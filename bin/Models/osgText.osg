@@ -1,0 +1,95 @@
+Geode {
+	DataVariance UNSPECIFIED
+	nodeMask 0xffffffff
+	cullingActive TRUE
+	num_drawables 4	
+	Geometry {
+		DataVariance UNSPECIFIED
+		useDisplayList TRUE
+		useVertexBufferObjects FALSE
+		PrimitiveSets 1
+		{
+			DrawArrays QUAD 0 4
+		}
+		VertexArray Vec3Array 4
+		{
+			-1 0 -1
+			1 0 -1
+			1 0 1
+			-1 0 1
+		}
+		NormalBinding OVERALL
+		NormalArray Vec3Array 1
+		{
+			0 -1 0
+		}
+		ColorBinding PER_VERTEX
+		ColorArray Vec4Array 4
+		{
+			1 0 0 1
+			0 1 0 1
+			0 0 1 1
+			1 1 1 1
+		}
+	}
+	osgText::Text {
+		DataVariance UNSPECIFIED
+		StateSet {
+			UniqueID StateSet_0
+			DataVariance UNSPECIFIED
+			rendering_hint TRANSPARENT_BIN
+			renderBinMode USE
+			binNumber 10
+			binName DepthSortedBin
+		}
+		supportsDisplayList FALSE
+		useDisplayList FALSE
+		useVertexBufferObjects FALSE
+		font C:\OSGDev\OpenSceneGraph-Data\fonts\arial.ttf
+		fontResolution 32 32
+		characterSize 0.15 1
+		characterSizeMode OBJECT_COORDS
+		alignment LEFT_BASE_LINE
+		autoRotateToScreen FALSE
+		layout LEFT_TO_RIGHT
+		position 1 0 1
+		color 1 1 1 1
+		drawMode 1
+		text "Top-right"
+	}
+	osgText::Text {
+		DataVariance UNSPECIFIED
+		Use StateSet_0
+		supportsDisplayList FALSE
+		useVertexBufferObjects FALSE
+		font C:\OSGDev\OpenSceneGraph-Data\fonts\arial.ttf
+		fontResolution  32 32
+		characterSize 0.15 1
+		characterSizeMode OBJECT_COORDS
+		alignment LEFT_BASE_LINE
+		autoRotateToScreen FALSE
+		layout LEFT_TO_RIGHT
+		position -1 0 1
+		color 1 1 1 1
+		drawMode 1
+		text "Top-left"
+	}
+	osgText::Text {
+		DataVariance UNSPECIFIED
+		Use StateSet_0
+		supportsDisplayList FALSE
+		useDisplayList FALSE
+		useVertexBufferObjects FALSE
+		font C:\OSGDev\OpenSceneGraph-Data\fonts\arial.ttf
+		fontResolution 128 128
+		characterSize 0.4 1
+		characterSizeMode OBJECT_COORDS
+		alignment CENTER_TOP
+		rotation 0.707107 0 0 0.707107
+		layout LEFT_TO_RIGHT
+		position 0 0 -1.04
+		color 1 1 1 1
+		drawMode 1
+		text "Hello OSG World"
+	}
+}

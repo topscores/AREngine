@@ -1,0 +1,42 @@
+Read me for AREngine.
+=====================
+
+Contents.
+---------
+
+About this archive.
+Build AREngine.
+Config file format.
+Changes log.
+Know issues in this release.
+
+
+About this archive.
+--------------------
+AREngine is a library xxx.
+
+Build AREngine.
+---------------
+
+Required Packages.
+-- Visual Studio 9.0
+-- ARTOOLKIT 2.72
+-- OSG 2.8.4
+-- OSGART 2.0RC3
+-- WXWIDGET 2.8.12
+
+Currently solution file is provided for VS9.0SP1. 
+In order to build AREngine you need to set following environment variable properly
+-- OSG_ROOT : Root directory of OpenSceneGraph (normally /Program File/OpenSceneGraph)
+-- OSGART_ROOT : Root directory of osgART (normally /Program File/osgART)
+-- WxWIDGET_ROOT : Root directory of wxWidget (normally /Program File/wxWidget)
+
+
+Config file format.
+-------------------
+
+Changes log.
+------------------------
+
+Known issues in this release.
+-----------------------------
