@@ -21,10 +21,17 @@ SceneObj::SceneObj()
 	scaleTo(m_scale);
 
 	m_scaleMat->addChild(m_orgNode);
+<<<<<<< HEAD
+	m_rotMat->addChild(m_scaleMat);
+	m_transMat->addChild(m_rotMat);
+	
+	addChild(m_transMat);
+=======
 	m_transMat->addChild(m_scaleMat);
 	m_rotMat->addChild(m_transMat);
 	
 	addChild(m_rotMat);
+>>>>>>> 3cd1e10477766ac0036f8040ed1b815785316770
 }
 
 
