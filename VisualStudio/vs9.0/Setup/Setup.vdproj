@@ -39,6 +39,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_0F4092FA095C47759412929AB7A28F60"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_11490C96D91349D88B12E55A20B2D625"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -87,6 +93,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_1D4D05F166B569C7F54B9199DDC9E835"
+        "OwnerKey" = "8:_47A3CD2725984F468FCC4A7E1B4B4BFC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1D4D05F166B569C7F54B9199DDC9E835"
+        "OwnerKey" = "8:_878BAAFF46EE4B6B8FE6DCCB874C408C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1D4D05F166B569C7F54B9199DDC9E835"
+        "OwnerKey" = "8:_5BF2A6B107DC4B3687DD497C29C095F7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_1E06539239B6495CBBBD0AC4D13F40FA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -125,30 +149,6 @@
         {
         "MsmKey" = "8:_2B8993CA4B77477C8A0D6C4C626EFB75"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2CE87519B2FB42448D5B763BF0AF5599"
-        "OwnerKey" = "8:_47A3CD2725984F468FCC4A7E1B4B4BFC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2CE87519B2FB42448D5B763BF0AF5599"
-        "OwnerKey" = "8:_F9759E19D47E4A2EA495BE0706BD604B"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2CE87519B2FB42448D5B763BF0AF5599"
-        "OwnerKey" = "8:_878BAAFF46EE4B6B8FE6DCCB874C408C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_2CE87519B2FB42448D5B763BF0AF5599"
-        "OwnerKey" = "8:_5BF2A6B107DC4B3687DD497C29C095F7"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -299,6 +299,12 @@
         {
         "MsmKey" = "8:_51FFDFF4323C4FDBBB6CA06505FE4B9E"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_520C6510FEE848B3AD95AF71DC9212FA"
+        "OwnerKey" = "8:_B6BBF7C14CEF4A5CA8D7CAE75762DB18"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -495,6 +501,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_854C87D670968D4FAEC21A396CCC9459"
+        "OwnerKey" = "8:_47A3CD2725984F468FCC4A7E1B4B4BFC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_86D59C44362F4A7AA965F1AE5A8D2752"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -663,6 +675,30 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_B6BBF7C14CEF4A5CA8D7CAE75762DB18"
+        "OwnerKey" = "8:_47A3CD2725984F468FCC4A7E1B4B4BFC"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6BBF7C14CEF4A5CA8D7CAE75762DB18"
+        "OwnerKey" = "8:_F9759E19D47E4A2EA495BE0706BD604B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6BBF7C14CEF4A5CA8D7CAE75762DB18"
+        "OwnerKey" = "8:_878BAAFF46EE4B6B8FE6DCCB874C408C"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6BBF7C14CEF4A5CA8D7CAE75762DB18"
+        "OwnerKey" = "8:_5BF2A6B107DC4B3687DD497C29C095F7"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B739D5A68BB641688AFAF07CE4982145"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -695,12 +731,6 @@
         {
         "MsmKey" = "8:_B967610FC8F8448A93B13F7FDACC7ACB"
         "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_BC1BDBA63711487CA42D6EA3331B8AD9"
-        "OwnerKey" = "8:_2CE87519B2FB42448D5B763BF0AF5599"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1066,7 +1096,7 @@
         "DisplayName" = "8:Release"
         "IsDebugOnly" = "11:FALSE"
         "IsReleaseOnly" = "11:TRUE"
-        "OutputFilename" = "8:\\\\psf\\Home\\Documents\\gitosis-admin\\arengine\\setup.msi"
+        "OutputFilename" = "8:\\\\psf\\Home\\Documents\\Visual Studio 2008\\Projects\\arengine\\setup.msi"
         "PackageFilesAs" = "3:2"
         "PackageFileSize" = "3:-2147483648"
         "CabType" = "3:1"
@@ -1198,6 +1228,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_0F4092FA095C47759412929AB7A28F60"
+            {
+            "SourcePath" = "8:\\\\psf\\Home\\Documents\\Visual Studio 2008\\Projects\\arengine\\bin\\mastercv.conf"
+            "TargetName" = "8:mastercv.conf"
+            "Tag" = "8:"
+            "Folder" = "8:_A5425DA2BE6C43508304CE4F90AA9D50"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_11490C96D91349D88B12E55A20B2D625"
             {
             "SourcePath" = "8:\\\\psf\\Home\\Documents\\Visual Studio 2008\\Projects\\AREngine\\bin\\Data\\patt.kanji"
@@ -1296,6 +1346,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1D4D05F166B569C7F54B9199DDC9E835"
+            {
+            "SourcePath" = "8:AREngine.dll"
+            "TargetName" = "8:AREngine.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_A5425DA2BE6C43508304CE4F90AA9D50"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_1E06539239B6495CBBBD0AC4D13F40FA"
@@ -2496,6 +2566,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_854C87D670968D4FAEC21A396CCC9459"
+            {
+            "SourcePath" = "8:AREngineWX.dll"
+            "TargetName" = "8:AREngineWX.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_A5425DA2BE6C43508304CE4F90AA9D50"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_86D59C44362F4A7AA965F1AE5A8D2752"
@@ -4221,9 +4311,9 @@
         "Product"
         {
         "Name" = "8:Microsoft Visual Studio"
-        "ProductName" = "8:ARAppWX"
+        "ProductName" = "8:AREngine"
         "ProductCode" = "8:{2E89D308-9E3F-40E8-9EEB-A28EBC72810E}"
-        "PackageCode" = "8:{386E0DF4-08BC-41AD-9E39-5DC80F0FE598}"
+        "PackageCode" = "8:{8C9E22DC-3AA3-4549-B177-FD57B934CA00}"
         "UpgradeCode" = "8:{CA270F54-C3D6-4133-AFEA-705660CD0BDE}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -4233,7 +4323,7 @@
         "Manufacturer" = "8:LarngearTech"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
-        "Title" = "8:ARAppWX"
+        "Title" = "8:AREngine"
         "Subject" = "8:"
         "ARPCONTACT" = "8:Arnupharp Viratanapanu"
         "Keywords" = "8:"
@@ -4738,11 +4828,11 @@
         }
         "MergeModule"
         {
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_2CE87519B2FB42448D5B763BF0AF5599"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_520C6510FEE848B3AD95AF71DC9212FA"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
+            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
                 "Properties"
                 {
                 }
@@ -4752,11 +4842,11 @@
             "Feature" = "8:"
             "IsolateTo" = "8:"
             }
-            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_BC1BDBA63711487CA42D6EA3331B8AD9"
+            "{CEE29DC0-9FBA-4B99-8D47-5BC643D9B626}:_B6BBF7C14CEF4A5CA8D7CAE75762DB18"
             {
             "UseDynamicProperties" = "11:TRUE"
             "IsDependency" = "11:TRUE"
-            "SourcePath" = "8:microsoft_vc90_crt_x86.msm"
+            "SourcePath" = "8:policy_9_0_Microsoft_VC90_CRT_x86.msm"
                 "Properties"
                 {
                 }
@@ -4771,7 +4861,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_47A3CD2725984F468FCC4A7E1B4B4BFC"
             {
-            "SourcePath" = "8:\\\\psf\\home\\Documents\\gitosis-admin\\arengine\\bin\\ARAppWX.exe"
+            "SourcePath" = "8:\\\\psf\\home\\Documents\\Visual Studio 2008\\Projects\\arengine\\bin\\ARAppWX.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A5425DA2BE6C43508304CE4F90AA9D50"
@@ -4799,7 +4889,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_5BF2A6B107DC4B3687DD497C29C095F7"
             {
-            "SourcePath" = "8:\\\\psf\\home\\Documents\\gitosis-admin\\arengine\\bin\\ARAppOsgViewer.exe"
+            "SourcePath" = "8:\\\\psf\\home\\Documents\\Visual Studio 2008\\Projects\\arengine\\bin\\ARAppOsgViewer.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A5425DA2BE6C43508304CE4F90AA9D50"
@@ -4827,7 +4917,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_878BAAFF46EE4B6B8FE6DCCB874C408C"
             {
-            "SourcePath" = "8:\\\\psf\\home\\Documents\\gitosis-admin\\arengine\\bin\\AREngineWX.dll"
+            "SourcePath" = "8:\\\\psf\\home\\Documents\\Visual Studio 2008\\Projects\\arengine\\bin\\AREngineWX.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A5425DA2BE6C43508304CE4F90AA9D50"
@@ -4855,7 +4945,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F9759E19D47E4A2EA495BE0706BD604B"
             {
-            "SourcePath" = "8:\\\\psf\\home\\Documents\\gitosis-admin\\arengine\\bin\\AREngine.dll"
+            "SourcePath" = "8:\\\\psf\\home\\Documents\\Visual Studio 2008\\Projects\\arengine\\bin\\AREngine.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_A5425DA2BE6C43508304CE4F90AA9D50"
