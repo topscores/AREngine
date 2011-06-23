@@ -51,30 +51,36 @@ Model::Model(DataNode *modelNode)
 				//{
 				//	compileDisplayList();
 				//}
+				m_id		= Util::getUniqueId();
 
-				m_scaleMat->addChild(m_orgNode);
+				m_orgTranslation[0] = modelNode->getAttributeAsDouble("transX");
+				m_orgTranslation[1] = modelNode->getAttributeAsDouble("transY");
+				m_orgTranslation[2] = modelNode->getAttributeAsDouble("transZ");
+				translateTo(m_orgTranslation);
+
+				m_orgRotation[0] = modelNode->getAttributeAsDouble("rotX");
+				m_orgRotation[1] = modelNode->getAttributeAsDouble("rotY");
+				m_orgRotation[2] = modelNode->getAttributeAsDouble("rotZ");
+				rotateTo(m_orgRotation);
+
+				m_orgSize = modelNode->getAttributeAsDouble("size");
+
+				// Calculate bounding box and size
+				setSize(m_orgSize);
+				scaleTo(m_scale);
+
+				m_unitTransform = new osg::MatrixTransform();
+				osg::Matrix modelTranslate;
+				modelTranslate.makeTranslate(-m_bs.center());
+				m_unitTransform->postMult(modelTranslate);
+				m_unitTransform->addChild(m_orgNode);
+				
+				this->addChild(m_unitTransform);
 			}
 			else
 			{
 				throw Exception("Model::Model() : FileName field cannot be empty", 2);
 			}
-			
-			m_id		= Util::getUniqueId();
-
-			m_orgTranslation[0] = modelNode->getAttributeAsDouble("transX");
-			m_orgTranslation[1] = modelNode->getAttributeAsDouble("transY");
-			m_orgTranslation[2] = modelNode->getAttributeAsDouble("transZ");
-			translateTo(m_orgTranslation);
-
-			m_orgRotation[0] = modelNode->getAttributeAsDouble("rotX");
-			m_orgRotation[1] = modelNode->getAttributeAsDouble("rotY");
-			m_orgRotation[2] = modelNode->getAttributeAsDouble("rotZ");
-			rotateTo(m_orgRotation);
-			
-			m_orgSize = modelNode->getAttributeAsDouble("size");
-			setSize(m_orgSize);
-			scaleTo(m_scale);
-
 			//compileDisplayList();
 		}
 		else
@@ -98,7 +104,7 @@ void
 Model::compileDisplayList()
 {
 	GLObjectsVisitor::Mode  glvMode = GLObjectsVisitor::COMPILE_DISPLAY_LISTS|
-                                      GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES;
+		GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES;
 	GLObjectsVisitor gloV(glvMode);
 	this->accept(gloV);
 }
@@ -120,8 +126,8 @@ Model::setSize(double size)
 		{
 			m_size = 50;
 		}
-		osg::BoundingSphere bs = m_orgNode->getBound();
-		m_scale = m_size/bs.radius();
+		m_bs = m_orgNode->getBound();
+		m_scale = m_size/m_bs.radius();
 	}
 }
 

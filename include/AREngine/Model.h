@@ -45,6 +45,9 @@ namespace arengine
 		osg::Vec3d m_orgRotation;
 		double	   m_orgSize;
 
+		ref_ptr<MatrixTransform> m_unitTransform;
+		osg::BoundingSphere m_bs;
+
 	};
 
 }
