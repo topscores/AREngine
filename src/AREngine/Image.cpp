@@ -67,7 +67,7 @@ m_tex(NULL)
 				m_stateSet->setMode(GL_BLEND, osg::StateAttribute::ON);
 				m_stateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
 
-				m_scaleMat->addChild(m_orgNode);
+				this->addChild(m_orgNode);
 			}
 		}
 		else
