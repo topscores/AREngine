@@ -73,6 +73,7 @@ Marker::getIdxForObjName(string name)
 	if (name.empty())
 	{
 		Util::log("Marker::getIdxForObjName() : Cannot find idx for empty name", 2);
+		return -1;
 	}
 	else
 	{

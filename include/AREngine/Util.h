@@ -28,14 +28,27 @@ namespace arengine
 	public:
 		static int makeInt(string s)
 		{
-			if (s.c_str())
+			const char *cstr;
+			cstr = s.c_str();
+			if (cstr != NULL)
 			{
-				return atoi(s.c_str());
+				// Hexadecimal
+				if (cstr[0] == '0' && cstr[1] == 'x')
+				{
+					int hex;
+					sscanf_s(cstr+2, "%x", &hex);
+					return hex;
+				}
+				else
+				{
+					return atoi(cstr);
+				}
 			}
 			else
 			{
 				return 0;
 			}
+
 
 		}
 
@@ -135,13 +148,13 @@ namespace arengine
 
 			log(sstr.str(), err.logLevel);
 		}
-		
+
 
 		static void log(string func, string logMsg, int logLevel = 3)
 		{
 			stringstream sstr;
 			sstr << func << ":" << logMsg << Util::newLine();
-			
+
 			log(sstr.str(), logLevel);
 		}
 

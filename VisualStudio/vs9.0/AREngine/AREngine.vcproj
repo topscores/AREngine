@@ -192,6 +192,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\AREngine\AppearChecker.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\AREngine\ARRoot.cpp"
 				>
 			</File>
@@ -299,6 +303,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\AREngine\AddRemoveAction.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\AREngine\AppearChecker.h"
 				>
 			</File>
 			<File

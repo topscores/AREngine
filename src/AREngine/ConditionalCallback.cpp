@@ -1,6 +1,7 @@
 #include "arengine/ConditionalCallback.h"
 #include "arengine/CollisionChecker.h"
 #include "arengine/KeyDownChecker.h"
+#include "arengine/AppearChecker.h"
 #include "arengine/AddRemoveAction.h"
 #include "arengine/Util.h"
 #include "arengine/ActionFactory.h"
@@ -60,7 +61,7 @@ m_lastState(E_INVALID)
 	}
 	else
 	{
-		Util::log("ConditionalCallback::ConditionalCallback() : Not a ConditionalCallback tag", 2);
+		Util::log(__FUNCTION__, "Not a ConditionalCallback tag", 2);
 	}
 }
 
@@ -202,7 +203,7 @@ ConditionalCallback::allConditionValid(osg::Node *node)
 	// No condition, just behave like an update callback
 	if (m_checkers.size() == 0)
 	{
-		Util::log("ConditionalCallback::allConditionValid() : There is no condition register", 5);
+		Util::log(__FUNCTION__, "There is no condition register", 5);
 		return true;
 	}
 
@@ -239,6 +240,16 @@ ConditionalCallback::processConditionData(DataNode *conditionNode)
 				else if (type.compare("KeyDown") == 0)
 				{
 					m_checkers.push_back(new KeyDownChecker(checker));
+				}
+				else if (type.compare("Appear") == 0)
+				{
+					m_checkers.push_back(new AppearChecker(checker));
+				}
+				else
+				{
+					stringstream sstr;
+					sstr << "Unknown checker \"" << type << "\"";
+					Util::log(__FUNCTION__, sstr.str().c_str(), 2);
 				}
 			}
 		}

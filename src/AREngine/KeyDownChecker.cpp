@@ -12,8 +12,16 @@ KeyDownChecker::KeyDownChecker(DataNode *checkerNode)
 {
 	if (checkerNode->getNodeName().compare("KeyDown") == 0)
 	{
-		string key = checkerNode->getAttributeAsString("key");
-		m_key = (key.c_str())[0];
+		if (!checkerNode->getAttributeAsString("keyCode").empty())
+		{
+			m_key = checkerNode->getAttributeAsInt("keyCode");
+		}
+		else
+		{
+			string key = checkerNode->getAttributeAsString("key");
+			m_key = (key.c_str())[0];
+		}
+
 		m_kbh = SmartSingleton<KeyboardHandler>::getInstance();
 
 		stringstream sstr;
