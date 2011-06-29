@@ -7,9 +7,11 @@
 #include "arengine/CircularActionSet.h"
 #include "arengine/TimerActionSet.h"
 #include "arengine/DataNode.h"
+#include "arengine/Util.h"
 
 #include <osg/Node>
 #include <string>
+#include <sstream>
 
 using namespace osg;
 using namespace std;
@@ -68,6 +70,12 @@ namespace arengine
 			else if (actionType == "TimerActionSet")
 			{
 				return new TimerActionSet(action);
+			}
+			else
+			{
+				stringstream sstr;
+				sstr << "Unknow action \" " << actionType << "\"";
+				Util::log(__FUNCTION__, sstr.str().c_str(), 2);
 			}
 		}
 	};

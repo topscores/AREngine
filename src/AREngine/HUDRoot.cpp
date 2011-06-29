@@ -172,18 +172,22 @@ HUDRoot::getHUD(int id)
 ref_ptr<osg::Node>
 HUDRoot::getHUD(string name)
 {
-	//if (!name.empty())
-	//{
-	//	int size = m_hud.size();
-	//	for (int i = 0;i < size;i++)
-	//	{
-	//		if (name.compare(
-	//	}
-	//}
-	//else
-	//{
-	//	Util::log("HUDRoot::getHUD(string) : Name is empty", 2);
-	//}
+	if (!name.empty())
+	{
+		int size = m_hudList.size();
+		for (int i = 0;i < size;i++)
+		{
+			if (name == m_hudList[i]->getName())
+			{
+				return m_hudList[i];
+			}
+		}
+		return NULL;
+	}
+	else
+	{
+		Util::log(__FUNCTION__, "Name is empty", 2);
+	}
 	return NULL;
 }
 
