@@ -6,6 +6,11 @@
 #include "arengine/DataNode.h"
 
 #include <osg/Node>
+#include <osgAudio/SoundState.h>
+using namespace osg;
+
+#include <string>
+using namespace std;
 
 namespace arengine
 {
@@ -17,6 +22,16 @@ namespace arengine
 		~StartSound();
 
 		virtual void doAction(osg::Node *node);
+
+	protected:
+		ref_ptr<osgAudio::SoundState> createSoundStateFromSample();
+		ref_ptr<osgAudio::SoundState> createSoundStateFromStream();
+
+	private:
+		string m_soundName;
+		string m_soundType;
+		bool m_loop;
+		ref_ptr<osgAudio::SoundState> m_soundState;
 	};
 
 	class ARENGINE_EXPORT StopSound : public Action
@@ -26,6 +41,11 @@ namespace arengine
 		~StopSound();
 
 		virtual void doAction(osg::Node *node);
+
+	private:
+		string m_soundName;
+		string m_pauseType;
+		ref_ptr<osgAudio::SoundState> m_soundState;
 	};
 
 }

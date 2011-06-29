@@ -184,6 +184,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\AREngine\ActionFactory.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\AREngine\ActionSet.cpp"
 				>
 			</File>
@@ -273,6 +277,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\AREngine\SceneObj.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\AREngine\SoundAction.cpp"
 				>
 			</File>
 			<File
@@ -419,6 +427,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\AREngine\SmartSingleton.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\AREngine\SoundAction.h"
 				>
 			</File>
 			<File
