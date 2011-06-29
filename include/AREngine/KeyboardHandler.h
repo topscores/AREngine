@@ -10,6 +10,7 @@
 #include <osgGA/GUIActionAdapter>
 
 #include <sstream>
+#include <map>
 using namespace std;
 
 namespace arengine
@@ -24,7 +25,7 @@ namespace arengine
 		bool isKeyDown(int key);
 
 	private:
-		bool m_keypress[500];
+		map<int, bool> m_keypress;
 
 	};
 
