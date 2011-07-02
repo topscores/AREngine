@@ -144,9 +144,28 @@ HUDRoot::removeHUD(string name)
 		m_hudCamera->removeChild(m_hudList.at(removeIndex));
 		m_hudList.erase(m_hudList.begin()+removeIndex, m_hudList.begin()+removeIndex+1);
 		stringstream sstr;
-		sstr << "Remove Object \""<< name<<"\" from list";
+		sstr << "Remove Object \""<< name <<"\" from list";
 		Util::log(__FUNCTION__, sstr.str().c_str(), 3);
 	}
+}
+
+
+void
+HUDRoot::removeHUD()
+{
+	ref_ptr<SceneObj> removeObj;
+	int n = m_hudList.size();
+	for (int i = 0;i < n;i++)
+	{
+		removeObj = m_hudList[i];
+		string name = removeObj->getObjName();
+		m_hudCamera->removeChild(removeObj);
+
+		stringstream sstr;
+		sstr << "Remove Object \""<< name <<"\" from list";
+		Util::log(__FUNCTION__, sstr.str().c_str(), 3);
+	}
+	m_hudList.clear();
 }
 
 

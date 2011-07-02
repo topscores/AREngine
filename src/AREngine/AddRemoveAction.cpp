@@ -94,14 +94,32 @@ RemoveAction::doAction(osg::Node *node)
 			}
 		}
 
-		m_marker->removeAssociatedObj(m_objName);
+		// If user provided m_objName remove that object
+		if (!m_objName.empty())
+		{
+			m_marker->removeAssociatedObj(m_objName);
+		}
+		// Otherwise remove all associated obj
+		else
+		{
+			m_marker->removeAssociatedObj();
+		}
 	}
 	// Remove from hud
 	else
 	{
 		if (scene->getHUDRoot() != NULL)
 		{
-			scene->getHUDRoot()->removeHUD(m_objName);
+			// If objName are provided remove it
+			if (!m_objName.empty())
+			{
+				scene->getHUDRoot()->removeHUD(m_objName);
+			}
+			// otherwise remove all huds
+			else
+			{
+				scene->getHUDRoot()->removeHUD();
+			}
 		}
 		else
 		{

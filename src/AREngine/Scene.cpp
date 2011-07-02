@@ -95,9 +95,9 @@ Scene::getIdxForMarkerName(string name)
 				return i;
 			}
 		}
-		stringstream sstr;
-		sstr << "Scene::getIdxForMarkerName() : Cannot find idx for " << name;
-		Util::log(sstr.str().c_str(), 2);
+		// stringstream sstr;
+		// sstr << "Scene::getIdxForMarkerName() : Cannot find idx for " << name;
+		// Util::log(sstr.str().c_str(), 2);
 		return -1;
 	}
 }
@@ -200,9 +200,9 @@ Scene::getMarker(string name)
 	int idx = getIdxForMarkerName(name);
 	if (idx == -1)
 	{
-		stringstream sstr;
-		sstr << "Scene::getMarker() : Cannot find idx for " << name;
-		Util::log(sstr.str().c_str(), 2);
+		// stringstream sstr;
+		// sstr << "Scene::getMarker() : Cannot find idx for " << name;
+		// Util::log(sstr.str().c_str(), 2);
 		return NULL;
 	}
 	else

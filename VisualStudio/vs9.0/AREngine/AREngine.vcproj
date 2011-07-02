@@ -61,7 +61,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib glu32.lib opengl32.lib osgART_debug.lib osgAudio.lib win32mm.lib"
+				AdditionalDependencies="OpenThreadsd.lib osgd.lib osgDBd.lib osgUtild.lib osgGAd.lib osgViewerd.lib osgTextd.lib glu32.lib opengl32.lib osgART_debug.lib osgAudio.lib winmm.lib"
 				OutputFile="$(OutDir)\$(ProjectName)d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\..\lib;&quot;$(OSGART_ROOT)\lib&quot;;&quot;$(OSG_ROOT)\lib&quot;;&quot;$(OSGAUDIO_ROOT)\lib&quot;"

@@ -72,7 +72,7 @@ Marker::getIdxForObjName(string name)
 {
 	if (name.empty())
 	{
-		Util::log("Marker::getIdxForObjName() : Cannot find idx for empty name", 2);
+		// Util::log("Marker::getIdxForObjName() : Cannot find idx for empty name", 2);
 		return -1;
 	}
 	else
@@ -85,9 +85,9 @@ Marker::getIdxForObjName(string name)
 				return i;
 			}
 		}
-		stringstream sstr;
-		sstr << "Marker::getIdxForObjName() : Cannot find idx for " << name;
-		Util::log(sstr.str().c_str(), 2);
+		// stringstream sstr;
+		// sstr << "Marker::getIdxForObjName() : Cannot find idx for " << name;
+		// Util::log(sstr.str().c_str(), 2);
 		return -1;
 	}
 }
@@ -213,14 +213,41 @@ Marker::removeAssociatedObj(string objName)
 	// If the removing model is in list
 	if (removeIndex != -1)
 	{
+		string name;
 		removeObj = getAssociatedObj(removeIndex);
+		name = removeObj->getObjName();
 
 		m_associatedObjNames.erase(m_associatedObjNames.begin()+removeIndex, m_associatedObjNames.begin()+removeIndex+1);
 		
 		// Remove the node from marker node
 		removeChild(removeObj.get());
 		m_associatedObjs.erase(m_associatedObjs.begin()+removeIndex, m_associatedObjs.begin()+removeIndex+1);
+
+		stringstream sstr;
+		sstr << "Remove Object \""<< name <<"\" from marker" << m_markerName;
+		Util::log(__FUNCTION__, sstr.str().c_str(), 3);
 	}
+}
+
+
+void
+Marker::removeAssociatedObj()
+{
+	ref_ptr<SceneObj> removeObj;
+	string name;
+	int n = countAssociatedObj();
+	for (int i = 0;i < n;i++)
+	{
+		removeObj = m_associatedObjs[i];
+		name = m_associatedObjNames[i];
+		removeChild(removeObj.get());
+
+		stringstream sstr;
+		sstr << "Remove Object \""<< name <<"\" from marker" << m_markerName;
+		Util::log(__FUNCTION__, sstr.str().c_str(), 3);
+	}
+	m_associatedObjs.clear();
+	m_associatedObjNames.clear();
 }
 
 

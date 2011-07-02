@@ -28,7 +28,7 @@ StartSound::StartSound(DataNode *soundNode)
 		}
 		else
 		{
-			m_soundState == NULL;
+			m_soundState = NULL;
 
 			stringstream sstr;
 			sstr << "Unsupported extension \"" << m_soundType << "\"";
