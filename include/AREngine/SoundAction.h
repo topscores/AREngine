@@ -20,7 +20,8 @@ namespace arengine
 	public:
 		StartSound(DataNode *soundNode);
 		~StartSound();
-
+		
+		ref_ptr<osgAudio::SoundState> getSoundState(){return m_soundState;}
 		virtual void doAction(osg::Node *node);
 
 	protected:
@@ -43,8 +44,12 @@ namespace arengine
 		virtual void doAction(osg::Node *node);
 
 	private:
+		void doStop();
+
+	private:
 		string m_soundName;
 		string m_pauseType;
+		osgAudio::SourceState m_stopMethod;
 		ref_ptr<osgAudio::SoundState> m_soundState;
 	};
 

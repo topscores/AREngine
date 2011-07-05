@@ -1,5 +1,7 @@
 #include "arengine/SoundAction.h"
 #include "arengine/Util.h"
+#include "arengine/Singleton.h"
+#include "arengine/ObjPool.h"
 
 #include <osgAudio/SoundManager.h>
 
@@ -156,26 +158,26 @@ StopSound::StopSound(DataNode *soundNode)
 		{
 			m_pauseType = "stop";
 		}
-		
+
 		m_soundState = osgAudio::SoundManager::instance()->findSoundState(m_soundName);
-		if (!m_soundState)
+		if (m_soundState)
 		{
 			if (m_pauseType == "stop")
 			{
-				m_soundState->setStopMethod(osgAudio::Stopped);
+				m_stopMethod = osgAudio::Stopped;
 			}
 			else
 			{
-				m_soundState->setStopMethod(osgAudio::Paused);
+				m_stopMethod = osgAudio::Paused;
 			}
 		}
 		else
 		{
-			stringstream sstr;
-			sstr << "Cannot find registered soundState with name " << m_soundName;
-			Util::log(__FUNCTION__, sstr.str().c_str(), 2);
+			//stringstream sstr;
+			//sstr << "Cannot find registered soundState with name " << m_soundName;
+			//Util::log(__FUNCTION__, sstr.str().c_str(), 2);
 		}
-			
+
 	}
 	else
 	{
@@ -192,16 +194,45 @@ StopSound::~StopSound()
 void
 StopSound::doAction(osg::Node *node)
 {
-	if (m_soundState)
+	if (m_soundName.empty())
 	{
-		m_soundState->setPlay(false);
+		ActionPool *pool = Singleton<ActionPool>::getInstance();
+		int n = pool->size();
+		for (int i = 0;i < n;i++)
+		{
+			StartSound *action = dynamic_cast<StartSound*>(pool->at(i).get());
+			if (action)
+			{
+				osgAudio::SoundState *soundState = action->getSoundState().get();
+				if (soundState->isPlaying())
+				{
+					soundState->setStopMethod(m_stopMethod);
+					soundState->setPlay(false);
+				}	
+			}
+		}
 	}
 	else
 	{
-		m_soundState = osgAudio::SoundManager::instance()->findSoundState(m_soundName);
 		if (m_soundState)
 		{
-			m_soundState->setPlay(false);
+			doStop();
+		}
+		else
+		{
+			m_soundState = osgAudio::SoundManager::instance()->findSoundState(m_soundName);
+			if (m_soundState)
+			{
+				doStop();
+			}
 		}
 	}
+}
+
+
+void
+StopSound::doStop()
+{
+	m_soundState->setStopMethod(m_stopMethod);
+	m_soundState->setPlay(false);
 }
