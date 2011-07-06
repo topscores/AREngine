@@ -58,6 +58,7 @@ Config::readConfig(string fileName)
 		m_smoothMotion	=	rootNode->getAttributeAsBool("smoothMotion");
 		m_flipEnable	=	rootNode->getAttributeAsBool("flipEnable");
 		m_useTexture2D	=	rootNode->getAttributeAsBool("useTexture2D");
+		m_viewStat		=	rootNode->getAttributeAsBool("viewStat");
 
 		// Init ARScene, VideoBackground and Tracker
 		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
@@ -147,6 +148,13 @@ bool
 Config::fullScreen()
 {
 	return m_fullScreen;
+}
+
+
+bool
+Config::viewStat()
+{
+	return m_viewStat;
 }
 
 

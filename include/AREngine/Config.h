@@ -27,6 +27,7 @@ namespace arengine
 		bool	flipEnable();
 		bool	useTexture2D();
 		bool	fullScreen();
+		bool	viewStat();
 
 	private:
 		void initReader();
@@ -50,6 +51,7 @@ namespace arengine
 		bool		  m_flipEnable;
 		bool		  m_useTexture2D;
 		bool		  m_fullScreen;
+		bool		  m_viewStat;
 	};
 
 }

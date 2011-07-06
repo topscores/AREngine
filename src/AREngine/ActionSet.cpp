@@ -30,3 +30,24 @@ ActionSet::doAction(osg::Node *node)
 		m_actions.at(i)->exec(node);
 	}
 }
+
+
+int
+ActionSet::actionCount()
+{
+	return m_actions.size();
+}
+
+
+ref_ptr<Action>
+ActionSet::getChildAction(int id)
+{
+	if (id >= 0 && id < m_actions.size())
+	{
+		return m_actions.at(id);
+	}
+	else
+	{
+		return NULL;
+	}
+}

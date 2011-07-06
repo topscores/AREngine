@@ -200,16 +200,7 @@ StopSound::doAction(osg::Node *node)
 		int n = pool->size();
 		for (int i = 0;i < n;i++)
 		{
-			StartSound *action = dynamic_cast<StartSound*>(pool->at(i).get());
-			if (action)
-			{
-				osgAudio::SoundState *soundState = action->getSoundState().get();
-				if (soundState->isPlaying())
-				{
-					soundState->setStopMethod(m_stopMethod);
-					soundState->setPlay(false);
-				}	
-			}
+			stopCurTagSound(pool->at(i).get());
 		}
 	}
 	else
@@ -235,4 +226,41 @@ StopSound::doStop()
 {
 	m_soundState->setStopMethod(m_stopMethod);
 	m_soundState->setPlay(false);
+}
+
+
+void
+StopSound::stopCurTagSound(Action *action)
+{
+	StartSound *startSound = dynamic_cast<StartSound*>(action);
+	if (startSound)
+	{
+		osgAudio::SoundState *soundState = startSound->getSoundState();
+		if (soundState->isPlaying())
+		{
+			soundState->setStopMethod(m_stopMethod);
+			soundState->setPlay(false);
+		}
+	}
+	else
+	{
+		stopChildTagSound(action);
+	}
+}
+
+
+void
+StopSound::stopChildTagSound(Action *parentTag)
+{
+
+	ActionSet *actionSet = dynamic_cast<ActionSet *>(parentTag);
+	if (actionSet)
+	{
+		int n = actionSet->actionCount();
+		for (int i = 0;i < n;i++)
+		{
+			Action *action = actionSet->getChildAction(i);
+			stopCurTagSound(action);
+		}
+	}
 }

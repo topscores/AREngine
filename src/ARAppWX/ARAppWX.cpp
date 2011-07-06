@@ -12,7 +12,7 @@
 #include "arenginewx/OSGFrame.h"
 #include "arenginewx/LGSplashWx.h"
 
-
+#include <osgViewer/ViewerEventHandlers>
 #include <osgGA/TrackballManipulator>
 #include <osgDB/ReadFile>
 
@@ -68,6 +68,11 @@ bool ARAppWX::OnInit()
 	// load the scene.
 	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 	viewer->setSceneData(arscene->getSceneData().get());
+	if (config->viewStat())
+	{
+		viewer->addEventHandler(new osgViewer::StatsHandler());
+	}
+
 	arscene->start();
 
 	splash->close();

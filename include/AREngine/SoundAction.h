@@ -4,6 +4,7 @@
 #include "arengine/Export"
 #include "arengine/Action.h"
 #include "arengine/DataNode.h"
+#include "arengine/ActionSet.h"
 
 #include <osg/Node>
 #include <osgAudio/SoundState.h>
@@ -45,6 +46,9 @@ namespace arengine
 
 	private:
 		void doStop();
+
+		void stopCurTagSound(Action *action);
+		void stopChildTagSound(Action *parentTag);
 
 	private:
 		string m_soundName;
