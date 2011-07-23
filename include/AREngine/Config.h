@@ -35,12 +35,6 @@ namespace arengine
 		void processModelData(DataNode *modelNode);
 		void processImageData(DataNode *imageNode);
 		void processSceneData(DataNode *pMarkerNode);
-		//void processTextData(DataNode *textNode);
-		//void processKeyboardHandlerData(DataNode *handlerNode);
-		//void processCollisionHandlerData(DataNode *handlerNode);
-		//void processAppearDisappearHandlerData(DataNode *handlerNode);
-
-		//Action* createActionFromDataNode(DataNode *pActionNode);
 
 	private:
 		ConfigReader *m_reader;

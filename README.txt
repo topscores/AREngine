@@ -48,5 +48,19 @@ Config file format.
 Changes log.
 ------------------------
 
+version 0.81
+- Add support for Sound Action
+- Can remove all objects on a marker
+- Can remove all huds on a scene
+- Change matrix manipulation from around fixed axis to local axis
+- Support tracking KeyDown event from keycode value
+- Callback can be added before and after action
+
+version 0.80
+- Conditional Callback
+- Collision checker
+- KeyDown checker
+- Add/Remove action for models and huds
+
 Known issues in this release.
 -----------------------------
