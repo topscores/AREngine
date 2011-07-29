@@ -55,6 +55,8 @@ version 0.81
 - Change matrix manipulation from around fixed axis to local axis
 - Support tracking KeyDown event from keycode value
 - Callback can be added before and after action
+- Add TwistIn transition
+- Regulate callback event checking frequency default to 25 time/sec
 
 version 0.80
 - Conditional Callback
