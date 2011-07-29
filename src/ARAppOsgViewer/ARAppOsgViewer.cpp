@@ -21,7 +21,11 @@ int main()
 	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 	arscene->start();
 	viewer.setSceneData(arscene->getSceneData());
-	viewer.addEventHandler(new osgViewer::StatsHandler());
+	if (config->viewStat())
+	{
+		viewer.addEventHandler(new osgViewer::StatsHandler());
+	}
+	//viewer.addEventHandler(new osgViewer::StatsHandler());
 	viewer.addEventHandler(new osgViewer::WindowSizeHandler());
 	viewer.addEventHandler(SmartSingleton<KeyboardHandler>::getInstance());
 	viewer.run();

@@ -51,13 +51,39 @@ Config::readConfig(string fileName)
 		}
 
 		m_fullScreen	=	rootNode->getAttributeAsBool("fullScreen");
+		Util::log(__FUNCTION__, 3, "fullscreen = %s", boolToString(m_fullScreen));
 
 		m_aviFileName	=	rootNode->getAttributeAsString("aviFileName");
+		if (!m_aviFileName.empty())
+		{
+			Util::log(__FUNCTION__, 3, "aviFileName = %s", m_aviFileName.c_str());
+		}
+
 		m_activeSceneName =   rootNode->getAttributeAsString("activeSceneName");
+		if (!m_activeSceneName.empty())
+		{
+			Util::log(__FUNCTION__, 3, "activeSceneName = %s", m_activeSceneName.c_str());
+		}
 
 		m_smoothMotion	=	rootNode->getAttributeAsBool("smoothMotion");
+		Util::log(__FUNCTION__, 3, "smoothMotion = %s", boolToString(m_smoothMotion));
+
 		m_flipEnable	=	rootNode->getAttributeAsBool("flipEnable");
+		Util::log(__FUNCTION__, 3, "flipEnable = %s", boolToString(m_flipEnable));
+
 		m_useTexture2D	=	rootNode->getAttributeAsBool("useTexture2D");
+		Util::log(__FUNCTION__, 3, "useTexture2D = %s", boolToString(m_useTexture2D));
+
+		m_viewStat		=	rootNode->getAttributeAsBool("viewStat");
+		Util::log(__FUNCTION__, 3, "viewStat = %s", boolToString(m_viewStat));
+
+		// How often we should check the condition
+		m_checkInterval = rootNode->getAttributeAsInt("checkInterval");
+		// Default interval = 400 millisec (25 times / sec)
+		if (m_checkInterval == 0)
+		{
+			m_checkInterval = 40;
+		}
 
 		// Init ARScene, VideoBackground and Tracker
 		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
@@ -147,6 +173,20 @@ bool
 Config::fullScreen()
 {
 	return m_fullScreen;
+}
+
+
+bool
+Config::viewStat()
+{
+	return m_viewStat;
+}
+
+
+int
+Config::getCheckInterval()
+{
+	return m_checkInterval;
 }
 
 

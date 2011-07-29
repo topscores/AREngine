@@ -7,7 +7,9 @@
 #include "arengine/Singleton.h"
 #include "arengine/Logger.h"
 
-#include "time.h"
+#include <time.h>
+#include <stdarg.h>
+
 #include <string>
 #include <sstream>
 
@@ -20,22 +22,37 @@ typedef string tstring;
 #endif
 
 
+#define boolToString(b) (b)?"true":"false"
 namespace arengine
 {
 
 	class ARENGINE_EXPORT Util
 	{
 	public:
+
 		static int makeInt(string s)
 		{
-			if (s.c_str())
+			const char *cstr;
+			cstr = s.c_str();
+			if (cstr != NULL)
 			{
-				return atoi(s.c_str());
+				// Hexadecimal
+				if (cstr[0] == '0' && cstr[1] == 'x')
+				{
+					int hex;
+					sscanf_s(cstr+2, "%x", &hex);
+					return hex;
+				}
+				else
+				{
+					return atoi(cstr);
+				}
 			}
 			else
 			{
 				return 0;
 			}
+
 
 		}
 
@@ -75,7 +92,6 @@ namespace arengine
 			return id;
 		}
 
-
 		static void playSound(tstring fileName, bool loop)
 		{
 			if (!fileName.empty())
@@ -113,7 +129,6 @@ namespace arengine
 			return logger->getLogLevel();
 		}
 
-
 		static void setLogLevel(int level)
 		{
 			if (level >= 1 && level <= 5)
@@ -126,32 +141,32 @@ namespace arengine
 
 		static void log(Exception err)
 		{
-			//string errMsg;
-			//errMsg.append(err.msg);
-			//errMsg.append(1, Util::newLine());
-
 			stringstream sstr;
 			sstr << err.msg << Util::newLine();
 
 			log(sstr.str(), err.logLevel);
 		}
-		
+
+		static void log(string func, int logLevel, char *fmt, ...)
+		{
+			va_list args;
+			va_start(args, fmt);
+
+			char c_log[200];
+			vsprintf(c_log, fmt, args);
+			log(func, c_log, logLevel);
+		}
 
 		static void log(string func, string logMsg, int logLevel = 3)
 		{
 			stringstream sstr;
-			sstr << func << ":" << logMsg << Util::newLine();
-			
+			sstr << func << ":" << logMsg;
+
 			log(sstr.str(), logLevel);
 		}
 
-
 		static void log(string logMsg, int logLevel = 3)
 		{
-			//string msg;
-			//msg.append(logMsg);
-			//msg.append(1, Util::newLine());
-
 			stringstream sstr;
 			sstr << logMsg << Util::newLine();
 
@@ -164,13 +179,14 @@ namespace arengine
 			}
 		}
 
-
-		static int getTimeInMilliSec()
+		static int getElapseTimeInMilliSec()
 		{
-			clock_t curClock = clock();
-			double second = ((double)curClock)/((double)CLOCKS_PER_SEC);
-			int milliSec = (int) second * 1000;
-			return milliSec;
+			return (int) clock();
+		}
+
+		static int getCurrentTime()
+		{
+			return (int) time(NULL);
 		}
 
 	};

@@ -1,5 +1,7 @@
 #include "arengine/Action.h"
+#include "arengine/Scene.h"
 #include "arengine/ActionFactory.h"
+#include "arengine/Util.h"
 
 using namespace arengine;
 
@@ -90,3 +92,26 @@ Action::doPostAction(osg::Node *node)
 }
 
 
+void
+Action::addToPendingQueue(osg::Node *node, Action *action)
+{
+	ref_ptr<Scene> scene = dynamic_cast<Scene*>(node);
+	if (scene.valid())
+	{
+		ref_ptr<PendingActionCallback> callback = scene->getPendingActionCallback();
+		if (callback.valid())
+		{
+			callback->addPendingAction(this);
+		}
+		else
+		{
+			Util::log(__FUNCTION__, "No valid PendingActionCallback was registered", 2);
+		}
+
+		Util::log(__FUNCTION__, "Register action to pending queue", 5);
+	}
+	else
+	{
+		Util::log(__FUNCTION__, "Invalid scene variable", 2);
+	}
+}

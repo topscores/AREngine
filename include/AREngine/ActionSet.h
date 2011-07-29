@@ -22,6 +22,9 @@ namespace arengine
 
 		virtual void doAction(osg::Node *node);
 
+		int actionCount();
+		ref_ptr<Action> getChildAction(int id);
+
 	protected:
 		int m_actionCount;
 		vector<ref_ptr<Action>> m_actions;

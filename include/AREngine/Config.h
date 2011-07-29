@@ -27,6 +27,8 @@ namespace arengine
 		bool	flipEnable();
 		bool	useTexture2D();
 		bool	fullScreen();
+		bool	viewStat();
+		int		getCheckInterval();
 
 	private:
 		void initReader();
@@ -34,12 +36,6 @@ namespace arengine
 		void processModelData(DataNode *modelNode);
 		void processImageData(DataNode *imageNode);
 		void processSceneData(DataNode *pMarkerNode);
-		//void processTextData(DataNode *textNode);
-		//void processKeyboardHandlerData(DataNode *handlerNode);
-		//void processCollisionHandlerData(DataNode *handlerNode);
-		//void processAppearDisappearHandlerData(DataNode *handlerNode);
-
-		//Action* createActionFromDataNode(DataNode *pActionNode);
 
 	private:
 		ConfigReader *m_reader;
@@ -50,6 +46,8 @@ namespace arengine
 		bool		  m_flipEnable;
 		bool		  m_useTexture2D;
 		bool		  m_fullScreen;
+		bool		  m_viewStat;
+		int			  m_checkInterval;
 	};
 
 }

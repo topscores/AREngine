@@ -16,12 +16,12 @@ CollisionChecker::CollisionChecker(DataNode *checkerNode)
 		m_threshold = checkerNode->getAttributeAsInt("threshold");
 
 		stringstream sstr;
-		sstr << "CollisionChecker::CollisionChecker() : marker=" << m_markerName1 << " and marker=" << m_markerName2 << " threshold=" << m_threshold;
-		Util::log(sstr.str().c_str(), 4);
+		sstr << "marker=" << m_markerName1 << " and marker=" << m_markerName2 << " threshold=" << m_threshold;
+		Util::log(__FUNCTION__, sstr.str().c_str(), 4);
 	}
 	else
 	{
-		Util::log("CollisionChecker::CollisionChecker() : Not a Collision tag", 2);
+		Util::log(__FUNCTION__, "Not a Collision tag", 2);
 	}
 }
 
@@ -46,7 +46,7 @@ CollisionChecker::conditionValid(osg::Node *node)
 
 			if (!marker1.valid() || !marker2.valid())
 			{
-				Util::log("CollisionChecker::conditionValid() : Cannot find marker", 2);
+				Util::log(__FUNCTION__, "Cannot find marker", 2);
 				return false;
 			}
 			else
@@ -57,7 +57,7 @@ CollisionChecker::conditionValid(osg::Node *node)
 		}
 		else
 		{
-			Util::log("CollisionChecker::conditionValid() : Invalid scene node", 2);
+			Util::log(__FUNCTION__, "Invalid scene node", 2);
 		}
 	}
 
@@ -79,15 +79,15 @@ CollisionChecker::conditionValid(osg::Node *node)
 		if (distance_markers12 < m_threshold)
 		{
 			stringstream sstr;
-			sstr << "CollisionChecker::conditionValid() : Collision detected between " << m_markerName1 << " and " << m_markerName2;
-			Util::log(sstr.str().c_str(), 5);
+			sstr << "Collision detected between " << m_markerName1 << " and " << m_markerName2;
+			Util::log(__FUNCTION__, sstr.str().c_str(), 5);
 			return true;
 		}
 		else
 		{
 			stringstream sstr;
-			sstr << "CollisionChecker::conditionValid() : Distance between " << m_markerName1 << " and " << m_markerName2 << " = " <<  distance_markers12;
-			Util::log(sstr.str().c_str(), 5);
+			sstr << "Distance between " << m_markerName1 << " and " << m_markerName2 << " = " <<  distance_markers12;
+			Util::log(__FUNCTION__, sstr.str().c_str(), 5);
 			return false;
 		}
 	}

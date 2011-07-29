@@ -43,7 +43,7 @@ TimerActionSet::exec(osg::Node *node)
 	if (isEnable())
 	{
 		doPreAction(node);
-		m_lastExec = Util::getTimeInMilliSec();
+		m_lastExec = Util::getElapseTimeInMilliSec();
 		m_curSleepCount = 0;
 
 		addToPendingQueue(node, this);
@@ -79,7 +79,7 @@ void
 TimerActionSet::doAction(osg::Node *node)
 {
 	// Check whether elapse time from last execute exceed sleepTime
-	int timeDiff = Util::getTimeInMilliSec() - m_lastExec;
+	int timeDiff = Util::getElapseTimeInMilliSec() - m_lastExec;
 	if (timeDiff >= m_sleepTime)
 	{
 		if (m_curSleepCount < m_sleepCount)
@@ -90,7 +90,7 @@ TimerActionSet::doAction(osg::Node *node)
 			}
 
 			// Update last execute time
-			m_lastExec = Util::getTimeInMilliSec();
+			m_lastExec = Util::getElapseTimeInMilliSec();
 			m_curSleepCount++;
 
 			stringstream sstr;
@@ -114,30 +114,5 @@ TimerActionSet::doAction(osg::Node *node)
 	else
 	{
 		addToPendingQueue(node, this);
-	}
-}
-
-
-void
-TimerActionSet::addToPendingQueue(osg::Node *node, Action *action)
-{
-	ref_ptr<Scene> scene = dynamic_cast<Scene*>(node);
-	if (scene.valid())
-	{
-		ref_ptr<PendingActionCallback> callback = scene->getPendingActionCallback();
-		if (callback.valid())
-		{
-			callback->addPendingAction(this);
-		}
-		else
-		{
-			Util::log(__FUNCTION__, "No valid PendingActionCallback was registered", 2);
-		}
-
-		Util::log(__FUNCTION__, "Register action to pending queue", 5);
-	}
-	else
-	{
-		Util::log(__FUNCTION__, "Invalid scene variable", 2);
 	}
 }

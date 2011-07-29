@@ -41,13 +41,13 @@ OSGFrame::OSGFrame(wxFrame *frame, const wxString& title, const wxPoint& pos,
     attributes[5] = 8;
     attributes[6] = 0;
 
-    OSGCanvas *canvas = new OSGCanvas(this, wxID_ANY, wxDefaultPosition,
+    _canvas = new OSGCanvas(this, wxID_ANY, wxDefaultPosition,
 		wxSize(width, height), wxNO_BORDER, wxT("osgviewerWX"), attributes);
-	canvas->enableProcessKeyDownEvent(true);
+	_canvas->enableProcessKeyDownEvent(true);
 
-    GraphicsWindowWX* gw = new GraphicsWindowWX(canvas);
+    GraphicsWindowWX* gw = new GraphicsWindowWX(_canvas);
 
-    canvas->SetGraphicsWindow(gw);
+    _canvas->SetGraphicsWindow(gw);
 
 	_viewer = new osgViewer::Viewer;
     _viewer->getCamera()->setGraphicsContext(gw);

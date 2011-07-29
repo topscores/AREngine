@@ -7,24 +7,18 @@ using namespace arengine;
 
 SceneObj::SceneObj()
 {
+	m_scale = 1.0;
 	m_rotation.set(osg::Vec3d(0.0, 0.0, 0.0));
 	m_translation.set(osg::Vec3d(0.0, 0.0, 0.0));
-	m_scale = 1.0;
+	m_orgNode = NULL;
 
-	m_rotMat = new osg::MatrixTransform();
-	rotateTo(m_rotation);
+	m_scaleMat.makeScale(m_scale, m_scale, m_scale);
+	m_rotMat.makeRotate(m_rotation[0], osg::Vec3f(1, 0, 0),
+						m_rotation[1], osg::Vec3f(0, 1, 0),
+						m_rotation[2], osg::Vec3f(0, 0, 1));
+	m_transMat.makeTranslate(m_translation);
 
-	m_transMat = new osg::MatrixTransform();
-	translateTo(m_translation);
-
-	m_scaleMat = new osg::MatrixTransform();
-	scaleTo(m_scale);
-
-	m_scaleMat->addChild(m_orgNode);
-	m_rotMat->addChild(m_scaleMat);
-	m_transMat->addChild(m_rotMat);
-	
-	addChild(m_transMat);
+	updateTransformMat();
 }
 
 
@@ -33,24 +27,24 @@ SceneObj::~SceneObj()
 }
 
 
-ref_ptr<osg::MatrixTransform>
-SceneObj::getRotationMat()
+osg::Vec3d
+SceneObj::getRotation()
 {
-	return m_rotMat.get();
+	return m_rotation;
 }
 
 
-ref_ptr<osg::MatrixTransform>
-SceneObj::getTranslationMat()
+osg::Vec3d
+SceneObj::getTranslation()
 {
-	return m_transMat.get();
+	return m_translation;
 }
 
 
-ref_ptr<osg::MatrixTransform>
-SceneObj::getScaleMat()
+double
+SceneObj::getScale()
 {
-	return m_scaleMat.get();
+	return m_scale;
 }
 
 
@@ -64,77 +58,55 @@ SceneObj::getOrgNode()
 void
 SceneObj::scale(double scale)
 {
-	m_scale = m_scale * scale;
-	scaleTo(m_scale);
+	scaleTo(m_scale * scale);
 }
 
 
 void
 SceneObj::scaleTo(double scale)
 {
-	osg::Matrix mat;
 	m_scale = scale;
-	mat.makeScale(scale, scale, scale);
-	m_scaleMat->setMatrix(mat);
+	m_scaleMat.makeScale(scale, scale, scale);
+	updateTransformMat();
 }
 
 
 void
 SceneObj::translate(osg::Vec3d transVec)
 {
-	m_translation = m_translation + transVec;
-	translateTo(m_translation);
+	translateTo(m_translation + transVec);
 }
 
 
 void
 SceneObj::translateTo(osg::Vec3d transVec)
 {
-	osg::Matrix mat;
 	m_translation = transVec;
-	mat.makeTranslate(m_translation);
-	m_transMat->setMatrix(mat);
+	m_transMat.makeTranslate(m_translation);
+	updateTransformMat();
 }
+
 
 void
 SceneObj::rotate(osg::Vec3d rotVec)
 {
-	m_rotation = m_rotation + rotVec;
-	rotateTo(m_rotation);
+	rotateTo(m_rotation + rotVec);
 }
 
 
 void
 SceneObj::rotateTo(osg::Vec3d rotVec)
 {
-	osg::Matrix mat;
 	m_rotation = rotVec;
-	mat.makeRotate(m_rotation[0]*PI/180, osg::Vec3f(1, 0, 0),
-				   m_rotation[1]*PI/180, osg::Vec3f(0, 1, 0),
-				   m_rotation[2]*PI/180, osg::Vec3f(0, 0, 1));
-	m_rotMat->setMatrix(mat);
+	m_rotMat.makeRotate(m_rotation[0], osg::Vec3f(1, 0, 0),
+		m_rotation[1], osg::Vec3f(0, 1, 0),
+		m_rotation[2], osg::Vec3f(0, 0, 1));
+	updateTransformMat();
 }
 
 
 void
-SceneObj::appear(int markerId)
+SceneObj::updateTransformMat()
 {
-	//MarkerManager *pMarkerManager = (MarkerManager*) ModuleRegistry::getSingleton()->getEntry("MarkerManager");
-	//Marker *pMarker = pMarkerManager->getMarkerById(markerId);
-	//if (pMarker)
-	//{
-	//	pMarker->addAssociatedModel(getName());
-	//}
-}
-
-
-void
-SceneObj::disappear(int markerId)
-{
-	//MarkerManager *pMarkerManager = (MarkerManager*) ModuleRegistry::getSingleton()->getEntry("MarkerManager");
-	//Marker *pMarker = pMarkerManager->getMarkerById(markerId);
-	//if (pMarker)
-	//{
-	//	pMarker->removeAssociatedModel(getName());
-	//}
+	this->setMatrix(m_scaleMat*m_rotMat*m_transMat);
 }

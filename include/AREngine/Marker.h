@@ -39,6 +39,8 @@ namespace arengine
 		// objName represent name field in Model tag
 		int		addAssociatedObj(string objName);
 		void	removeAssociatedObj(string objName);
+		// remove all associate obj
+		void	removeAssociatedObj();
 
 		int		countAssociatedObj();
 

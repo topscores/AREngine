@@ -7,10 +7,6 @@ SmartSingleton<KeyboardHandler>::InstPtr SmartSingleton<KeyboardHandler>::sm_ptr
 
 KeyboardHandler::KeyboardHandler()
 {
-	for (int i = 0;i < 500;i++)
-	{
-		m_keypress[i] = false;
-	}
 }
 
 
@@ -25,7 +21,7 @@ KeyboardHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapte
 
 	switch (ea.getEventType())
 	{
-		int key;
+	int key;
 	case osgGA::GUIEventAdapter::KEYDOWN:
 		key = ea.getKey();
 		if (key != -1)
@@ -80,13 +76,5 @@ KeyboardHandler::handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapte
 bool
 KeyboardHandler::isKeyDown(int key)
 {
-	if (key >= 0 && key <= 500)
-	{
 		return m_keypress[key];
-	}
-	else
-	{
-		Util::log("Invalid keycode", 2);
-		return false;
-	}
 }

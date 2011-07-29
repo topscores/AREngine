@@ -27,6 +27,7 @@ namespace arengine
 
 		void addHUD(string name);
 		void removeHUD(string name);
+		void removeHUD();
 
 		ref_ptr<osg::Node> getHUD(int id);
 		ref_ptr<osg::Node> getHUD(string name);

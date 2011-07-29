@@ -1,19 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AREngine", "AREngine\AREngine.vcproj", "{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AREngineWX", "AREngineWX\AREngineWX.vcproj", "{319880D3-0CCE-4553-98F3-46587A8C38A2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73} = {F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ARAppWX", "ARAppWX\ARAppWX.vcproj", "{97815424-9CAB-4300-B0C7-BC18E8129218}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73} = {F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}
-		{319880D3-0CCE-4553-98F3-46587A8C38A2} = {319880D3-0CCE-4553-98F3-46587A8C38A2}
-	EndProjectSection
-EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Setup", "Setup\Setup.vdproj", "{43FD48D7-4BCF-42F7-AB29-62E15470E849}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ARAppOsgViewer", "ARAppOsgViewer\ARAppOsgViewer.vcproj", "{CCB1EED9-E028-429E-962F-5CAA311D2009}"
@@ -22,12 +9,35 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ARAppOsgViewer", "ARAppOsgV
 		{319880D3-0CCE-4553-98F3-46587A8C38A2} = {319880D3-0CCE-4553-98F3-46587A8C38A2}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ARAppWX", "ARAppWX\ARAppWX.vcproj", "{97815424-9CAB-4300-B0C7-BC18E8129218}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73} = {F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}
+		{319880D3-0CCE-4553-98F3-46587A8C38A2} = {319880D3-0CCE-4553-98F3-46587A8C38A2}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AREngine", "AREngine\AREngine.vcproj", "{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AREngineWX", "AREngineWX\AREngineWX.vcproj", "{319880D3-0CCE-4553-98F3-46587A8C38A2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73} = {F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{43FD48D7-4BCF-42F7-AB29-62E15470E849}.Debug|Win32.ActiveCfg = Debug
+		{43FD48D7-4BCF-42F7-AB29-62E15470E849}.Release|Win32.ActiveCfg = Release
+		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Debug|Win32.Build.0 = Debug|Win32
+		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Release|Win32.ActiveCfg = Release|Win32
+		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Release|Win32.Build.0 = Release|Win32
+		{97815424-9CAB-4300-B0C7-BC18E8129218}.Debug|Win32.ActiveCfg = Debug|Win32
+		{97815424-9CAB-4300-B0C7-BC18E8129218}.Debug|Win32.Build.0 = Debug|Win32
+		{97815424-9CAB-4300-B0C7-BC18E8129218}.Release|Win32.ActiveCfg = Release|Win32
+		{97815424-9CAB-4300-B0C7-BC18E8129218}.Release|Win32.Build.0 = Release|Win32
 		{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}.Debug|Win32.ActiveCfg = Debug|Win32
 		{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}.Debug|Win32.Build.0 = Debug|Win32
 		{F3BC0841-D0C5-45DC-8E3B-ACC0D07F8A73}.Release|Win32.ActiveCfg = Release|Win32
@@ -36,16 +46,6 @@ Global
 		{319880D3-0CCE-4553-98F3-46587A8C38A2}.Debug|Win32.Build.0 = Debug|Win32
 		{319880D3-0CCE-4553-98F3-46587A8C38A2}.Release|Win32.ActiveCfg = Release|Win32
 		{319880D3-0CCE-4553-98F3-46587A8C38A2}.Release|Win32.Build.0 = Release|Win32
-		{97815424-9CAB-4300-B0C7-BC18E8129218}.Debug|Win32.ActiveCfg = Debug|Win32
-		{97815424-9CAB-4300-B0C7-BC18E8129218}.Debug|Win32.Build.0 = Debug|Win32
-		{97815424-9CAB-4300-B0C7-BC18E8129218}.Release|Win32.ActiveCfg = Release|Win32
-		{97815424-9CAB-4300-B0C7-BC18E8129218}.Release|Win32.Build.0 = Release|Win32
-		{43FD48D7-4BCF-42F7-AB29-62E15470E849}.Debug|Win32.ActiveCfg = Debug
-		{43FD48D7-4BCF-42F7-AB29-62E15470E849}.Release|Win32.ActiveCfg = Release
-		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Debug|Win32.ActiveCfg = Debug|Win32
-		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Debug|Win32.Build.0 = Debug|Win32
-		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Release|Win32.ActiveCfg = Release|Win32
-		{CCB1EED9-E028-429E-962F-5CAA311D2009}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

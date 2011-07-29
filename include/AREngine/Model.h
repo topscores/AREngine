@@ -30,7 +30,7 @@ namespace arengine
 
 		string	getFileName();
 
-		void	setSize(double size);
+		virtual void setScaleFromSize(double size);
 		double	getSize();
 
 	private:
@@ -44,6 +44,9 @@ namespace arengine
 		osg::Vec3d m_orgTranslation;
 		osg::Vec3d m_orgRotation;
 		double	   m_orgSize;
+
+		ref_ptr<MatrixTransform> m_unitTransform;
+		osg::BoundingSphere m_bs;
 
 	};
 

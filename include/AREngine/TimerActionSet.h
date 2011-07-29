@@ -28,9 +28,6 @@ namespace arengine
 		virtual void doAction(osg::Node *node);
 
 	protected:
-		void addToPendingQueue(osg::Node *node, Action *action);
-
-	protected:
 		int m_sleepTime;
 		int m_sleepCount;
 		int m_curSleepCount;

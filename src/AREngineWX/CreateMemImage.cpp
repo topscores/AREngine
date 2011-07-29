@@ -16,13 +16,13 @@ CreateMemImage::operator()(const osg::Image& image, const unsigned int context_i
 	int w, h;
 	if (m_win != NULL && m_callback != NULL)
 	{
-		int time = arengine::Util::getTimeInMilliSec();
+		int time = arengine::Util::getElapseTimeInMilliSec();
 		stringstream sstr;
-		sstr << "images/" <<  time << ".png";
-		wxString fileName = wxT("images/") + wxString::Format(wxT("%i"), time) + wxT(".png");
+		sstr << "images/" <<  time << ".jpg";
+		wxString fileName = wxT("images/") + wxString::Format(wxT("%i"), time) + wxT(".jpg");
 		osgDB::writeImageFile(image, sstr.str().c_str());
 		wxImage wxImg;
-		wxImg.LoadFile(fileName, wxBITMAP_TYPE_PNG);
+		wxImg.LoadFile(fileName, wxBITMAP_TYPE_JPEG);
 		
 		//img->flipVertical();
 		//wxImg.SetData(img->data());

@@ -8,6 +8,7 @@
 #include <osg/Group>
 #include <osg/Vec3d>
 #include <osg/MatrixTransform>
+#include <osg/Matrix>
 
 #include <string>
 
@@ -23,7 +24,8 @@ namespace arengine
 		E_IMAGE
 	};
 
-	class ARENGINE_EXPORT SceneObj : public osg::Group, public arengine::NamedObj
+	class ARENGINE_EXPORT SceneObj : public osg::MatrixTransform, 
+		public arengine::NamedObj
 	{
 	public:
 		SceneObj();
@@ -35,10 +37,10 @@ namespace arengine
 		virtual string getObjName() = 0;
 		virtual EObjType getObjType() = 0;
 
-		virtual ref_ptr<osg::MatrixTransform> getRotationMat();
-		virtual ref_ptr<osg::MatrixTransform> getTranslationMat();
-		virtual ref_ptr<osg::MatrixTransform> getScaleMat();
-		virtual ref_ptr<osg::Node>			  getOrgNode();
+		virtual osg::Vec3d getRotation();
+		virtual osg::Vec3d getTranslation();
+		virtual double getScale();
+		virtual ref_ptr<osg::Node>	getOrgNode();
 
 		virtual void scale(double scale);
 		virtual void scaleTo(double scale);
@@ -46,17 +48,18 @@ namespace arengine
 		virtual void translateTo(osg::Vec3d transVec);
 		virtual void rotate(osg::Vec3d rotVec);
 		virtual void rotateTo(osg::Vec3d rotVec);
-		virtual void appear(int markerId);
-		virtual void disappear(int markerId);
+
+	protected:
+		virtual void updateTransformMat();
 
 	protected:
 		osg::Vec3d	m_translation;
 		osg::Vec3d	m_rotation;
 		double		m_scale;
 
-		osg::ref_ptr<osg::MatrixTransform> m_rotMat;
-		osg::ref_ptr<osg::MatrixTransform> m_transMat;
-		osg::ref_ptr<osg::MatrixTransform> m_scaleMat;
+		osg::Matrix m_rotMat;
+		osg::Matrix m_transMat;
+		osg::Matrix m_scaleMat;
 
 		osg::ref_ptr<osg::Node>	m_orgNode;
 	};
