@@ -139,7 +139,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib glu32.lib opengl32.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib arengine.lib arenginewx.lib $(NOINHERIT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\lib;&quot;$(OSGART_ROOT)\lib&quot;;&quot;$(OSG_ROOT)\lib&quot;;..\..\3rdparty\lib"
+				AdditionalLibraryDirectories="..\..\..\lib;&quot;$(OSGART_ROOT)\lib&quot;;&quot;$(OSG_ROOT)\lib&quot;;..\..\3rdparty\release\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
 				OptimizeReferences="2"

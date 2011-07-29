@@ -140,7 +140,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib OpenThreads.lib osg.lib osgDB.lib osgUtil.lib osgGA.lib osgViewer.lib osgText.lib glu32.lib opengl32.lib wxbase28u.lib wxmsw28u_core.lib wxmsw28u_gl.lib wxbase28u_net.lib wxpng.lib wxtiff.lib wxjpeg.lib wxzlib.lib wxregexu.lib wxexpat.lib wxmsw28u_adv.lib winmm.lib comctl32.lib rpcrt4.lib wsock32.lib arengine.lib $(NOINHERIT)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\..\..\lib;&quot;$(OSG_ROOT)\lib&quot;;&quot;$(OSGART_ROOT)\lib&quot;;&quot;$(WXWIDGET_ROOT)\lib\vc_dll&quot;;..\..\3rdparty\lib"
+				AdditionalLibraryDirectories="..\..\..\lib;&quot;$(OSG_ROOT)\lib&quot;;&quot;$(OSGART_ROOT)\lib&quot;;&quot;$(WXWIDGET_ROOT)\lib\vc_dll&quot;;..\..\3rdparty\release\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
