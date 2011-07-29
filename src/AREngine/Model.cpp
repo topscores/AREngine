@@ -66,7 +66,7 @@ Model::Model(DataNode *modelNode)
 				m_orgSize = modelNode->getAttributeAsDouble("size");
 
 				// Calculate bounding box and size
-				setSize(m_orgSize);
+				setScaleFromSize(m_orgSize);
 				scaleTo(m_scale);
 
 				m_unitTransform = new osg::MatrixTransform();
@@ -117,7 +117,7 @@ Model::getFileName()
 }
 
 void
-Model::setSize(double size)
+Model::setScaleFromSize(double size)
 {
 	if (m_orgNode.valid())
 	{

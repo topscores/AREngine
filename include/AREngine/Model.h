@@ -30,7 +30,7 @@ namespace arengine
 
 		string	getFileName();
 
-		void	setSize(double size);
+		virtual void setScaleFromSize(double size);
 		double	getSize();
 
 	private:

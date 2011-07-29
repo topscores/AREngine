@@ -23,6 +23,8 @@ namespace arengine
 	private:
 		queue<ref_ptr<Action>> m_pendingAction;
 
+		int m_checkInterval;
+		int m_lastCheckTime;
 	};
 }
 

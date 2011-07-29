@@ -2,11 +2,11 @@
 #include "arengine/CollisionChecker.h"
 #include "arengine/KeyDownChecker.h"
 #include "arengine/AppearChecker.h"
-#include "arengine/AddRemoveAction.h"
 #include "arengine/Util.h"
 #include "arengine/ActionFactory.h"
 #include "arengine/Singleton.h"
 #include "arengine/ObjPool.h"
+#include "arengine/Config.h"
 
 #include <string>
 
@@ -20,6 +20,10 @@ m_lastState(E_INVALID)
 {
 	if (callbackNode->getNodeName().compare("ConditionalCallback") == 0)
 	{
+		// How often we should check the condition
+		m_checkInterval = Singleton<Config>::getInstance()->getCheckInterval();
+		m_lastCheckTime = Util::getElapseTimeInMilliSec();
+
 		// How many times an event should be detected before declared  valid
 		int thresh = callbackNode->getAttributeAsInt("threshold");
 		m_validThresh = thresh;
@@ -69,13 +73,19 @@ m_lastState(E_INVALID)
 void
 ConditionalCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
-	if (valid(node))
+	int curTime = Util::getElapseTimeInMilliSec();
+
+	if ((curTime - m_lastCheckTime) > m_checkInterval)
 	{
-		vector<ref_ptr<Action>>::iterator actionItr;
-		for (actionItr = m_actions.begin();actionItr != m_actions.end();actionItr++)
+		m_lastCheckTime = curTime;
+		if (valid(node))
 		{
-			ref_ptr<Action> action = *actionItr;
-			action->exec(node);
+			vector<ref_ptr<Action>>::iterator actionItr;
+			for (actionItr = m_actions.begin();actionItr != m_actions.end();actionItr++)
+			{
+				ref_ptr<Action> action = *actionItr;
+				action->exec(node);
+			}
 		}
 	}
 

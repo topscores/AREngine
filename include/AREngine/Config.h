@@ -28,6 +28,7 @@ namespace arengine
 		bool	useTexture2D();
 		bool	fullScreen();
 		bool	viewStat();
+		int		getCheckInterval();
 
 	private:
 		void initReader();
@@ -46,6 +47,7 @@ namespace arengine
 		bool		  m_useTexture2D;
 		bool		  m_fullScreen;
 		bool		  m_viewStat;
+		int			  m_checkInterval;
 	};
 
 }

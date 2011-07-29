@@ -52,6 +52,9 @@ namespace arengine
 		vector<ref_ptr<ConditionChecker>> m_checkers;
 		vector<ref_ptr<Action>> m_actions;
 
+		int m_checkInterval;
+		int m_lastCheckTime;
+
 		int m_validCount;
 		int m_invalidCount;
 

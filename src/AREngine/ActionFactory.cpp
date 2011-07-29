@@ -8,6 +8,7 @@
 #include "arengine/TimerActionSet.h"
 #include "arengine/DataNode.h"
 #include "arengine/Util.h"
+#include "arengine/TransitionAction.h"
 
 #include <osg/Node>
 #include <string>
@@ -52,6 +53,10 @@ ActionFactory::newAction(DataNode *action)
 	else if (actionType == "TimerActionSet")
 	{
 		return new TimerActionSet(action);
+	}
+	else if (actionType == "TwistIn")
+	{
+		return new TwistIn(action);
 	}
 	else
 	{

@@ -36,6 +36,9 @@ namespace arengine
 		virtual void doAction(osg::Node *node) = 0;
 
 	protected:
+		virtual void addToPendingQueue(osg::Node *node, Action *action);
+
+	protected:
 		string m_name;
 		vector<ref_ptr<ActionCallback>> m_preActionCB;
 		vector<ref_ptr<ActionCallback>> m_postActionCB;

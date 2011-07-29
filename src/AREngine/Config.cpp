@@ -77,6 +77,14 @@ Config::readConfig(string fileName)
 		m_viewStat		=	rootNode->getAttributeAsBool("viewStat");
 		Util::log(__FUNCTION__, 3, "viewStat = %s", boolToString(m_viewStat));
 
+		// How often we should check the condition
+		m_checkInterval = rootNode->getAttributeAsInt("checkInterval");
+		// Default interval = 400 millisec (25 times / sec)
+		if (m_checkInterval == 0)
+		{
+			m_checkInterval = 40;
+		}
+
 		// Init ARScene, VideoBackground and Tracker
 		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 		arscene->init();
@@ -172,6 +180,13 @@ bool
 Config::viewStat()
 {
 	return m_viewStat;
+}
+
+
+int
+Config::getCheckInterval()
+{
+	return m_checkInterval;
 }
 
 

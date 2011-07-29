@@ -179,10 +179,14 @@ namespace arengine
 			}
 		}
 
-		static int getTimeInMilliSec()
+		static int getElapseTimeInMilliSec()
 		{
-			time_t milliSec = time(NULL) * 1000;
-			return (int) milliSec;
+			return (int) clock();
+		}
+
+		static int getCurrentTime()
+		{
+			return (int) time(NULL);
 		}
 
 	};
