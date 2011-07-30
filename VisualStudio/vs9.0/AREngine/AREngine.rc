@@ -54,7 +54,7 @@ END
 
 VS_VERSION_INFO VERSIONINFO
  FILEVERSION 1,0,0,1
- PRODUCTVERSION 0,8,1,0
+ PRODUCTVERSION 0,8,1,1
  FILEFLAGSMASK 0x17L
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -75,7 +75,7 @@ BEGIN
             VALUE "LegalCopyright", "Copyright (C) 2011"
             VALUE "OriginalFilename", "AREngine.dll"
             VALUE "ProductName", "AREngine Dynamic Link Library"
-            VALUE "ProductVersion", "0.81"
+            VALUE "ProductVersion", "0.811"
         END
     END
     BLOCK "VarFileInfo"
