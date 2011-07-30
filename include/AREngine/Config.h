@@ -6,6 +6,9 @@
 #include "arengine/DataNode.h"
 //#include "Action.h"
 
+#define APP_CONF(s) Config::getAppConf(s)
+#define INT_CONF(s) atoi(APP_CONF(s).c_str())
+
 #include <string>
 using namespace std;
 
@@ -30,6 +33,9 @@ namespace arengine
 		bool	viewStat();
 		int		getCheckInterval();
 
+		string	getAppConfig(string configName);
+		static string getAppConf(string configName);
+
 	private:
 		void initReader();
 
@@ -48,6 +54,8 @@ namespace arengine
 		bool		  m_fullScreen;
 		bool		  m_viewStat;
 		int			  m_checkInterval;
+
+		DataNode	 *m_appConfig;
 	};
 
 }

@@ -125,6 +125,9 @@ Config::readConfig(string fileName)
 			processSceneData(sceneNode);
 
 		}
+
+		// Get Application Specific data
+		m_appConfig = rootNode->getChild("AppConf");
 	}
 	catch (Exception err)
 	{
@@ -189,6 +192,36 @@ Config::getCheckInterval()
 	return m_checkInterval;
 }
 
+
+string
+Config::getAppConfig(string configName)
+{
+	if (m_appConfig)
+	{
+		DataNode *conf = m_appConfig->getChild(configName);
+		if (conf)
+		{
+			Util::log(__FUNCTION__, 3, "configName = %s value = %s", configName.c_str(), conf->getAttributeAsString("value").c_str());
+			return conf->getAttributeAsString("value");
+		}
+		else
+		{
+			return string(NULL);
+		}
+	}
+	else
+	{
+		return string(NULL);
+	}
+}
+
+
+string
+Config::getAppConf(std::string configName)
+{
+	Config *config = Singleton<Config>::getInstance();
+	return config->getAppConfig(configName);
+}
 
 void
 Config::initReader()
