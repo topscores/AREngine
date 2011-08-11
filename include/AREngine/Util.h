@@ -94,32 +94,32 @@ namespace arengine
 
 		static void playSound(tstring fileName, bool loop)
 		{
-			if (!fileName.empty())
-			{
-				if (loop)
-				{
-					PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_LOOP|SND_ASYNC);
-				}
-				else
-				{
-					PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_ASYNC);
-				}
-			}
+			//if (!fileName.empty())
+			//{
+			//	if (loop)
+			//	{
+			//		PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_LOOP|SND_ASYNC);
+			//	}
+			//	else
+			//	{
+			//		PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_ASYNC);
+			//	}
+			//}
 		}
 
 
 		static void stopSound(tstring fileName)
 		{
-			if (!fileName.empty())
-			{
-				PlaySound(fileName.c_str(), NULL, SND_ASYNC | SND_PURGE);
-			}
+			//if (!fileName.empty())
+			//{
+			//	PlaySound(fileName.c_str(), NULL, SND_ASYNC | SND_PURGE);
+			//}
 		}
 
 
 		static void stopAllSound()
 		{
-			PlaySound(NULL, NULL, SND_ASYNC | SND_PURGE);
+			//PlaySound(NULL, NULL, SND_ASYNC | SND_PURGE);
 		}
 
 
