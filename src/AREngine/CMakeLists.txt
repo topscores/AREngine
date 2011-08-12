@@ -1,5 +1,12 @@
 set(lib_name "AREngine")
 
+include_directories(${OSGAUDIO_INCLUDE_DIR})
+include_directories(${OPENAL_INCLUDE_DIR})
+include_directories(${ALUT_INCLUDE_DIR})
+include_directories(${VORBIS_INCLUDE_DIR})
+include_directories(${OGG_INCLUDE_DIR})
+
+
 file(GLOB lib_srcs
 	*.cpp
 )
@@ -16,19 +23,23 @@ set(lib_export
 add_library(${lib_name} SHARED ${lib_srcs} ${lib_hdrs} ${lib_export})
 
 # we are going to build a lib - tell the preprocessor
-add_definitions(-DARENGINE_LIBRARY)
+set_target_properties(AREngine 
+			PROPERTIES
+			DEFINE_SYMBOL ARENGINE_LIBRARY
+			VERSION ${ARENGINE_VERSION_MINOR}
+)
 
 # link external libs
 target_link_libraries(${lib_name} 
 	${OPENTHREADS_LIBRARY}
-	${OSG_LIBRARY} 
-	${OSGDB_LIBRARY}
-	${OSGUTIL_LIBRARY}
-	${OSGGA_LIBRARY}
-	${OSGVIEWER_LIBRARY}
-	${OSGTEXT_LIBRARY}
-	${OPENGL_LIBRARY} 
-	${GLUT_LIBRARY}
+	${OPENSCENEGRAPH_LIBRARIES}
+	${OPENGL_LIBRARIES}
 	${OSGART_LIBRARY}
 	${OSGAUDIO_LIBRARY}
 )
+
+install(FILES ${lib_hdrs} 
+		DESTINATION include/${lib_name}
+)
+
+install_arengine(AREngine)

@@ -1,7 +1,7 @@
 # Make file for AREngine
 # Modified from osgART-2.0.0-RC3 
 
-cmake_minimum_required(VERSION 2.4.7 FATAL_ERROR)
+cmake_minimum_required(VERSION 2.8.4 FATAL_ERROR)
 
 project(AREngine)
 
@@ -11,6 +11,9 @@ endif(COMMAND cmake_policy)
 
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMakeModules)
+
+# some include
+include(AREngineUtil)
 
 if(APPLE)
 	option(ARENGINE_BUILD_BUNDLES "Builds bundles and frameworks for the library and examples")
@@ -30,25 +33,23 @@ endif(WIN32)
 set(ARENGINE_VERSION_MAJOR 0)
 set(ARENGINE_VERSION_MINOR 8)
 set(ARENGINE_VERSION_PATCH 1)
-set(ARENGINE_VERSION_OPTION 1)
+set(ARENGINE_VERSION_TWEAK 1)
 
-set(ARENGINE_VERSION_FULL ${ARENGINE_VERSION_MAJOR}.${ARENGINE_VERSION_PATCH}.${ARENGINE_VERSION_PATCH}.${ARENGINE_VERSION_OPTION})
+set(ARENGINE_VERSION_FULL ${ARENGINE_VERSION_MAJOR}.${ARENGINE_VERSION_PATCH}.${ARENGINE_VERSION_PATCH}.${ARENGINE_VERSION_TWEAK})
 
 # Finding various packages
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
-
-find_package(OSGART REQUIRED)
 
 find_package(OpenThreads REQUIRED)
-find_package(osg REQUIRED)
-find_package(osgDB REQUIRED)
-find_package(osgUtil REQUIRED)
-find_package(osgGA REQUIRED)
-find_package(osgViewer REQUIRED)
-find_package(osgText REQUIRED)
+find_package(OpenSceneGraph 2.8.4 REQUIRED
+		osgDB
+		osgUtil
+		osgGA
+		osgViewer
+		osgText
+)
 
-find_package(wxWidgets REQUIRED)
+find_package(OSGART REQUIRED)
 
 find_package(OSGAUDIO REQUIRED)
 find_package(OpenAL REQUIRED)
@@ -57,24 +58,21 @@ find_package(OGG REQUIRED)
 find_package(VorbisFile REQUIRED)
 find_package(Vorbis REQUIRED)
 
-if(APPLE)
-	# darn bug in CMake: http://www.cmake.org/Bug/view.php?id=7407
-	include_directories("/${OSG_INCLUDE_DIR}")
-	include_directories("/${OSGART_INCLUDE_DIR}")
-	include_directories("/${OSGAUDIO_INCLUDE_DIR}")
-	include_directories("/${OPENAL_INCLUDE_DIR}")
-	include_directories("/${ALUT_INCLUDE_DIR}")
-	include_directories("/${VORBIS_INCLUDE_DIR}")
-	include_directories("/${OGG_INCLUDE_DIR}")
-else(APPLE)
-	include_directories(${OSG_INCLUDE_DIR})
-	include_directories(${OSGART_INCLUDE_DIR})
-	include_directories(${OSGAUDIO_INCLUDE_DIR})
-	include_directories(${OPENAL_INCLUDE_DIR})
-	include_directories(${ALUT_INCLUDE_DIR})
-	include_directories(${VORBIS_INCLUDE_DIR})
-	include_directories(${OGG_INCLUDE_DIR})
-endif(APPLE)
+find_package(wxWidgets COMPONENTS 
+		net 
+		gl 
+		core 
+		base 
+		adv
+)
+
+# Add additional include directories
+include_directories(${OPENGL_INCLUDE_DIR})
+
+include_directories(${OPENTHREADS_INCLUDE_DIR})
+include_directories(${OPENSCENEGRAPH_INCLUDE_DIRS})
+
+include_directories(${OSGART_INCLUDE_DIR})
 
 # we might want to honor the actual OSG Version
 include(parse_OSG_version)
@@ -92,10 +90,11 @@ endif(APPLE)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR}/bin)
 set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 
-install(FILES
+install(
+	FILES
 	${CMAKE_SOURCE_DIR}/README.txt
 	${CMAKE_SOURCE_DIR}/config-format.rtf
-	DESTINATION "doc"
+	DESTINATION "share/AREngine"
 )
 
 #

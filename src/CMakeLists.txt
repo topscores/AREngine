@@ -6,8 +6,7 @@ include_directories(
 	${CMAKE_SOURCE_DIR}/include 
 )
 
-#set (DIRS ARAppOsgViewer ARAppWX AREngine AREngineWX)
-set (DIRS AREngine)
+set (DIRS AREngine AREngineWX ARAppOsgViewer ARAppWX)
 
 foreach (DIR ${DIRS})
 	add_subdirectory(${DIR})
