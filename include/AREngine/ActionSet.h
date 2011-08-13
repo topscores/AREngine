@@ -27,7 +27,7 @@ namespace arengine
 
 	protected:
 		int m_actionCount;
-		vector<ref_ptr<Action>> m_actions;
+		vector< ref_ptr<Action> > m_actions;
 	};
 
 }

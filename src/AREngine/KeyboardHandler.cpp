@@ -3,7 +3,6 @@
 
 using namespace arengine;
 
-SmartSingleton<KeyboardHandler>::InstPtr SmartSingleton<KeyboardHandler>::sm_ptr;
 
 KeyboardHandler::KeyboardHandler()
 {

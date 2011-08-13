@@ -49,8 +49,8 @@ namespace arengine
 		void processActionData(DataNode *actionNode);
 
 	private:
-		vector<ref_ptr<ConditionChecker>> m_checkers;
-		vector<ref_ptr<Action>> m_actions;
+		vector< ref_ptr<ConditionChecker> > m_checkers;
+		vector< ref_ptr<Action> > m_actions;
 
 		int m_checkInterval;
 		int m_lastCheckTime;

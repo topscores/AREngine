@@ -1,7 +1,6 @@
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
-#include <windows.h>
 #include "arengine/Export"
 #include "arengine/Exception.h"
 #include "arengine/Singleton.h"
@@ -21,6 +20,11 @@ typedef wstring tstring;
 typedef string tstring;
 #endif
 
+#ifdef WIN32
+	#define SSCANF sscanf_s
+#else    
+	#define SSCANF sscanf
+#endif
 
 #define boolToString(b) (b)?"true":"false"
 namespace arengine
@@ -40,7 +44,7 @@ namespace arengine
 				if (cstr[0] == '0' && cstr[1] == 'x')
 				{
 					int hex;
-					sscanf_s(cstr+2, "%x", &hex);
+					SSCANF(cstr+2, "%x", &hex);
 					return hex;
 				}
 				else

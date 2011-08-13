@@ -2,7 +2,6 @@
 #include "arengine/Logger.h"
 using namespace arengine;
 
-Singleton<Logger>::InstPtr Singleton<Logger>::sm_ptr;
 
 Logger::Logger():
 m_log(NULL),	// Not yet initialized

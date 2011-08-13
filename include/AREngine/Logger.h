@@ -9,6 +9,7 @@ using namespace std;
 namespace arengine
 {
 
+	// This class should be access via Singleton class
 	class ARENGINE_EXPORT Logger
 	{
 	public:

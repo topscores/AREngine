@@ -21,7 +21,7 @@ namespace arengine
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
 	private:
-		queue<ref_ptr<Action>> m_pendingAction;
+		queue< ref_ptr<Action> > m_pendingAction;
 
 		int m_checkInterval;
 		int m_lastCheckTime;

@@ -1,15 +1,12 @@
 #ifndef __SINGLETON_H__
 #define __SINGLETON_H__
 
-#include "arengine/Export"
-
 namespace arengine
-{
-
-	template<class T>
-	class ARENGINE_EXPORT Singleton
+{	
+	template<typename T>
+	class Singleton
 	{
-	private:
+	private:		
 		class InstPtr
 		{
 		public:
@@ -27,7 +24,7 @@ namespace arengine
 		private:
 			T* m_ptr;
 		};
-
+		
 		static InstPtr sm_ptr;
 		Singleton();
 		Singleton(const Singleton&);
@@ -43,6 +40,8 @@ namespace arengine
 			return sm_ptr.Get();
 		}
 	};
+	
+	template <typename T> typename Singleton<T>::InstPtr Singleton<T>::sm_ptr;
 
 }
 

@@ -13,7 +13,7 @@ using namespace osg;
 
 namespace arengine
 {
-	
+	// This class should be access via SmartSingleton class
 	class ARENGINE_EXPORT ARScene : public osg::Referenced
 	{
 	public:

@@ -47,7 +47,7 @@ namespace arengine
 	public:
 		ref_ptr<osg::Camera>		m_cam;
 		ref_ptr<osgAudio::SoundRoot> m_sound_root;
-		vector<ref_ptr<Scene>>		m_scene;
+		vector< ref_ptr<Scene> >		m_scene;
 		int							m_activeSceneIdx;
 	};
 

@@ -1,15 +1,13 @@
 #ifndef __SMART_SINGLETON_H__
 #define __SMART_SINGLETON_H__
 
-#include "arengine/Export"
-
 #include <osg/Node>
 using namespace osg;
 
 namespace arengine
-{
-	template<class T>
-	class ARENGINE_EXPORT SmartSingleton
+{	
+	template<typename T>
+	class SmartSingleton
 	{
 	private:
 		class InstPtr
@@ -28,7 +26,7 @@ namespace arengine
 		private:
 			ref_ptr<T> m_ptr;
 		};
-
+		
 		static InstPtr sm_ptr;
 		SmartSingleton();
 		SmartSingleton(const SmartSingleton&);
@@ -44,6 +42,9 @@ namespace arengine
 			return sm_ptr.Get();
 		}
 	};
+	
+	template <typename T> typename SmartSingleton<T>::InstPtr SmartSingleton<T>::sm_ptr;
+
 }
 
 #endif

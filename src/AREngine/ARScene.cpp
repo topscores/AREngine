@@ -14,7 +14,6 @@
 
 using namespace arengine;
 
-SmartSingleton<ARScene>::InstPtr SmartSingleton<ARScene>::sm_ptr;
 
 ARScene::ARScene()
 {
@@ -85,15 +84,15 @@ ARScene::initVideo()
 		}
 
 		// Flip or not flip images from video before using it
-		osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();
-		if (!config->flipEnable())
-		{
-			videoConfig->deviceconfig = "Data\\WDM_camera_normal.xml";
-		}
-		else
-		{
-			videoConfig->deviceconfig = "Data\\WDM_camera_mirror.xml";
-		}
+		//osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();
+		//if (!config->flipEnable())
+		//{
+		//	videoConfig->deviceconfig = "Data/WDM_camera_normal.xml";
+		//}
+		//else
+		//{
+		//	videoConfig->deviceconfig = "Data/WDM_camera_mirror.xml";
+		//}
 	}
 	else
 	{
