@@ -22,9 +22,14 @@ namespace arengine
 		
 		// Must be called to initialize tracker and video
 		void init();
+
 		void start();
+
 		ref_ptr<osg::Node> getSceneData();
 		ref_ptr<osgART::Tracker> getTracker();
+		
+		// Important to call before the end of main
+		void destroy();
 
 	private:
 		void initVideo();

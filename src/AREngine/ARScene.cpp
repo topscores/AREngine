@@ -6,6 +6,10 @@
 #include "arengine/ObjPool.h"
 
 #include <osgDB/Readfile>
+
+#include <osgAudio/SoundManager.h>
+#include <osg/DeleteHandler>
+
 #include <osgART/GeometryUtils>
 #include <osgART/PluginManager>
 #include <osgART/VideoGeode>
@@ -38,6 +42,11 @@ ARScene::init()
 	// Set root node with global components
 	m_rootNode->initCameraMatrix(m_tracker.get());
 	m_rootNode->setVideoBackground(videoBackground);
+	
+	// Initialize sound system
+	osgAudio::SoundManager::instance()->init( 16, true );
+	osgAudio::SoundManager::instance()->getEnvironment()->setDistanceModel(osgAudio::InverseDistance);
+	osgAudio::SoundManager::instance()->getEnvironment()->setDopplerFactor(1);
 }
 
 
@@ -68,6 +77,18 @@ ARScene::getTracker()
 
 
 void
+ARScene::destroy()
+{
+	// Very important to call before end of main!
+	if (osg::Referenced::getDeleteHandler()) {
+		osg::Referenced::getDeleteHandler()->setNumFramesToRetainObjects(0);
+		osg::Referenced::getDeleteHandler()->flushAll();
+	}
+	osgAudio::SoundManager::instance()->shutdown();
+}
+
+
+void
 ARScene::initVideo()
 {
 	// Check wheter to use web camera or video file as a video source
@@ -84,15 +105,30 @@ ARScene::initVideo()
 		}
 
 		// Flip or not flip images from video before using it
-		//osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();
-		//if (!config->flipEnable())
-		//{
-		//	videoConfig->deviceconfig = "Data/WDM_camera_normal.xml";
-		//}
-		//else
-		//{
-		//	videoConfig->deviceconfig = "Data/WDM_camera_mirror.xml";
-		//}
+		osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();
+
+#ifdef WIN32
+		if (!config->flipEnable())
+		{
+			videoConfig->deviceconfig = "Data\\WDM_camera_normal.xml";
+		}
+		else
+		{
+			videoConfig->deviceconfig = "Data\\WDM_camera_mirror.xml";
+		}
+#endif
+		
+#ifdef __APPLE__
+		if (!config->flipEnable())
+		{
+			videoConfig->deviceconfig = "-nodialog";
+		}
+		else
+		{
+			videoConfig->deviceconfig = "-nodialog -fliph";
+		}
+#endif
+		
 	}
 	else
 	{

@@ -3,7 +3,6 @@
 
 #include <osgUtil/Optimizer>
 #include <osgAudio/SoundManager.h>
-#include <osg/DeleteHandler>
 
 #include <sstream>
 
@@ -15,10 +14,6 @@ ARRoot::ARRoot()
 {
 	m_activeSceneIdx = 0;
 
-	osgAudio::SoundManager::instance()->init( 16, true );
-	osgAudio::SoundManager::instance()->getEnvironment()->setDistanceModel(osgAudio::InverseDistance);
-	osgAudio::SoundManager::instance()->getEnvironment()->setDopplerFactor(1);
-
 	m_sound_root = new osgAudio::SoundRoot();
 	this->addChild(m_sound_root);
 
@@ -27,12 +22,6 @@ ARRoot::ARRoot()
 
 ARRoot::~ARRoot()
 {
-	// Very important to call before end of main!
-	if (osg::Referenced::getDeleteHandler()) {
-		osg::Referenced::getDeleteHandler()->setNumFramesToRetainObjects(0);
-		osg::Referenced::getDeleteHandler()->flushAll();
-	}
-	osgAudio::SoundManager::instance()->shutdown();
 }
 
 

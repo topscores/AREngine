@@ -29,4 +29,5 @@ int main()
 	viewer.addEventHandler(new osgViewer::WindowSizeHandler());
 	viewer.addEventHandler(SmartSingleton<KeyboardHandler>::getInstance());
 	viewer.run();
+	arscene->destroy();
 }

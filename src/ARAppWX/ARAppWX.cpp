@@ -27,6 +27,7 @@ class ARAppWX : public wxApp
 {
 public:
 	bool OnInit();
+	int OnExit();
 };
 
 
@@ -37,7 +38,7 @@ bool ARAppWX::OnInit()
 	OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
 		wxDefaultPosition, wxSize(800, 600));
 
-	LGSplashWx *splash = new LGSplashWx(wxT(".\\huds\\splash.png"));
+	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.png"));
 	splash->show();
 
 	// wxString fname(argv[1]);
@@ -81,5 +82,14 @@ bool ARAppWX::OnInit()
 
 	return true;
 }
+
+
+int
+ARAppWX::OnExit()
+{
+	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
+	arscene->destroy();
+}
+
 
 IMPLEMENT_APP(ARAppWX)
