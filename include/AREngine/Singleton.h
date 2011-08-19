@@ -3,7 +3,7 @@
 
 namespace arengine
 {	
-	template<typename T>
+	template<class T>
 	class Singleton
 	{
 	private:		
@@ -41,7 +41,7 @@ namespace arengine
 		}
 	};
 	
-	template <typename T> typename Singleton<T>::InstPtr Singleton<T>::sm_ptr;
+	template <class T> typename Singleton<T>::InstPtr Singleton<T>::sm_ptr;
 
 }
 

@@ -12,10 +12,14 @@ file(GLOB app_srcs
 
 # create an executable
 if (WIN32)
-	add_executable(${app_name} WIN32 ${app_srcs})
-else (WIN32)
-	add_executable(${app_name} ${app_srcs})
+	set(platform WIN32)
 endif (WIN32)
+
+if (APPLE)
+	set(platform MACOSX_BUNDLE)
+endif (APPLE)
+
+add_executable(${app_name} ${platform} ${app_srcs})
 
 # link external libs
 target_link_libraries(${app_name} 

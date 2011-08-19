@@ -8,7 +8,11 @@ file(GLOB app_srcs
 
 
 # create an executable
-add_executable(${app_name} ${app_srcs})
+if (APPLE)
+	set(platform MACOSX_BUNDLE)
+endif (APPLE)
+
+add_executable(${app_name} ${platform} ${app_srcs})
 
 # link external libs
 target_link_libraries(${app_name} 

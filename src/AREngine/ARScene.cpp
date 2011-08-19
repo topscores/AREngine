@@ -79,6 +79,7 @@ ARScene::getTracker()
 void
 ARScene::destroy()
 {
+	// Shutdown osgAudio
 	// Very important to call before end of main!
 	if (osg::Referenced::getDeleteHandler()) {
 		osg::Referenced::getDeleteHandler()->setNumFramesToRetainObjects(0);
@@ -103,6 +104,7 @@ ARScene::initVideo()
 		{
 			Util::log("ARScene::CreateBackgroundVideo : Could not initialize video", 1);
 		}
+
 
 		// Flip or not flip images from video before using it
 		osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();

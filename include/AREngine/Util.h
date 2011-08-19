@@ -192,6 +192,24 @@ namespace arengine
 		{
 			return (int) time(NULL);
 		}
+		
+		static string toPosixPath(string winPath)
+		{
+			string posixPath = winPath;
+			size_t index = 0;
+			while (true) {
+				/* Locate the substring to replace. */
+				index = posixPath.find("\\", index);
+				if (index == string::npos) break;
+				
+				/* Make the replacement. */
+				posixPath.replace(index, 1, "/");
+				
+				/* Advance index forward one spot so the next iteration doesn't pick it up as well. */
+				++index;
+			}
+			return posixPath;
+		}
 
 	};
 }

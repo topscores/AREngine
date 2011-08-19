@@ -142,6 +142,10 @@ DataNode::getChild(string nodeName, int index)
 void
 DataNode::addAttribute(Attribute attrib)
 {
+#ifndef WIN32
+	// Convert to unix style path
+	attrib.value = Util::toPosixPath(attrib.value);
+#endif
 	m_attribList.push_back(attrib);
 }
 

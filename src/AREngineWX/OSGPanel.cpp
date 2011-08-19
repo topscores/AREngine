@@ -54,7 +54,7 @@ OSGPanel::OSGPanel( wxWindow* parent, wxWindowID id, const wxPoint& pos,
 	_viewer->addEventHandler(SmartSingleton<KeyboardHandler>::getInstance());
 	_viewer->addEventHandler(new osgViewer::WindowSizeHandler);
 
-	//_viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+	_viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 }
 
 

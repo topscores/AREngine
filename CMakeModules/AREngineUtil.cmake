@@ -9,6 +9,7 @@ macro(install_arengine target)
 		RUNTIME DESTINATION bin
 		LIBRARY DESTINATION lib
 		ARCHIVE DESTINATION lib
+		BUNDLE DESTINATION bin
 	)
 
 endmacro(install_arengine target)

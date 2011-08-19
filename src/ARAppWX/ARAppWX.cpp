@@ -1,4 +1,5 @@
 #include "wx/wx.h"
+#include "arenginewx/OSGFrame.h"
 
 #include "arengine/Util.h"
 #include "arengine/Logger.h"
@@ -9,7 +10,6 @@
 #include "arengine/SceneObj.h"
 #include "arengine/Config.h"
 #include "arengine/Model.h"
-#include "arenginewx/OSGFrame.h"
 #include "arenginewx/LGSplashWx.h"
 
 #include <osgViewer/ViewerEventHandlers>
@@ -43,7 +43,7 @@ bool ARAppWX::OnInit()
 
 	// wxString fname(argv[1]);
 	// Initialize logger
-	Logger* logger = Singleton<Logger>::getInstance();
+	arengine::Logger* logger = Singleton<Logger>::getInstance();
 	logger->init("log.txt", 4);
 
 	// Read config file
@@ -79,6 +79,7 @@ bool ARAppWX::OnInit()
 	splash->close();
 	
 	viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+	frame->Show(true);
 
 	return true;
 }
@@ -89,6 +90,7 @@ ARAppWX::OnExit()
 {
 	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 	arscene->destroy();
+	return 0;
 }
 
 
