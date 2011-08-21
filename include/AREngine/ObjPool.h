@@ -5,7 +5,6 @@
 #include "arengine/NamedObj.h"
 #include "arengine/Action.h"
 #include "arengine/SceneObj.h"
-#include "arengine/Singleton.h"
 #include "arengine/Util.h"
 
 #include <osg/Referenced>
@@ -40,6 +39,7 @@ namespace arengine
 	};
 
 }
+
 
 using namespace arengine;
 template <class T>

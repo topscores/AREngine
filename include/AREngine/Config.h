@@ -4,7 +4,6 @@
 #include "arengine/Export"
 #include "arengine/ConfigReader.h"
 #include "arengine/DataNode.h"
-//#include "Action.h"
 
 #define APP_CONF(s) Config::getAppConf(s)
 #define INT_CONF(s) atoi(APP_CONF(s).c_str())

@@ -14,12 +14,6 @@
 
 using namespace std;
 
-#ifdef _UNICODE 
-typedef wstring tstring;
-#else
-typedef string tstring;
-#endif
-
 #ifdef WIN32
 	#define SSCANF sscanf_s
 #else    
@@ -33,6 +27,7 @@ namespace arengine
 	class ARENGINE_EXPORT Util
 	{
 	public:
+
 
 		static int makeInt(string s)
 		{
@@ -60,6 +55,7 @@ namespace arengine
 
 		}
 
+
 		static double makeDouble(string s)
 		{
 			if (s.c_str())
@@ -71,6 +67,7 @@ namespace arengine
 				return 0.0;
 			}
 		}
+
 
 		static bool makeBool(string s)
 		{
@@ -84,46 +81,18 @@ namespace arengine
 			}
 		}
 
+
 		static char newLine()
 		{
 			return '\n';
 		}
 
+	
 		static int getUniqueId()
 		{
 			static int id = 0;
 			id++;
 			return id;
-		}
-
-		static void playSound(tstring fileName, bool loop)
-		{
-			//if (!fileName.empty())
-			//{
-			//	if (loop)
-			//	{
-			//		PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_LOOP|SND_ASYNC);
-			//	}
-			//	else
-			//	{
-			//		PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_ASYNC);
-			//	}
-			//}
-		}
-
-
-		static void stopSound(tstring fileName)
-		{
-			//if (!fileName.empty())
-			//{
-			//	PlaySound(fileName.c_str(), NULL, SND_ASYNC | SND_PURGE);
-			//}
-		}
-
-
-		static void stopAllSound()
-		{
-			//PlaySound(NULL, NULL, SND_ASYNC | SND_PURGE);
 		}
 
 
@@ -132,6 +101,7 @@ namespace arengine
 			Logger *logger = Singleton<Logger>::getInstance();
 			return logger->getLogLevel();
 		}
+
 
 		static void setLogLevel(int level)
 		{
@@ -151,6 +121,7 @@ namespace arengine
 			log(sstr.str(), err.logLevel);
 		}
 
+
 		static void log(string func, int logLevel, char *fmt, ...)
 		{
 			va_list args;
@@ -161,6 +132,7 @@ namespace arengine
 			log(func, c_log, logLevel);
 		}
 
+
 		static void log(string func, string logMsg, int logLevel = 3)
 		{
 			stringstream sstr;
@@ -168,6 +140,7 @@ namespace arengine
 
 			log(sstr.str(), logLevel);
 		}
+
 
 		static void log(string logMsg, int logLevel = 3)
 		{
@@ -183,16 +156,19 @@ namespace arengine
 			}
 		}
 
+
 		static int getElapseTimeInMilliSec()
 		{
 			return (int) clock();
 		}
+
 
 		static int getCurrentTime()
 		{
 			return (int) time(NULL);
 		}
 		
+
 		static string toPosixPath(string winPath)
 		{
 			string posixPath = winPath;

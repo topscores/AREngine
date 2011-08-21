@@ -4,11 +4,9 @@
 #include "arengine/SmartSingleton.h"
 #include "arengine/Marker.h"
 #include "arengine/ObjPool.h"
+#include "arengine/SDLSoundManager.h"
 
 #include <osgDB/Readfile>
-
-#include <osgAudio/SoundManager.h>
-#include <osg/DeleteHandler>
 
 #include <osgART/GeometryUtils>
 #include <osgART/PluginManager>
@@ -33,6 +31,10 @@ ARScene::~ARScene()
 void
 ARScene::init()
 {
+	// Init sound system
+	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
+	soundMgr->initAudio();
+
 	// Create global components that will be used for all scenes
 	initVideo();
 
@@ -42,11 +44,6 @@ ARScene::init()
 	// Set root node with global components
 	m_rootNode->initCameraMatrix(m_tracker.get());
 	m_rootNode->setVideoBackground(videoBackground);
-	
-	// Initialize sound system
-	osgAudio::SoundManager::instance()->init( 16, true );
-	osgAudio::SoundManager::instance()->getEnvironment()->setDistanceModel(osgAudio::InverseDistance);
-	osgAudio::SoundManager::instance()->getEnvironment()->setDopplerFactor(1);
 }
 
 
@@ -79,13 +76,9 @@ ARScene::getTracker()
 void
 ARScene::destroy()
 {
-	// Shutdown osgAudio
-	// Very important to call before end of main!
-	if (osg::Referenced::getDeleteHandler()) {
-		osg::Referenced::getDeleteHandler()->setNumFramesToRetainObjects(0);
-		osg::Referenced::getDeleteHandler()->flushAll();
-	}
-	osgAudio::SoundManager::instance()->shutdown();
+	// Init sound system
+	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
+	soundMgr->closeAudio();
 }
 
 

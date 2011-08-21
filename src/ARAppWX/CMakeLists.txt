@@ -1,6 +1,6 @@
 set(app_name "ARAppWX")
 
-include_directories(${OSGAUDIO_INCLUDE_DIR})
+include_directories(${SDL_INCLUDE_DIR})
 
 include_directories(${wxWidgets_INCLUDE_DIRS})
 include(${wxWidgets_USE_FILE})

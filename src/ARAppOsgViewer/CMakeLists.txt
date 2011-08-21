@@ -1,6 +1,6 @@
 set(app_name "ARAppOsgViewer")
 
-include_directories(${OSGAUDIO_INCLUDE_DIR})
+include_directories(${SDL_INCLUDE_DIR})
 
 file(GLOB app_srcs
 	*.cpp
@@ -12,6 +12,7 @@ if (APPLE)
 	set(platform MACOSX_BUNDLE)
 endif (APPLE)
 
+add_definitions(-DUNICODE -D_UNICODE)
 add_executable(${app_name} ${platform} ${app_srcs})
 
 # link external libs

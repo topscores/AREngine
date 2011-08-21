@@ -1,11 +1,7 @@
 set(lib_name "AREngine")
 
-include_directories(${OSGAUDIO_INCLUDE_DIR})
-include_directories(${OPENAL_INCLUDE_DIR})
-include_directories(${ALUT_INCLUDE_DIR})
-include_directories(${VORBIS_INCLUDE_DIR})
-include_directories(${OGG_INCLUDE_DIR})
-
+include_directories(${SDL_INCLUDE_DIR})
+include_directories(${SDLMIXER_INCLUDE_DIR})
 
 file(GLOB lib_srcs
 	*.cpp
@@ -18,6 +14,8 @@ file(GLOB lib_hdrs
 set(lib_export 	
 	${CMAKE_SOURCE_DIR}/include/AREngine/Export
 )
+
+add_definitions(-DUNICODE -D_UNICODE)
 
 # create a shared library - always
 add_library(${lib_name} SHARED ${lib_srcs} ${lib_hdrs} ${lib_export})
@@ -35,7 +33,8 @@ target_link_libraries(${lib_name}
 	${OPENSCENEGRAPH_LIBRARIES}
 	${OPENGL_LIBRARIES}
 	${OSGART_LIBRARY}
-	${OSGAUDIO_LIBRARY}
+	${SDL_LIBRARY}
+	${SDLMIXER_LIBRARY}
 )
 
 install(FILES ${lib_hdrs} 

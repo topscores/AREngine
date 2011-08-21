@@ -51,12 +51,8 @@ find_package(OpenSceneGraph 2.8.4 REQUIRED
 
 find_package(OSGART REQUIRED)
 
-find_package(OSGAUDIO REQUIRED)
-find_package(OpenAL REQUIRED)
-find_package(ALUT REQUIRED)
-find_package(OGG REQUIRED)
-find_package(VorbisFile REQUIRED)
-find_package(Vorbis REQUIRED)
+find_package(SDL REQUIRED)
+find_package(SDL_mixer REQUIRED)
 
 find_package(wxWidgets COMPONENTS 
 		net 
@@ -83,7 +79,7 @@ check_osg_version(${OSG_INCLUDE_DIR}/osg/Version)
 # Mac needs these for building the examples
 if(APPLE)
     find_library(CARBON_LIBRARY Carbon REQUIRED)
-    find_library(COCOA_LIBRARY Cocoa REQUIRED)
+    #find_library(COCOA_LIBRARY Cocoa REQUIRED)
     find_library(QUICKTIME_LIBRARY QuickTime REQUIRED)
 endif(APPLE)
 
