@@ -2,6 +2,7 @@
 #define __KEYBOARD_HANDLER_H__
 
 #include "arengine/Export"
+#include "arengine/SmartSingleton.h"
 #include "arengine/Util.h"
 
 #include <osgViewer/Viewer>
@@ -19,11 +20,17 @@ namespace arengine
 	// This class should be access via Singleton class
 	class ARENGINE_EXPORT KeyboardHandler : public osgGA::GUIEventHandler
 	{ 
+	template<class KeyboardHandler> friend class SmartSingleton;
 	public:
-		KeyboardHandler();
+
 
 		bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
 		bool isKeyDown(int key);
+
+	private:
+		KeyboardHandler();
+		KeyboardHandler(const KeyboardHandler&);
+		KeyboardHandler& operator=(const KeyboardHandler&);
 
 	private:
 		map<int, bool> m_keypress;

@@ -2,6 +2,7 @@
 #define __ARSCENE_H__
 
 #include "arengine/Export"
+#include "arengine/SmartSingleton.h"
 #include "arengine/ARRoot.h"
 
 #include <osg/Node>
@@ -16,8 +17,8 @@ namespace arengine
 	// This class should be access via SmartSingleton class
 	class ARENGINE_EXPORT ARScene : public osg::Referenced
 	{
+	template<class ARScene> friend class SmartSingleton;
 	public:
-		ARScene();
 		~ARScene();
 		
 		// Must be called to initialize tracker and video
@@ -30,6 +31,11 @@ namespace arengine
 		
 		// Important to call before the end of main
 		void release();
+	
+	private:
+		ARScene();
+		ARScene(const ARScene&);
+		ARScene& operator=(const ARScene&);
 
 	private:
 		void initVideo();

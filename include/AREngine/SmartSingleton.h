@@ -13,11 +13,6 @@ using namespace osg;
 
 namespace arengine
 {
-	extern "C" 
-	{
-		extern ARENGINE_EXPORT ref_ptr<ARScene> g_arscene;
-		extern ARENGINE_EXPORT ref_ptr<KeyboardHandler> g_kbhdl;
-	}
 
 	template<class T>
 	class SmartSingleton
@@ -38,44 +33,6 @@ namespace arengine
 			return sm_ptr.get();
 		}
 	};
-	
-/*	template<>
-	class SmartSingleton<ARScene>
-	{
-	private:
-		SmartSingleton();
-		SmartSingleton(const SmartSingleton&);
-		SmartSingleton& operator=(const SmartSingleton&);
-		
-	public:
-		static ARScene* getInstance()
-		{
-			if(!g_arscene.valid())
-			{
-				g_arscene = new ARScene();
-			}
-			return g_arscene.get();
-		}
-	};
-	
-	template<>
-	class SmartSingleton<KeyboardHandler>
-	{
-	private:
-		SmartSingleton();
-		SmartSingleton(const SmartSingleton&);
-		SmartSingleton& operator=(const SmartSingleton&);
-		
-	public:
-		static KeyboardHandler* getInstance()
-		{
-			if(!g_kbhdl.valid())
-			{
-				g_kbhdl = new KeyboardHandler();
-			}
-			return g_kbhdl.get();
-		}
-	};*/
 	
 	template<class T>
 	ref_ptr<T> SmartSingleton<T>::sm_ptr;
