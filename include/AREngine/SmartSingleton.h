@@ -1,15 +1,15 @@
 #ifndef __SMART_SINGLETON_H__
 #define __SMART_SINGLETON_H__
 
-#include "arengine/Export"
+//#include "arengine/Export"
 
 #include <osg/Node>
 using namespace osg;
 
 namespace arengine
 {	
-	class ARScene;
-	class KeyboardHandler;
+	/*class ARScene;
+	class KeyboardHandler;*/
 
 	template<class T>
 	class SmartSingleton
@@ -31,10 +31,13 @@ namespace arengine
 		}
 	};
 
-	#ifndef IN_  // Note: For VC++, you can leave out the extern
+	/*#ifndef IN_  // Note: For VC++, you can leave out the extern
 		extern template class ARENGINE_EXPORT SmartSingleton<ARScene>;
 		extern template class ARENGINE_EXPORT SmartSingleton<KeyboardHandler>;
-	#endif
+	#endif*/
+	
+	template<class T>
+	ref_ptr<T> SmartSingleton<T>::sm_ptr;
 
 }
 

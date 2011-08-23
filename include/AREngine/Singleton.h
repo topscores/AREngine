@@ -1,21 +1,21 @@
 #ifndef __SINGLETON_H__
 #define __SINGLETON_H__
 
-#include "arengine/Export"
+/*#include "arengine/Export"
 
 #define ActionPool arengine::ObjPool<arengine::Action>
-#define SceneObjPool arengine::ObjPool<arengine::SceneObj>
+#define SceneObjPool arengine::ObjPool<arengine::SceneObj>*/
 
 namespace arengine
 {	
-	class Logger;
+/*	class Logger;
 	class Config;
 
 	// The definitions of ActionPool and SceneObjPool needs these classes
 	template<class T> class ObjPool;
 	class Action;
 	class SceneObj;
-	//
+	//*/
 
 	class SDLSoundManager;
 
@@ -57,13 +57,16 @@ namespace arengine
 		}
 	};
 
-	#ifndef IN_  // Note: For VC++, you can leave out the extern
+/*	#ifndef IN_  // Note: For VC++, you can leave out the extern
 		extern template class ARENGINE_EXPORT Singleton<Logger>;
 		extern template class ARENGINE_EXPORT Singleton<Config>;
 		extern template class ARENGINE_EXPORT Singleton<ActionPool>;
 		extern template class ARENGINE_EXPORT Singleton<SceneObjPool>;
 		extern template class ARENGINE_EXPORT Singleton<SDLSoundManager>;
-	#endif
+	#endif*/
+	
+	template<class T>
+	typename Singleton<T>::InstPtr Singleton<T>::sm_ptr;
 	
 }
 

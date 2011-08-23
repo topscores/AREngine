@@ -1,4 +1,4 @@
-#include "arengine/SmartSingleton.h"
+/*#include "arengine/SmartSingleton.h"
 #include "arengine/ARScene.h"
 #include "arengine/KeyboardHandler.h"
 
@@ -16,4 +16,5 @@ ARENGINE_EXPORT ref_ptr<ARScene> SmartSingleton<ARScene>::sm_ptr;
 template class ARENGINE_EXPORT SmartSingleton<KeyboardHandler>;
 template<>
 ARENGINE_EXPORT ref_ptr<KeyboardHandler> SmartSingleton<KeyboardHandler>::sm_ptr;
+*/
 

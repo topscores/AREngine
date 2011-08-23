@@ -44,7 +44,7 @@ bool ARAppWX::OnInit()
 	// wxString fname(argv[1]);
 	// Initialize logger
 	arengine::Logger* logger = Singleton<Logger>::getInstance();
-	logger->init(L"log.txt", 4);
+	logger->init("log.txt", 4, "ARAppWX");
 
 	// Read config file
 	Config *config = Singleton<Config>::getInstance();

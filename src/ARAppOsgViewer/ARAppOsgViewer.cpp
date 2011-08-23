@@ -1,3 +1,4 @@
+#include "arengine/AREngine.h"
 #include "arengine/ARScene.h"
 #include "arengine/Singleton.h"
 #include "arengine/SmartSingleton.h"
@@ -15,14 +16,17 @@ int main()
 	osgViewer::Viewer viewer;
 
 	// Initialize logger
-	Logger* logger = Singleton<Logger>::getInstance();
-	logger->init(L"log.txt", 4);
+	// Logger* logger = Singleton<Logger>::getInstance();
+	Logger* logger = AREngine::getLogger();
+	logger->init("log.txt", 4, "ARAppOsgViewer");
 
 	// Read config file
-	Config *config = Singleton<Config>::getInstance();
+	// Config *config = Singleton<Config>::getInstance();
+	Config *config = AREngine::getConfig();
 	config->readConfig("mastercv.conf");
 
-	ARScene* arscene = SmartSingleton<ARScene>::getInstance();
+	// ARScene* arscene = SmartSingleton<ARScene>::getInstance();
+	ARScene *arscene = AREngine::getARScene();
 	arscene->start();
 	viewer.setSceneData(arscene->getSceneData());
 	if (config->viewStat())

@@ -1,9 +1,19 @@
 #ifdef WIN32
 	#include <Shlobj.h>
+	#include <arengine/Util.h>	
+#endif
+
+#ifdef __APPLE__
+	#include <CoreServices/CoreServices.h>
+	#include <CoreFoundation/CoreFoundation.h>
+	#include <unistd.h>
+	#include <dlfcn.h>
+	#include "arengine/Arengine.h"
 #endif
 
 #include "arengine/Logger.h"
 using namespace arengine;
+
 
 Logger::Logger():
 m_log(NULL),	// Not yet initialized
@@ -19,7 +29,7 @@ Logger::~Logger()
 
 
 void
-Logger::init(wstring fileName, int logLevel)
+Logger::init(string fileName, int logLevel, string appName)
 {
 	if (logLevel >= 1 && logLevel <= 5)
 	{
@@ -31,16 +41,17 @@ Logger::init(wstring fileName, int logLevel)
 		m_logLevel = 3;
 	}
 
-	wstring logPath;
-	logPath.append(getLogDir());
+	string logPath;
+	logPath.append(getLogDir(appName));
 	logPath.append(fileName);
 
-#ifdef WIN32
+	m_log = fopen(logPath.c_str(), "w");
+/*#ifdef WIN32
 	DWORD err;
 	m_log	= CreateFile(logPath.c_str(), FILE_WRITE_DATA, 0, NULL,
 		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
 	err = GetLastError();
-#endif
+#endif*/
 }
 
 
@@ -53,10 +64,11 @@ Logger::log(string logMsg, int logLevel)
 	}
 	else if (logLevel <= m_logLevel)
 	{
-#ifdef WIN32
+/*#ifdef WIN32
 		DWORD n;
 		WriteFile(m_log, logMsg.c_str(), logMsg.size(), &n, NULL);
-#endif
+#endif*/
+		fprintf(m_log, "%s", logMsg.c_str());
 	}
 }
 
@@ -81,41 +93,65 @@ Logger::getLogLevel()
 void
 Logger::releaseLog()
 {
-#ifdef WIN32
-	if (m_log)
-	{
-		CloseHandle(m_log);
+	fclose(m_log);
 
-		m_log		= NULL;
-		m_logLevel	= -1;
-	}
-#endif
+	m_log		= NULL;
+	m_logLevel	= -1;
 }
 
 
-wstring
-Logger::getLogDir()
+string
+Logger::getLogDir(string appName)
 {
 #ifdef WIN32
+	HRESULT res;
 	wchar_t appDataDir[MAX_PATH], moduleFileName[MAX_PATH];
 	
-	SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, appDataDir);
-	
-	GetModuleFileName(NULL, moduleFileName, MAX_PATH);
-	wstring moduleName;
-	int ext_begin;
-	int module_begin;
-	moduleName.append(moduleFileName);
-	module_begin = moduleName.find_last_of(L"\\") + 1;
-	ext_begin = moduleName.find_last_of(L".");
-	moduleName = moduleName.substr(module_begin, ext_begin - module_begin);
+	res = SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, appDataDir);
+	if (res == E_FAIL) 
+	{
+		return "";
+	}
 
 	wstring logDir;
 	logDir.append(appDataDir);
 	logDir.append(L"\\Larngear\\");
-	logDir.append(moduleName);
+	logDir.append(Util::widen(appName));
 	logDir.append(L"\\");
 	SHCreateDirectory(NULL, logDir.c_str());
-	return logDir;
+	return Util::narrow(logDir);
 #endif
+	
+#ifdef __APPLE__
+	char homePath[1024];
+	FSRef homeRef;
+	FSFindFolder(kOnAppropriateDisk, kCurrentUserFolderType, kCreateFolder, &homeRef);
+	FSRefMakePath(&homeRef,(UInt8*) &homePath ,sizeof(homePath) );
+	
+	string logDir;
+	logDir.append(homePath);
+	if (!logDir.empty())
+	{
+		logDir.append("/");
+		logDir.append("Library/Logs/Larngear");
+		logDir.append("/");
+	}
+	else 
+	{
+		return "";
+	}
+	
+	logDir.append(appName);
+	logDir.append("/");
+	
+	string cmd;
+	cmd.append("mkdir -p ");
+	cmd.append(logDir);
+	system(cmd.c_str());
+	
+	return logDir;
+
+#endif
+	
+	return "";
 }

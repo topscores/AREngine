@@ -20,19 +20,17 @@ namespace arengine
 		Logger();
 		~Logger();
 
-		void init(wstring fileName, int logLevel);
+		void init(string fileName, int logLevel, string appName);
 		void log(string logMsg, int logLevel);
 		void setLogLevel(int logLevel);
 		int  getLogLevel();
 		void releaseLog();
 
 	private:
-		wstring getLogDir();
+		string getLogDir(string appName);
 		
 	private:
-#ifdef WIN32
-		HANDLE m_log;
-#endif
+		FILE	*m_log;
 		int		m_logLevel;
 	};
 
