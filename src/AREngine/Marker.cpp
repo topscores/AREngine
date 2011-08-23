@@ -124,7 +124,7 @@ Marker::setActive(bool active)
 void
 Marker::initMarkerMatrixCallback()
 {
-	osgART::Tracker *tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
+	ref_ptr<osgART::Tracker> tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
 	m_osgMarker = tracker->addMarker(m_initString);
 
 	if (m_osgMarker.valid())

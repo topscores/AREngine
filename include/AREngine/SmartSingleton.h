@@ -1,15 +1,48 @@
 #ifndef __SMART_SINGLETON_H__
 #define __SMART_SINGLETON_H__
 
-//#include "arengine/Export"
+#include "arengine/Export"
 
 #include <osg/Node>
 using namespace osg;
 
+
+#include "arengine/KeyboardHandler.h"
+#include "arengine/ARScene.h"
+
+/*#define SmartSingleton<ARScene>::getInstance getARScene
+#define SmartSingleton<KeyboardHandler>::getInstance getKeyboardHandler*/
+
+/*ARENGINE_EXPORT
+ref_ptr<ARScene> 
+getARScene()
+{
+	if (!g_arscene.valid())
+	{
+		g_arscene = new arengine::ARScene();
+	}
+	return g_arscene;
+}
+
+
+ARENGINE_EXPORT
+ref_ptr<KeyboardHandler> 
+getKeyboardHandler()
+{
+	if (!g_kbhdl.valid())
+	{
+		g_kbhdl = new arengine::KeyboardHandler();
+	}
+	return g_kbhdl;
+}*/
+
 namespace arengine
-{	
-	/*class ARScene;
-	class KeyboardHandler;*/
+{
+	extern "C" 
+	{
+		extern ARENGINE_EXPORT ref_ptr<ARScene> g_arscene;
+		extern ARENGINE_EXPORT ref_ptr<KeyboardHandler> g_kbhdl;
+	}
 
 	template<class T>
 	class SmartSingleton
@@ -30,11 +63,44 @@ namespace arengine
 			return sm_ptr.get();
 		}
 	};
-
-	/*#ifndef IN_  // Note: For VC++, you can leave out the extern
-		extern template class ARENGINE_EXPORT SmartSingleton<ARScene>;
-		extern template class ARENGINE_EXPORT SmartSingleton<KeyboardHandler>;
-	#endif*/
+	
+	template<>
+	class SmartSingleton<ARScene>
+	{
+	private:
+		SmartSingleton();
+		SmartSingleton(const SmartSingleton&);
+		SmartSingleton& operator=(const SmartSingleton&);
+		
+	public:
+		static ARScene* getInstance()
+		{
+			if(!g_arscene.valid())
+			{
+				g_arscene = new ARScene();
+			}
+			return g_arscene.get();
+		}
+	};
+	
+	template<>
+	class SmartSingleton<KeyboardHandler>
+	{
+	private:
+		SmartSingleton();
+		SmartSingleton(const SmartSingleton&);
+		SmartSingleton& operator=(const SmartSingleton&);
+		
+	public:
+		static KeyboardHandler* getInstance()
+		{
+			if(!g_kbhdl.valid())
+			{
+				g_kbhdl = new KeyboardHandler();
+			}
+			return g_kbhdl.get();
+		}
+	};
 	
 	template<class T>
 	ref_ptr<T> SmartSingleton<T>::sm_ptr;

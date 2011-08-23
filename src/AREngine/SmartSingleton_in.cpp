@@ -18,3 +18,10 @@ template<>
 ARENGINE_EXPORT ref_ptr<KeyboardHandler> SmartSingleton<KeyboardHandler>::sm_ptr;
 */
 
+#include "arengine/SmartSingleton.h"
+using namespace arengine;
+extern "C" 
+{
+	ARENGINE_EXPORT ref_ptr<ARScene> g_arscene;
+	ARENGINE_EXPORT ref_ptr<KeyboardHandler> g_kbhdl;
+}

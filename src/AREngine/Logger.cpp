@@ -46,12 +46,6 @@ Logger::init(string fileName, int logLevel, string appName)
 	logPath.append(fileName);
 
 	m_log = fopen(logPath.c_str(), "w");
-/*#ifdef WIN32
-	DWORD err;
-	m_log	= CreateFile(logPath.c_str(), FILE_WRITE_DATA, 0, NULL,
-		CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL );
-	err = GetLastError();
-#endif*/
 }
 
 
@@ -64,10 +58,6 @@ Logger::log(string logMsg, int logLevel)
 	}
 	else if (logLevel <= m_logLevel)
 	{
-/*#ifdef WIN32
-		DWORD n;
-		WriteFile(m_log, logMsg.c_str(), logMsg.size(), &n, NULL);
-#endif*/
 		fprintf(m_log, "%s", logMsg.c_str());
 	}
 }
