@@ -13,7 +13,7 @@ using namespace osg;
 
 namespace arengine
 {
-	
+	// This class should be access via SmartSingleton class
 	class ARENGINE_EXPORT ARScene : public osg::Referenced
 	{
 	public:
@@ -22,9 +22,14 @@ namespace arengine
 		
 		// Must be called to initialize tracker and video
 		void init();
+
 		void start();
+
 		ref_ptr<osg::Node> getSceneData();
 		ref_ptr<osgART::Tracker> getTracker();
+		
+		// Important to call before the end of main
+		void destroy();
 
 	private:
 		void initVideo();

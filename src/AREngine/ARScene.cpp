@@ -4,8 +4,10 @@
 #include "arengine/SmartSingleton.h"
 #include "arengine/Marker.h"
 #include "arengine/ObjPool.h"
+#include "arengine/SDLSoundManager.h"
 
 #include <osgDB/Readfile>
+
 #include <osgART/GeometryUtils>
 #include <osgART/PluginManager>
 #include <osgART/VideoGeode>
@@ -14,7 +16,6 @@
 
 using namespace arengine;
 
-SmartSingleton<ARScene>::InstPtr SmartSingleton<ARScene>::sm_ptr;
 
 ARScene::ARScene()
 {
@@ -30,6 +31,10 @@ ARScene::~ARScene()
 void
 ARScene::init()
 {
+	// Init sound system
+	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
+	soundMgr->initAudio();
+
 	// Create global components that will be used for all scenes
 	initVideo();
 
@@ -69,6 +74,15 @@ ARScene::getTracker()
 
 
 void
+ARScene::destroy()
+{
+	// Init sound system
+	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
+	soundMgr->closeAudio();
+}
+
+
+void
 ARScene::initVideo()
 {
 	// Check wheter to use web camera or video file as a video source
@@ -84,8 +98,11 @@ ARScene::initVideo()
 			Util::log("ARScene::CreateBackgroundVideo : Could not initialize video", 1);
 		}
 
+
 		// Flip or not flip images from video before using it
 		osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();
+
+#ifdef WIN32
 		if (!config->flipEnable())
 		{
 			videoConfig->deviceconfig = "Data\\WDM_camera_normal.xml";
@@ -94,6 +111,19 @@ ARScene::initVideo()
 		{
 			videoConfig->deviceconfig = "Data\\WDM_camera_mirror.xml";
 		}
+#endif
+		
+#ifdef __APPLE__
+		if (!config->flipEnable())
+		{
+			videoConfig->deviceconfig = "-nodialog";
+		}
+		else
+		{
+			videoConfig->deviceconfig = "-nodialog -fliph";
+		}
+#endif
+		
 	}
 	else
 	{

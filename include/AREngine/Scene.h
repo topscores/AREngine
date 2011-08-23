@@ -47,7 +47,7 @@ namespace arengine
 
 	private:
 		string					m_name;
-		vector<ref_ptr<Marker>> m_markers;
+		vector< ref_ptr<Marker> > m_markers;
 		bool					m_active;
 		ref_ptr<HUDRoot>		m_hudRoot;
 		ref_ptr<PendingActionCallback> m_pendingActionCB;

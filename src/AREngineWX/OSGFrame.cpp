@@ -42,7 +42,7 @@ OSGFrame::OSGFrame(wxFrame *frame, const wxString& title, const wxPoint& pos,
     attributes[6] = 0;
 
     _canvas = new OSGCanvas(this, wxID_ANY, wxDefaultPosition,
-		wxSize(width, height), wxNO_BORDER, wxT("osgviewerWX"), attributes);
+		wxSize(width, height), wxSUNKEN_BORDER, wxT("osgviewerWX"), attributes);
 	_canvas->enableProcessKeyDownEvent(true);
 
     GraphicsWindowWX* gw = new GraphicsWindowWX(_canvas);
@@ -55,7 +55,7 @@ OSGFrame::OSGFrame(wxFrame *frame, const wxString& title, const wxPoint& pos,
     _viewer->addEventHandler(new osgViewer::StatsHandler);
 	_viewer->addEventHandler(SmartSingleton<KeyboardHandler>::getInstance());
 	_viewer->addEventHandler(new osgViewer::WindowSizeHandler);
-    //_viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+    _viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 }
 
 

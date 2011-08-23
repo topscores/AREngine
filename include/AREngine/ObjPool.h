@@ -5,7 +5,6 @@
 #include "arengine/NamedObj.h"
 #include "arengine/Action.h"
 #include "arengine/SceneObj.h"
-#include "arengine/Singleton.h"
 #include "arengine/Util.h"
 
 #include <osg/Referenced>
@@ -23,18 +22,24 @@ namespace arengine
 {
 
 	template <class T>
-	class ObjPool : public vector<ref_ptr<T>>
+	class ObjPool
 	{
 	public:
 		ObjPool();
 		~ObjPool();
 
 		void addObj(T *obj);
+		int size();
+		ref_ptr<T> at(int i);
 		ref_ptr<T> getByName(string name);
+		
+	private:
+		vector< ref_ptr<T> > m_pool;
 
 	};
 
 }
+
 
 using namespace arengine;
 template <class T>
@@ -58,11 +63,11 @@ ObjPool<T>::addObj(T *obj)
 		string name = obj->getName();
 		if (name == "")
 		{
-			push_back(obj);
+			m_pool.push_back(obj);
 		}
 		else if(getByName(name) == NULL)
 		{
-			push_back(obj);
+			m_pool.push_back(obj);
 		}
 		else
 		{
@@ -75,13 +80,29 @@ ObjPool<T>::addObj(T *obj)
 
 
 template <class T>
+int
+ObjPool<T>::size()
+{
+	return m_pool.size();
+}
+
+
+template <class T>
+ref_ptr<T>
+ObjPool<T>::at(int i)
+{
+	return m_pool.at(i);
+}
+
+
+template <class T>
 ref_ptr<T>
 ObjPool<T>::getByName(string name)
 {
-	int n = size();
+	int n = m_pool.size();
 	for (int i = 0;i < n;i++)
 	{
-		T *obj = this->at(i);
+		T *obj = m_pool.at(i);
 		if (obj != NULL)
 		{
 			if (obj->getName() == name)

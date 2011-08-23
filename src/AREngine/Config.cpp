@@ -16,7 +16,6 @@
 
 using namespace arengine;
 
-Singleton<Config>::InstPtr Singleton<Config>::sm_ptr;
 
 Config::Config():
 m_reader(NULL)

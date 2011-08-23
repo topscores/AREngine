@@ -20,6 +20,7 @@
 using namespace std;
 using namespace osg;
 
+
 namespace arengine
 {
 
@@ -57,7 +58,7 @@ namespace arengine
 		string			m_initString;
 		ref_ptr<osgART::Marker> m_osgMarker;
 		vector<string>	m_associatedObjNames;
-		vector<ref_ptr<SceneObj>>	m_associatedObjs;
+		vector< ref_ptr<SceneObj> >	m_associatedObjs;
 
 	};
 

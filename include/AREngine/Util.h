@@ -1,7 +1,6 @@
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
-#include <windows.h>
 #include "arengine/Export"
 #include "arengine/Exception.h"
 #include "arengine/Singleton.h"
@@ -15,12 +14,11 @@
 
 using namespace std;
 
-#ifdef _UNICODE 
-typedef wstring tstring;
-#else
-typedef string tstring;
+#ifdef WIN32
+	#define SSCANF sscanf_s
+#else    
+	#define SSCANF sscanf
 #endif
-
 
 #define boolToString(b) (b)?"true":"false"
 namespace arengine
@@ -29,6 +27,7 @@ namespace arengine
 	class ARENGINE_EXPORT Util
 	{
 	public:
+
 
 		static int makeInt(string s)
 		{
@@ -40,7 +39,7 @@ namespace arengine
 				if (cstr[0] == '0' && cstr[1] == 'x')
 				{
 					int hex;
-					sscanf_s(cstr+2, "%x", &hex);
+					SSCANF(cstr+2, "%x", &hex);
 					return hex;
 				}
 				else
@@ -56,6 +55,7 @@ namespace arengine
 
 		}
 
+
 		static double makeDouble(string s)
 		{
 			if (s.c_str())
@@ -67,6 +67,7 @@ namespace arengine
 				return 0.0;
 			}
 		}
+
 
 		static bool makeBool(string s)
 		{
@@ -80,46 +81,18 @@ namespace arengine
 			}
 		}
 
+
 		static char newLine()
 		{
 			return '\n';
 		}
 
+	
 		static int getUniqueId()
 		{
 			static int id = 0;
 			id++;
 			return id;
-		}
-
-		static void playSound(tstring fileName, bool loop)
-		{
-			if (!fileName.empty())
-			{
-				if (loop)
-				{
-					PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_LOOP|SND_ASYNC);
-				}
-				else
-				{
-					PlaySound(fileName.c_str(), NULL,SND_FILENAME|SND_ASYNC);
-				}
-			}
-		}
-
-
-		static void stopSound(tstring fileName)
-		{
-			if (!fileName.empty())
-			{
-				PlaySound(fileName.c_str(), NULL, SND_ASYNC | SND_PURGE);
-			}
-		}
-
-
-		static void stopAllSound()
-		{
-			PlaySound(NULL, NULL, SND_ASYNC | SND_PURGE);
 		}
 
 
@@ -128,6 +101,7 @@ namespace arengine
 			Logger *logger = Singleton<Logger>::getInstance();
 			return logger->getLogLevel();
 		}
+
 
 		static void setLogLevel(int level)
 		{
@@ -147,6 +121,7 @@ namespace arengine
 			log(sstr.str(), err.logLevel);
 		}
 
+
 		static void log(string func, int logLevel, char *fmt, ...)
 		{
 			va_list args;
@@ -157,6 +132,7 @@ namespace arengine
 			log(func, c_log, logLevel);
 		}
 
+
 		static void log(string func, string logMsg, int logLevel = 3)
 		{
 			stringstream sstr;
@@ -164,6 +140,7 @@ namespace arengine
 
 			log(sstr.str(), logLevel);
 		}
+
 
 		static void log(string logMsg, int logLevel = 3)
 		{
@@ -179,15 +156,58 @@ namespace arengine
 			}
 		}
 
+
 		static int getElapseTimeInMilliSec()
 		{
 			return (int) clock();
 		}
 
+
 		static int getCurrentTime()
 		{
 			return (int) time(NULL);
 		}
+		
+
+		static string toPosixPath(string winPath)
+		{
+			string posixPath = winPath;
+			size_t index = 0;
+			while (true) {
+				/* Locate the substring to replace. */
+				index = posixPath.find("\\", index);
+				if (index == string::npos) break;
+				
+				/* Make the replacement. */
+				posixPath.replace(index, 1, "/");
+				
+				/* Advance index forward one spot so the next iteration doesn't pick it up as well. */
+				++index;
+			}
+			return posixPath;
+		}
+		
+#ifdef WIN32
+		static wstring widen( const string& str )
+		{
+			wostringstream wstm ;
+			const ctype<wchar_t>& ctfacet = 
+			use_facet< ctype<wchar_t> >( wstm.getloc() ) ;
+			for( size_t i=0 ; i<str.size() ; ++i ) 
+				wstm << ctfacet.widen( str[i] ) ;
+			return wstm.str() ;
+		}
+		
+		static string narrow( const wstring& str )
+		{
+			ostringstream stm ;
+			const ctype<char>& ctfacet = 
+			use_facet< ctype<char> >( stm.getloc() ) ;
+			for( size_t i=0 ; i<str.size() ; ++i ) 
+				stm << ctfacet.narrow( str[i], 0 ) ;
+			return stm.str() ;
+		}
+#endif
 
 	};
 }
