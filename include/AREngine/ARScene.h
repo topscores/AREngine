@@ -29,7 +29,7 @@ namespace arengine
 		ref_ptr<osgART::Tracker> getTracker();
 		
 		// Important to call before the end of main
-		void destroy();
+		void release();
 
 	private:
 		void initVideo();
@@ -37,7 +37,7 @@ namespace arengine
 
 		ref_ptr<osgART::Tracker> createTracker();
 
-	private:
+	public:
 		int m_activeScene;
 		ref_ptr<ARRoot>				m_rootNode;
 		ref_ptr<osgART::Tracker>	m_tracker;

@@ -61,7 +61,6 @@ ARScene::start()
 ref_ptr<osg::Node>
 ARScene::getSceneData()
 {
-	//return m_root.get();
 	return m_rootNode.get();
 }
 
@@ -74,11 +73,17 @@ ARScene::getTracker()
 
 
 void
-ARScene::destroy()
+ARScene::release()
 {
 	// Init sound system
 	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
 	soundMgr->closeAudio();
+	
+	// Need to do this to force ref_ptr to unref, otherwise will cause core dump on osx
+	// This might have something to do with static variable memory releasing in osx
+	m_rootNode = NULL;
+	m_video = NULL;
+	m_tracker = NULL;
 }
 
 

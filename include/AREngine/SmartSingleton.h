@@ -10,31 +10,6 @@ using namespace osg;
 #include "arengine/KeyboardHandler.h"
 #include "arengine/ARScene.h"
 
-/*#define SmartSingleton<ARScene>::getInstance getARScene
-#define SmartSingleton<KeyboardHandler>::getInstance getKeyboardHandler*/
-
-/*ARENGINE_EXPORT
-ref_ptr<ARScene> 
-getARScene()
-{
-	if (!g_arscene.valid())
-	{
-		g_arscene = new arengine::ARScene();
-	}
-	return g_arscene;
-}
-
-
-ARENGINE_EXPORT
-ref_ptr<KeyboardHandler> 
-getKeyboardHandler()
-{
-	if (!g_kbhdl.valid())
-	{
-		g_kbhdl = new arengine::KeyboardHandler();
-	}
-	return g_kbhdl;
-}*/
 
 namespace arengine
 {
@@ -64,7 +39,7 @@ namespace arengine
 		}
 	};
 	
-	template<>
+/*	template<>
 	class SmartSingleton<ARScene>
 	{
 	private:
@@ -100,7 +75,7 @@ namespace arengine
 			}
 			return g_kbhdl.get();
 		}
-	};
+	};*/
 	
 	template<class T>
 	ref_ptr<T> SmartSingleton<T>::sm_ptr;

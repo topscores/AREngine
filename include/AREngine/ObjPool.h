@@ -29,6 +29,7 @@ namespace arengine
 		~ObjPool();
 
 		void addObj(T *obj);
+		void release();
 		int size();
 		ref_ptr<T> at(int i);
 		ref_ptr<T> getByName(string name);
@@ -75,6 +76,18 @@ ObjPool<T>::addObj(T *obj)
 			sstr << "Object \"" << obj->getName() << "\" is already in pool ";
 			Util::log(__FUNCTION__, sstr.str().c_str(), 2);
 		}
+	}
+}
+
+
+template <class T>
+void
+ObjPool<T>::release()
+{
+	int n  = m_pool.size();
+	for (int i = 0;i < n;i++)
+	{
+		m_pool[i] = NULL;
 	}
 }
 
