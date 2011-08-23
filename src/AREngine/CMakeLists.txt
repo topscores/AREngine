@@ -24,7 +24,6 @@ add_library(${lib_name} SHARED ${lib_srcs} ${lib_hdrs} ${lib_export})
 set_target_properties(AREngine 
 			PROPERTIES
 			DEFINE_SYMBOL ARENGINE_LIBRARY
-			VERSION ${ARENGINE_VERSION_MINOR}
 )
 
 # link external libs
