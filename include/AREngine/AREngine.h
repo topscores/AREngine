@@ -6,6 +6,7 @@
 #include "arengine/Logger.h"
 #include "arengine/Config.h"
 #include "arengine/ARScene.h"
+#include "arengine/KeyboardHandler.h"
 
 namespace arengine
 {
@@ -13,9 +14,17 @@ namespace arengine
 	class ARENGINE_EXPORT AREngine
 	{
 	public:
+		static void init(string appName,
+						 string logFileName, 
+						 int logLevel,
+						 string configFileName);
+		
 		static Logger* getLogger();
 		static Config* getConfig();
 		static ARScene* getARScene();
+		static KeyboardHandler* getKeyboardHandler();
+		
+		static void release();
 	};
 	
 }

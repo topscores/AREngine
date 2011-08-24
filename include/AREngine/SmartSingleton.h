@@ -10,39 +10,9 @@ using namespace osg;
 #include "arengine/KeyboardHandler.h"
 #include "arengine/ARScene.h"
 
-/*#define SmartSingleton<ARScene>::getInstance getARScene
-#define SmartSingleton<KeyboardHandler>::getInstance getKeyboardHandler*/
-
-/*ARENGINE_EXPORT
-ref_ptr<ARScene> 
-getARScene()
-{
-	if (!g_arscene.valid())
-	{
-		g_arscene = new arengine::ARScene();
-	}
-	return g_arscene;
-}
-
-
-ARENGINE_EXPORT
-ref_ptr<KeyboardHandler> 
-getKeyboardHandler()
-{
-	if (!g_kbhdl.valid())
-	{
-		g_kbhdl = new arengine::KeyboardHandler();
-	}
-	return g_kbhdl;
-}*/
 
 namespace arengine
 {
-	extern "C" 
-	{
-		extern ARENGINE_EXPORT ref_ptr<ARScene> g_arscene;
-		extern ARENGINE_EXPORT ref_ptr<KeyboardHandler> g_kbhdl;
-	}
 
 	template<class T>
 	class SmartSingleton
@@ -61,44 +31,6 @@ namespace arengine
 				sm_ptr = new T();
 			}
 			return sm_ptr.get();
-		}
-	};
-	
-	template<>
-	class SmartSingleton<ARScene>
-	{
-	private:
-		SmartSingleton();
-		SmartSingleton(const SmartSingleton&);
-		SmartSingleton& operator=(const SmartSingleton&);
-		
-	public:
-		static ARScene* getInstance()
-		{
-			if(!g_arscene.valid())
-			{
-				g_arscene = new ARScene();
-			}
-			return g_arscene.get();
-		}
-	};
-	
-	template<>
-	class SmartSingleton<KeyboardHandler>
-	{
-	private:
-		SmartSingleton();
-		SmartSingleton(const SmartSingleton&);
-		SmartSingleton& operator=(const SmartSingleton&);
-		
-	public:
-		static KeyboardHandler* getInstance()
-		{
-			if(!g_kbhdl.valid())
-			{
-				g_kbhdl = new KeyboardHandler();
-			}
-			return g_kbhdl.get();
 		}
 	};
 	
