@@ -1,0 +1,52 @@
+#
+# CPack template for AREngine
+#
+
+include(InstallRequiredSystemLibraries)
+
+set(CPACK_PACKAGE_NAME "AREngine")
+set(CPACK_PACKAGE_VENDOR "Larngear Technology")
+
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "AREngine for ${CMAKE_GENERATOR} is a high level development library for AR applications")
+
+set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/README.txt")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_SOURCE_DIR}/LICENSE.txt")
+
+set(CPACK_PACKAGE_VERSION_MAJOR "0")
+set(CPACK_PACKAGE_VERSION_MINOR "8")
+set(CPACK_PACKAGE_VERSION_PATCH "1")
+
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "AREngine SDK")
+
+set(CPACK_PACKAGE_EXECUTABLES "ARAppOsgViewer;Example using AREngine with standard osgViewer;ARAppWX;Example using AREngine with wxWidgets")
+
+if(WIN32)
+
+	#
+	# For MSVC compilers (and probably others) we need to copy the runtime
+	# to the plugins folder as well
+	# 
+	install(FILES ${CMAKE_INSTALL_SYSTEM_RUNTIME_LIBS}
+		DESTINATION bin)
+		
+	set(CPACK_NSIS_MENU_LINKS
+		"bin" "AREngine application folder"
+		"share/AREngine" "AREngine extras folder"
+		"share/AREngine/README.txt" "AREngine ReadMe"
+		"share/AREngine/LICENSE.txt" "AREngine GPL3 License"
+		"http://www.learngears.com" "Learngears website"
+    )
+	
+	set(CPACK_NSIS_HELP_LINK "http:\\\\\\\\www.learngears.com")
+	set(CPACK_NSIS_URL_INFO_ABOUT "http:\\\\\\\\www.learngears.com")
+	set(CPACK_NSIS_CONTACT "info@larngeartech.com")
+ 	set(CPACK_NSIS_DISPLAY_NAME "AREngine SDK")
+	
+else(WIN32)
+	if   (APPLE)
+		set(CPACK_GENERATOR "PackageMaker;STGZ")
+		INCLUDE(CPack)
+	endif(APPLE)
+endif(WIN32)	
+	
+include(CPack)

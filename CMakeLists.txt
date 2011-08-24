@@ -89,6 +89,7 @@ set(LIBRARY_OUTPUT_PATH ${CMAKE_BINARY_DIR}/lib)
 install(
 	FILES
 	${CMAKE_SOURCE_DIR}/README.txt
+	${CMAKE_SOURCE_DIR}/LICENSE.txt
 	${CMAKE_SOURCE_DIR}/config-format.rtf
 	DESTINATION "share/AREngine"
 )
@@ -108,3 +109,16 @@ configure_file(
   
 add_custom_target(uninstall
   "${CMAKE_COMMAND}" -P "${CMAKE_CURRENT_BINARY_DIR}/cmake_uninstall.cmake")
+
+#
+# Optional packaging for AREngine
+#
+option(ARENGINE_BUILD_PACKAGE "Build distribution packages" OFF)
+if   (ARENGINE_BUILD_PACKAGE)
+	configure_file(
+		${CMAKE_SOURCE_DIR}/CMakeModules/Packaging.cmake.in
+		${CMAKE_BINARY_DIR}/.cpack/ARENGINEPackaging.cmake	
+		@ONLY
+	)		
+	include(${CMAKE_BINARY_DIR}/.cpack/ARENGINEPackaging.cmake)			
+endif (ARENGINE_BUILD_PACKAGE)

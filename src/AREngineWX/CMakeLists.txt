@@ -38,3 +38,43 @@ install(FILES ${lib_hdrs}
 )
 
 install_arengine(AREngineWX)
+
+#
+# Optional SDK packaging (default is on)
+#
+if(WIN32)		
+	option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
+	if(ARENGINE_BUILD_SDK)		
+		# wxWidgets
+		install(
+			DIRECTORY ${wxWidgets_INCLUDE_DIRS}
+			DESTINATION "."
+		)
+
+		install(
+			DIRECTORY ${wxWidgets_LIB_DIR}/${wxWidgets_CONFIGURATION}
+			DESTINATION "lib"
+		)
+
+		file(GLOB wxlibs
+			${wxWidgets_LIB_DIR}/*.lib
+		)
+		install(
+			FILES ${wxlibs}
+			DESTINATION "lib"
+		)
+
+		file(GLOB wxdlls
+			${wxWidgets_LIB_DIR}/*.dll
+		)
+		install(
+			FILES ${wxdlls}
+			DESTINATION "lib"
+		)
+		install(
+			FILES ${wxdlls}
+			DESTINATION "bin"
+		)
+
+	endif(ARENGINE_BUILD_SDK)
+endif(WIN32)
