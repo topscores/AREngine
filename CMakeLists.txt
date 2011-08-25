@@ -15,10 +15,6 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/CMakeModules)
 # some include
 include(AREngineUtil)
 
-if(APPLE)
-	option(ARENGINE_BUILD_BUNDLES "Builds bundles and frameworks for the library and examples")
-endif(APPLE)
-
 #
 # Check if somebody wants to build in-tree
 #
@@ -92,6 +88,12 @@ install(
 	${CMAKE_SOURCE_DIR}/LICENSE.txt
 	${CMAKE_SOURCE_DIR}/config-format.rtf
 	DESTINATION "share/AREngine"
+)
+
+install(
+	DIRECTORY
+	${CMAKE_SOURCE_DIR}/bin
+	DESTINATION "."
 )
 
 #

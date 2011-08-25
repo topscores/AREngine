@@ -40,6 +40,10 @@ install(FILES ${lib_hdrs}
 		DESTINATION include/${lib_name}
 )
 
+install(FILES ${lib_export} 
+		DESTINATION include/${lib_name}
+)
+
 install_arengine(AREngine)
 
 #
