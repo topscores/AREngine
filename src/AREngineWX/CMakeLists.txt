@@ -42,9 +42,9 @@ install_arengine(AREngineWX)
 #
 # Optional SDK packaging (default is on)
 #
-if(WIN32)		
-	option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
-	if(ARENGINE_BUILD_SDK)		
+option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
+if(ARENGINE_BUILD_SDK)		
+	if(WIN32)		
 		# wxWidgets
 		install(
 			DIRECTORY ${wxWidgets_INCLUDE_DIRS}
@@ -75,6 +75,13 @@ if(WIN32)
 			FILES ${wxdlls}
 			DESTINATION "bin"
 		)
-
-	endif(ARENGINE_BUILD_SDK)
-endif(WIN32)
+	else(WIN32)
+		if (APPLE)
+			FIND_PATH(wxWidgets_ROOT_DIR include/wx/wx.h)
+			install(
+				DIRECTORY ${wxWidgets_ROOT_DIR}/
+				DESTINATION "."
+			)
+		endif (APPLE)
+	endif(WIN32)
+endif(ARENGINE_BUILD_SDK)

@@ -45,21 +45,21 @@ install_arengine(AREngine)
 #
 # Optional SDK packaging (default is on)
 #
-if(WIN32)		
-	option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
-	if(ARENGINE_BUILD_SDK)		
-		# OSG
-		install(
-			DIRECTORY "${OSG_INCLUDE_DIR}/../"
-			DESTINATION "."
-		)
+option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
+if(ARENGINE_BUILD_SDK)
+	# OSG
+	install(
+		DIRECTORY "${OSG_INCLUDE_DIR}/../"
+		DESTINATION "."
+	)
 
-		# OSGART
-		install(
-			DIRECTORY "${OSGART_INCLUDE_DIR}/../"
-			DESTINATION "."
-		)
+	# OSGART
+	install(
+		DIRECTORY "${OSGART_INCLUDE_DIR}/../"
+		DESTINATION "."
+	)
 
+	if(WIN32)		
 		# SDL
 		install(
 			DIRECTORY "${SDL_INCLUDE_DIR}"
@@ -103,9 +103,20 @@ if(WIN32)
 			FILES ${sdlmixerdlls}
 			DESTINATION "bin"
 		)
-	endif(ARENGINE_BUILD_SDK)
-endif(WIN32)
 
+	else(WIN32)
+		if (APPLE)
+			install(
+				DIRECTORY "${SDL_INCLUDE_DIR}/../"
+				DESTINATION "framework/SDL.framework"
+			)
+			install(
+				DIRECTORY "${SDLMIXER_INCLUDE_DIR}/../"
+				DESTINATION "framework/SDL_mixer.framework"
+			)
+		endif (APPLE)
+	endif(WIN32)
+endif(ARENGINE_BUILD_SDK)
 
 
 
