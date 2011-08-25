@@ -1,6 +1,7 @@
 #include "wx/wx.h"
 #include "arenginewx/OSGFrame.h"
 
+#include "arengine/AREngine.h"
 #include "arengine/Util.h"
 #include "arengine/Logger.h"
 #include "arengine/ARScene.h"
@@ -41,15 +42,9 @@ bool ARAppWX::OnInit()
 	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.png"));
 	splash->show();
 
-	// wxString fname(argv[1]);
-	// Initialize logger
-	arengine::Logger* logger = Singleton<Logger>::getInstance();
-	logger->init("log.txt", 4, "ARAppWX");
-
-	// Read config file
-	Config *config = Singleton<Config>::getInstance();
-	config->readConfig("mastercv.conf");
-
+	AREngine::init("ARAppWX", "log.txt", 4, "mastercv.conf");
+	Config *config = AREngine::getConfig();
+	
 	splash->SetMainFrame(frame, config->fullScreen());
 	
 	osgViewer::Viewer *viewer = frame->getViewer();
@@ -67,7 +62,7 @@ bool ARAppWX::OnInit()
 	//viewer->setSceneData(obj);
 
 	// load the scene.
-	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
+	ref_ptr<ARScene> arscene = AREngine::getARScene();
 	viewer->setSceneData(arscene->getSceneData().get());
 	if (config->viewStat())
 	{
@@ -80,6 +75,7 @@ bool ARAppWX::OnInit()
 	
 	viewer->setCameraManipulator(new osgGA::TrackballManipulator);
 	frame->Show(true);
+	
 
 	return true;
 }
@@ -88,8 +84,7 @@ bool ARAppWX::OnInit()
 int
 ARAppWX::OnExit()
 {
-	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
-	arscene->destroy();
+	AREngine::release();
 	return 0;
 }
 

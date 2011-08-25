@@ -2,6 +2,7 @@
 #define __OBJ_POOL_H__
 
 #include "arengine/Export"
+#include "arengine/Singleton.h"
 #include "arengine/NamedObj.h"
 #include "arengine/Action.h"
 #include "arengine/SceneObj.h"
@@ -24,14 +25,20 @@ namespace arengine
 	template <class T>
 	class ObjPool
 	{
+	template<class T> friend class Singleton;
 	public:
-		ObjPool();
 		~ObjPool();
 
 		void addObj(T *obj);
+		void release();
 		int size();
 		ref_ptr<T> at(int i);
 		ref_ptr<T> getByName(string name);
+
+	private:
+		ObjPool();
+		ObjPool(const ObjPool&);
+		ObjPool& operator=(const ObjPool&);
 		
 	private:
 		vector< ref_ptr<T> > m_pool;
@@ -75,6 +82,18 @@ ObjPool<T>::addObj(T *obj)
 			sstr << "Object \"" << obj->getName() << "\" is already in pool ";
 			Util::log(__FUNCTION__, sstr.str().c_str(), 2);
 		}
+	}
+}
+
+
+template <class T>
+void
+ObjPool<T>::release()
+{
+	int n  = m_pool.size();
+	for (int i = 0;i < n;i++)
+	{
+		m_pool[i] = NULL;
 	}
 }
 

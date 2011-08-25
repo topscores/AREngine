@@ -2,6 +2,7 @@
 #define __CONFIG_H__
 
 #include "arengine/Export"
+#include "arengine/Singleton.h"
 #include "arengine/ConfigReader.h"
 #include "arengine/DataNode.h"
 
@@ -17,8 +18,8 @@ namespace arengine
 	// This class should be access via Singleton class
 	class ARENGINE_EXPORT Config
 	{
+	template<class Config> friend class Singleton;
 	public:
-		Config();
 		~Config();
 
 		void readConfig(string fileName);
@@ -35,6 +36,11 @@ namespace arengine
 
 		string	getAppConfig(string configName);
 		static string getAppConf(string configName);
+
+	private:
+		Config();
+		Config(const Config&);
+		Config& operator=(const Config&);
 
 	private:
 		void initReader();

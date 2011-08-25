@@ -6,18 +6,18 @@
 #endif 
 
 #include "arengine/Export"
-#include <string>
+#include "arengine/Singleton.h"
 
+#include <string>
 using namespace std;
 
 namespace arengine
 {
-
 	// This class should be access via Singleton class
 	class ARENGINE_EXPORT Logger
 	{
+	template<class Logger> friend class Singleton;
 	public:
-		Logger();
 		~Logger();
 
 		void init(string fileName, int logLevel, string appName);
@@ -25,6 +25,11 @@ namespace arengine
 		void setLogLevel(int logLevel);
 		int  getLogLevel();
 		void releaseLog();
+
+	private:
+		Logger();
+		Logger(const Logger&);
+		Logger& operator=(const Logger&);
 
 	private:
 		string getLogDir(string appName);
