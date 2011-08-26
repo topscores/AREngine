@@ -21,7 +21,7 @@ add_definitions(-DUNICODE -D_UNICODE)
 add_library(${lib_name} SHARED ${lib_srcs} ${lib_hdrs} ${lib_export})
 
 # we are going to build a lib - tell the preprocessor
-set_target_properties(AREngine 
+set_target_properties(${lib_name} 
 			PROPERTIES
 			DEFINE_SYMBOL ARENGINE_LIBRARY
 )
@@ -40,4 +40,87 @@ install(FILES ${lib_hdrs}
 		DESTINATION include/${lib_name}
 )
 
+install(FILES ${lib_export} 
+		DESTINATION include/${lib_name}
+)
+
 install_arengine(AREngine)
+
+#
+# Optional SDK packaging (default is on)
+#
+option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
+if(ARENGINE_BUILD_SDK)
+	# OSG
+	install(
+		DIRECTORY "${OSG_INCLUDE_DIR}/../"
+		DESTINATION "."
+	)
+
+	# OSGART
+	install(
+		DIRECTORY "${OSGART_INCLUDE_DIR}/../"
+		DESTINATION "."
+	)
+
+	if(WIN32)		
+		# SDL
+		install(
+			DIRECTORY "${SDL_INCLUDE_DIR}"
+			DESTINATION "."
+		)
+
+		file(GLOB sdllibs
+			${SDL_INCLUDE_DIR}/../lib/*.lib
+		)
+		install(
+			FILES ${sdllibs}
+			DESTINATION "lib"
+		)
+
+		file(GLOB sdldlls
+			${SDL_INCLUDE_DIR}/../lib/*.dll
+		)
+		install(
+			FILES ${sdldlls}
+			DESTINATION "bin"
+		)
+
+		# SDLMIXER
+		install(
+			DIRECTORY "${SDLMIXER_INCLUDE_DIR}"
+			DESTINATION "."
+		)
+
+		file(GLOB sdlmixerlibs
+			${SDLMIXER_INCLUDE_DIR}/../lib/*.lib
+		)
+		install(
+			FILES ${sdlmixerlibs}
+			DESTINATION "lib"
+		)
+
+		file(GLOB sdlmixerdlls
+			${SDLMIXER_INCLUDE_DIR}/../lib/*.dll
+		)
+		install(
+			FILES ${sdlmixerdlls}
+			DESTINATION "bin"
+		)
+
+	else(WIN32)
+		if (APPLE)
+			install(
+				DIRECTORY "${SDL_INCLUDE_DIR}/../"
+				DESTINATION "framework/SDL.framework"
+			)
+			install(
+				DIRECTORY "${SDLMIXER_INCLUDE_DIR}/../"
+				DESTINATION "framework/SDL_mixer.framework"
+			)
+		endif (APPLE)
+	endif(WIN32)
+endif(ARENGINE_BUILD_SDK)
+
+
+
