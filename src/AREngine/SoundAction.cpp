@@ -11,7 +11,7 @@ StartSound::StartSound(DataNode *soundNode)
 {
 	if (soundNode->getNodeName() == "StartSound")
 	{
-		m_soundName	= soundNode->getAttributeAsString("soundName");
+		m_soundName	= soundNode->getAttributeAsPath("soundName");
 		
 		// Default is no loop
 		m_loop	=	soundNode->getAttributeAsBool("loop");
@@ -41,7 +41,7 @@ StopSound::StopSound(DataNode *soundNode)
 {
 	if (soundNode->getNodeName() == "StopSound")
 	{
-		m_soundName	= soundNode->getAttributeAsString("soundName");
+		m_soundName	= soundNode->getAttributeAsPath("soundName");
 		
 		string pauseType	= soundNode->getAttributeAsString("pauseType");
 		if (pauseType.empty())

@@ -33,6 +33,9 @@ Config::readConfig(string fileName)
 {
 	initReader();
 	try {
+#ifdef __APPLE__
+		fileName = Util::getNativePath(fileName);
+#endif
 		DataNode *rootNode = m_reader->readConfigFile(fileName);
 		if (rootNode == NULL)
 		{

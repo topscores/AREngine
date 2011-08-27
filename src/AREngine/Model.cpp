@@ -39,7 +39,7 @@ Model::Model(DataNode *modelNode)
 
 			if (!modelNode->getAttributeAsString("fileName").empty())
 			{
-				m_fileName	= modelNode->getAttributeAsString("fileName");
+				m_fileName	= modelNode->getAttributeAsPath("fileName");
 				m_orgNode   = osgDB::readNodeFile(m_fileName);
 				if (!m_orgNode)
 				{

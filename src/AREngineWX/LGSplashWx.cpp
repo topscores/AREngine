@@ -1,5 +1,7 @@
+#include "arengine/Util.h"
 #include "arenginewx/LGSplashWx.h"
 
+using namespace arengine;
 using namespace arenginewx;
 
 BEGIN_EVENT_TABLE(LGSplashWx, wxEvtHandler)
@@ -7,8 +9,16 @@ BEGIN_EVENT_TABLE(LGSplashWx, wxEvtHandler)
 END_EVENT_TABLE()
 
 LGSplashWx::LGSplashWx(wxString bitmapName)
-:m_mainFrame(NULL), m_fullscreen(false), m_bitmapName(bitmapName)
+:m_mainFrame(NULL), m_fullscreen(false)
 {
+#ifdef WIN32
+	m_bitmapName = bitmapName;
+#endif 
+	
+#ifdef __APPLE__
+	string nativePath = Util::getNativePath(bitmapName.mb_str().data());
+	m_bitmapName = wxString(nativePath.c_str(), wxConvUTF8);
+#endif
 }
 
 

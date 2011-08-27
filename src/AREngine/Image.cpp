@@ -37,7 +37,7 @@ m_tex(NULL)
 			m_objName.append(s);
 		}
 
-		m_imageFileName = imageNode->getAttributeAsString("fileName");
+		m_imageFileName = imageNode->getAttributeAsPath("fileName");
 
 		if (!m_imageFileName.empty())
 		{

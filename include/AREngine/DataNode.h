@@ -42,6 +42,7 @@ namespace arengine
 		// If the index specified was out of range return reference to the first attribute in list
 		Attribute&	getAttribute(int index);
 		string		getAttributeAsString(string name);
+		string		getAttributeAsPath(string name);
 		int			getAttributeAsInt(string name);
 		double		getAttributeAsDouble(string name);
 		bool		getAttributeAsBool(string name);

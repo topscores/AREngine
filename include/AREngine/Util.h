@@ -20,6 +20,10 @@ using namespace std;
 	#define SSCANF sscanf
 #endif
 
+#ifdef __APPLE__
+	#include <CoreFoundation/CFBundle.h>
+#endif
+
 #define boolToString(b) (b)?"true":"false"
 namespace arengine
 {
@@ -169,23 +173,57 @@ namespace arengine
 		}
 		
 
-		static string toPosixPath(string winPath)
+		static string getNativePath(string path)
 		{
-			string posixPath = winPath;
+			string nativePath = path;
 			size_t index = 0;
 			while (true) {
 				/* Locate the substring to replace. */
-				index = posixPath.find("\\", index);
+				index = nativePath.find("\\", index);
 				if (index == string::npos) break;
 				
 				/* Make the replacement. */
-				posixPath.replace(index, 1, "/");
+				nativePath.replace(index, 1, "/");
 				
 				/* Advance index forward one spot so the next iteration doesn't pick it up as well. */
 				++index;
 			}
-			return posixPath;
+
+#ifdef __APPLE__
+			nativePath = getBundleResourcePath(nativePath);
+#endif
+
+			return nativePath;
 		}
+		
+/*		static bool isPath(string s)
+		{
+			int i;
+			double f;
+			i = atoi(s.c_str());
+			
+			// If it is not a numeric value
+			if (i != 0)
+			{
+				int index = s.find(".", 0);
+			
+				// There is no "." , assume this is not a file path
+				if (index == string::npos)
+				{
+					return false;
+				}
+				else 
+				{
+					f = atof(s.c_str());
+					return true;
+				}
+			}
+			else 
+			{
+				return false;
+			}
+
+		}*/
 		
 #ifdef WIN32
 		static wstring widen( const string& str )
@@ -207,6 +245,15 @@ namespace arengine
 				stm << ctfacet.narrow( str[i], 0 ) ;
 			return stm.str() ;
 		}
+#endif
+
+#ifdef __APPLE__
+	private:
+		static CFBundleRef mainBundle;
+
+	public:
+		static bool initBundleLoading();
+		static string getBundleResourcePath(string fileName);
 #endif
 
 	};
