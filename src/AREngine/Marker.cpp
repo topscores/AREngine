@@ -30,9 +30,6 @@ Marker::Marker(DataNode *markerNode)
 		m_markerName = markerNode->getAttributeAsString("name");
 
 		m_initString = markerNode->getAttributeAsString("initString");
-		FILE *fout = fopen("/Users/topscores/log.txt", "a");
-		fprintf(fout, "m_initString = %s\n", m_initString.c_str());
-		fflush(fout);
 #ifdef __APPLE__
 		// Init string syntax eg. initString=single;data\logo_gear.patt;80;0;0
 		// We need to extract the second part and convert to native path
@@ -41,20 +38,14 @@ Marker::Marker(DataNode *markerNode)
 		char *initStringPart[5];
 		char str[100];
 		sprintf(str, "%s", m_initString.c_str());
-		fprintf(fout, "str = %s\n", str);
-		fflush(fout);
 		pch = strtok(str, ";");
 		while (pch != NULL)
 		{
 			initStringPart[i] = pch;
-			fprintf(fout, "part[%d] = %s\n", i, initStringPart[i]);
-			fflush(fout);
 			pch = strtok(NULL, ";");
 			i++;
 		}
 		string nativePath = Util::getNativePath(string(initStringPart[1]));
-		fprintf(fout, "nativePath = %s\n", nativePath.c_str());
-		fflush(fout);
 		m_initString="";
 		m_initString.append(initStringPart[0]);
 		m_initString.append(";");
@@ -65,9 +56,6 @@ Marker::Marker(DataNode *markerNode)
 		m_initString.append(initStringPart[3]);
 		m_initString.append(";");
 		m_initString.append(initStringPart[4]);
-		fprintf(fout, "m_initString = %s\n", m_initString.c_str());
-		fclose(fout);
-		
 #endif
 		if (m_initString.empty())
 		{
