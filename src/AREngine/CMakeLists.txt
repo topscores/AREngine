@@ -110,12 +110,13 @@ if(ARENGINE_BUILD_SDK)
 
 	else(WIN32)
 		if (APPLE)
+			# SDL_INCLUDE_DIR = Library/Frameworks/SDL.framework/Versions/Current/Headers
 			install(
-				DIRECTORY "${SDL_INCLUDE_DIR}/../"
+				DIRECTORY "${SDL_INCLUDE_DIR}/../../../"
 				DESTINATION "framework/SDL.framework"
 			)
 			install(
-				DIRECTORY "${SDLMIXER_INCLUDE_DIR}/../"
+				DIRECTORY "${SDLMIXER_INCLUDE_DIR}/../../../"
 				DESTINATION "framework/SDL_mixer.framework"
 			)
 		endif (APPLE)

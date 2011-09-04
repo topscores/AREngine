@@ -215,7 +215,7 @@ ARScene::createTracker()
 		osg::ref_ptr<osgART::Calibration> calibration = tracker->getOrCreateCalibration();
 
 		// load a calibration file
-		if (!calibration->load(std::string("data/camera_para.dat"))) 
+		if (!calibration->load(Util::getNativePath("data/camera_para.dat"))) 
 		{
 
 			// the calibration file was non-existing or couldnt be loaded
