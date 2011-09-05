@@ -15,11 +15,11 @@ using namespace std;
 namespace arengine
 {
 
-	class ARENGINE_EXPORT StartSound : public Action
+	class ARENGINE_EXPORT StartSoundAction : public Action
 	{
 	public:
-		StartSound(DataNode *soundNode);
-		~StartSound();
+		StartSoundAction(DataNode *soundNode);
+		~StartSoundAction();
 		
 		virtual void doAction(osg::Node *node);
 
@@ -28,11 +28,11 @@ namespace arengine
 		bool m_loop;
 	};
 
-	class ARENGINE_EXPORT StopSound : public Action
+	class ARENGINE_EXPORT StopSoundAction : public Action
 	{
 	public:
-		StopSound(DataNode *soundNode);
-		~StopSound();
+		StopSoundAction(DataNode *soundNode);
+		~StopSoundAction();
 
 		virtual void doAction(osg::Node *node);
 

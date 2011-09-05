@@ -3,6 +3,7 @@
 #include "arengine/Action.h"
 #include "arengine/AddRemoveAction.h"
 #include "arengine/SoundAction.h"
+#include "arengine/ResetAnimationAction.h"
 #include "arengine/ActionSet.h"
 #include "arengine/CircularActionSet.h"
 #include "arengine/TimerActionSet.h"
@@ -36,11 +37,15 @@ ActionFactory::newAction(DataNode *action)
 	}
 	else if (actionType == "StartSound")
 	{
-		return new StartSound(action);
+		return new StartSoundAction(action);
 	}
 	else if (actionType == "StopSound")
 	{
-		return new StopSound(action);
+		return new StopSoundAction(action);
+	}
+	else if (actionType == "ResetAnimation")
+	{
+		return new ResetAnimationAction(action);
 	}
 	else if (actionType == "ActionSet")
 	{

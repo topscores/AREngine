@@ -6,7 +6,7 @@
 using namespace std;
 using namespace arengine;
 
-StartSound::StartSound(DataNode *soundNode)
+StartSoundAction::StartSoundAction(DataNode *soundNode)
 :Action(soundNode)
 {
 	if (soundNode->getNodeName() == "StartSound")
@@ -23,20 +23,20 @@ StartSound::StartSound(DataNode *soundNode)
 }
 
 
-StartSound::~StartSound()
+StartSoundAction::~StartSoundAction()
 {
 }
 
 
 void
-StartSound::doAction(osg::Node *node)
+StartSoundAction::doAction(osg::Node *node)
 {
 	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
 	soundMgr->play(m_soundName, m_loop);
 }
 
 //==================================
-StopSound::StopSound(DataNode *soundNode)
+StopSoundAction::StopSoundAction(DataNode *soundNode)
 :Action(soundNode)
 {
 	if (soundNode->getNodeName() == "StopSound")
@@ -65,13 +65,13 @@ StopSound::StopSound(DataNode *soundNode)
 }
 
 
-StopSound::~StopSound()
+StopSoundAction::~StopSoundAction()
 {
 }
 
 
 void
-StopSound::doAction(osg::Node *node)
+StopSoundAction::doAction(osg::Node *node)
 {
 	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
 
