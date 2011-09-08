@@ -3,7 +3,7 @@
 #include "arengine/Action.h"
 #include "arengine/AddRemoveAction.h"
 #include "arengine/SoundAction.h"
-#include "arengine/ResetAnimationAction.h"
+#include "arengine/ManipulateAnimationAction.h"
 #include "arengine/ActionSet.h"
 #include "arengine/CircularActionSet.h"
 #include "arengine/TimerActionSet.h"
@@ -12,12 +12,9 @@
 #include "arengine/TransitionAction.h"
 
 #include <osg/Node>
-#include <string>
-#include <sstream>
 
 using namespace arengine;
 using namespace osg;
-using namespace std;
 
 
 ref_ptr<Action> 
@@ -43,9 +40,9 @@ ActionFactory::newAction(DataNode *action)
 	{
 		return new StopSoundAction(action);
 	}
-	else if (actionType == "ResetAnimation")
+	else if (actionType == "ManipulateAnimation")
 	{
-		return new ResetAnimationAction(action);
+		return new ManipulateAnimationAction(action);
 	}
 	else if (actionType == "ActionSet")
 	{
@@ -65,8 +62,6 @@ ActionFactory::newAction(DataNode *action)
 	}
 	else
 	{
-		stringstream sstr;
-		sstr << "Unknow action \"" << actionType << "\"";
-		Util::log(__FUNCTION__, sstr.str().c_str(), 2);
+		Util::log(__FUNCTION__, 2, "Unknown action\"%s\"", actionType);
 	}
 }

@@ -5,7 +5,6 @@
 #include "arengine/KeyboardHandler.h"
 #include "arengine/Logger.h"
 #include "arengine/Config.h"
-#include "arengine/ResetAnimationAction.h"
 
 #include <osgViewer/Viewer>
 #include <osgViewer/ViewerEventHandlers>
@@ -18,10 +17,7 @@ int main()
 	osgViewer::Viewer viewer;
 	ref_ptr<ARScene> arscene = AREngine::getARScene();
 	arscene->start();
-	ref_ptr<osg::Node> root = arscene->getSceneData();
-	root->accept(ResetSequenceVisitor());
-	root->accept(ResetAnimationPathVisitor());
-	viewer.setSceneData(root.get());
+	viewer.setSceneData(arscene->getSceneData());
 	Config *config = AREngine::getConfig();
 	if (config->viewStat())
 	{
