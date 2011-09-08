@@ -73,7 +73,8 @@ AppearChecker::conditionValid(osg::Node *node)
 		return true;
 	}
 	// Found hud on scene
-	else if (m_scene->getHUDRoot()->getHUD(m_objName) != NULL)
+	else if (!m_objName.empty()
+		&& m_scene->getHUDRoot()->getHUD(m_objName) != NULL)
 	{
 		stringstream sstr;
 		sstr << "hud " << m_objName << " is visible";
