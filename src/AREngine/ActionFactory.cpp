@@ -62,6 +62,6 @@ ActionFactory::newAction(DataNode *action)
 	}
 	else
 	{
-		Util::log(__FUNCTION__, 2, "Unknown action\"%s\"", actionType);
+		Util::log(__FUNCTION__, 2, "Unknown action\"%s\"", actionType.c_str());
 	}
 }

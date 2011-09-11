@@ -20,7 +20,7 @@ ManipulateSequenceVisitor::ManipulateSequenceVisitor(string manipulateType)
 		&& m_manipulateType != "pause"
 		&& m_manipulateType != "resume")
 	{
-		Util::log(__FUNCTION__, 2, "Unsupport manipulationType:\"%s\"", m_manipulateType);
+		Util::log(__FUNCTION__, 2, "Unsupport manipulationType:\"%s\"", m_manipulateType.c_str());
 	}
 }
 
@@ -56,7 +56,7 @@ ManipulateAnimationPathVisitor::ManipulateAnimationPathVisitor(string manipulate
 		&& m_manipulateType != "pause"
 		&& m_manipulateType != "resume")
 	{
-		Util::log(__FUNCTION__, 2, "Unsupport manipulationType:\"%s\"", m_manipulateType);
+		Util::log(__FUNCTION__, 2, "Unsupport manipulationType:\"%s\"", m_manipulateType.c_str());
 	}
 }
 
@@ -141,7 +141,7 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 			if (obj.valid())
 			{
 				manipulateAnim(obj.get());
-				Util::log(__FUNCTION__, 3, "Manipulate animation on %s with command \"%s\"", m_objName, m_manipulateType);
+				Util::log(__FUNCTION__, 3, "Manipulate animation on %s with command \"%s\"", m_objName.c_str(), m_manipulateType.c_str());
 			}
 		}
 		// Manipulate all active animation on marker
@@ -152,7 +152,7 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 			{
 				manipulateAnim((m_marker->getAssociatedObj(i)).get());
 			}
-			Util::log(__FUNCTION__, 3, "Manipulate animation on marker %s with command \"%s\"", m_markerName, m_manipulateType);
+			Util::log(__FUNCTION__, 3, "Manipulate animation on marker %s with command \"%s\"", m_markerName.c_str(), m_manipulateType.c_str());
 		}
 	}
 	// Reset animation on specific obj
@@ -174,7 +174,20 @@ ManipulateAnimationAction::manipulateAnim(SceneObj *obj)
 {
 	if (obj)
 	{
-		obj->accept(ManipulateSequenceVisitor(m_manipulateType));
-		obj->accept(ManipulateAnimationPathVisitor(m_manipulateType));
+		/*if (m_manipulateType == "stop")
+		{
+			obj->accept(ManipulateSequenceVisitor("start"));
+			obj->accept(ManipulateAnimationPathVisitor("start"));
+
+			obj->accept(ManipulateSequenceVisitor("stop"));
+			obj->accept(ManipulateAnimationPathVisitor("stop"));
+		}
+		else
+		{*/
+        ManipulateSequenceVisitor msv(m_manipulateType);
+        ManipulateAnimationPathVisitor mapv(m_manipulateType);
+			obj->accept(msv);
+			obj->accept(mapv);
+		//}
 	}
 }
