@@ -1,12 +1,19 @@
 #ifndef __UTIL_H__
 #define __UTIL_H__
 
+#ifdef WIN32
+#include <Windows.h>
+#include <stdio.h>
+#endif
+
 #include "arengine/Export"
 #include "arengine/Exception.h"
 #include "arengine/Singleton.h"
 #include "arengine/Logger.h"
 
 #include <time.h>
+#include <direct.h>
+#include <sys/stat.h>
 #include <stdarg.h>
 
 #include <string>
@@ -15,13 +22,13 @@
 using namespace std;
 
 #ifdef WIN32
-	#define SSCANF sscanf_s
+#define SSCANF sscanf_s
 #else    
-	#define SSCANF sscanf
+#define SSCANF sscanf
 #endif
 
 #ifdef __APPLE__
-	#include <CoreFoundation/CFBundle.h>
+#include <CoreFoundation/CFBundle.h>
 #endif
 
 #define boolToString(b) (b)?"true":"false"
@@ -91,7 +98,7 @@ namespace arengine
 			return '\n';
 		}
 
-	
+
 		static int getUniqueId()
 		{
 			static int id = 0;
@@ -171,7 +178,7 @@ namespace arengine
 		{
 			return (int) time(NULL);
 		}
-		
+
 
 		static string getNativePath(string path)
 		{
@@ -181,10 +188,10 @@ namespace arengine
 				/* Locate the substring to replace. */
 				index = nativePath.find("\\", index);
 				if (index == string::npos) break;
-				
+
 				/* Make the replacement. */
 				nativePath.replace(index, 1, "/");
-				
+
 				/* Advance index forward one spot so the next iteration doesn't pick it up as well. */
 				++index;
 			}
@@ -195,52 +202,23 @@ namespace arengine
 
 			return nativePath;
 		}
-		
-/*		static bool isPath(string s)
-		{
-			int i;
-			double f;
-			i = atoi(s.c_str());
-			
-			// If it is not a numeric value
-			if (i != 0)
-			{
-				int index = s.find(".", 0);
-			
-				// There is no "." , assume this is not a file path
-				if (index == string::npos)
-				{
-					return false;
-				}
-				else 
-				{
-					f = atof(s.c_str());
-					return true;
-				}
-			}
-			else 
-			{
-				return false;
-			}
 
-		}*/
-		
 #ifdef WIN32
 		static wstring widen( const string& str )
 		{
 			wostringstream wstm ;
 			const ctype<wchar_t>& ctfacet = 
-			use_facet< ctype<wchar_t> >( wstm.getloc() ) ;
+				use_facet< ctype<wchar_t> >( wstm.getloc() ) ;
 			for( size_t i=0 ; i<str.size() ; ++i ) 
 				wstm << ctfacet.widen( str[i] ) ;
 			return wstm.str() ;
 		}
-		
+
 		static string narrow( const wstring& str )
 		{
 			ostringstream stm ;
 			const ctype<char>& ctfacet = 
-			use_facet< ctype<char> >( stm.getloc() ) ;
+				use_facet< ctype<char> >( stm.getloc() ) ;
 			for( size_t i=0 ; i<str.size() ; ++i ) 
 				stm << ctfacet.narrow( str[i], 0 ) ;
 			return stm.str() ;
@@ -255,7 +233,112 @@ namespace arengine
 		static bool initBundleLoading();
 		static string getBundleResourcePath(string fileName);
 #endif
+	public:
+		// Check for program integrity
+		static bool isValidImage()
+		{
+			int imageHash;
+			FILE *imgid = fopen("imgid", "r");
+			if (imgid)
+			{
+				fscanf(imgid, "%d", &imageHash);
+				return imageHash == getImageHash();
+			}
+			else
+			{
+				return false;
+			}
+		}
 
+		static int getImageHash(string appPath = "")
+		{
+			int confHash = getConfHash(appPath + "mastercv.conf");
+			int modelHash = getFolderHash(appPath + "models");
+			int hudHash = getFolderHash(appPath + "huds");
+			int uiHash = getFolderHash(appPath + "ui");
+			int soundHash = getFolderHash(appPath + "sounds");
+			return confHash + modelHash + hudHash + uiHash + soundHash;
+		}
+
+	private:
+		static int getFolderHash(string folder)
+		{
+#ifdef WIN32
+			bool working = true;
+			wstring buffer;
+			int folderHash = 0;
+
+			WIN32_FIND_DATA file;
+			string searchLocation;
+			searchLocation.append(folder);
+			searchLocation.append("\\*.*");
+			HANDLE hFolder=FindFirstFile(widen(searchLocation).c_str(), &file);
+
+			if(hFolder != INVALID_HANDLE_VALUE)
+			{
+				buffer = file.cFileName;
+
+				while(working)
+				{
+					FindNextFile(hFolder, &file);
+					if(file.cFileName != buffer)
+					{
+						buffer = file.cFileName;
+						string absPath;
+						absPath.append(folder);
+						absPath.append("\\");
+						absPath.append(narrow(file.cFileName));
+						folderHash += getFileHash(absPath);
+					}
+					else
+					{
+						//end of files reached
+						working=false;
+					}
+
+				}
+			}
+			return folderHash;
+#endif
+
+		}
+
+		static int getFileHash(string file)
+		{
+			struct stat filestatus;
+			stat(file.c_str(), &filestatus);
+			return filestatus.st_size % 100000000;
+		}
+
+		static int getConfHash(string file)
+		{
+			FILE *conf = fopen(file.c_str(), "r");
+			string s("");
+			if (conf)
+			{
+				while (!feof(conf))
+				{
+					char buff[256];
+					fgets(buff, 256, conf);
+					s.append(buff);
+				}
+			}
+			fclose(conf);
+			return hashFunc(s);
+		}
+
+		static int hashFunc(const string &s)
+		{
+			int InitialFNV = 2166136261;
+			int FNVMultiple = 16777619;
+			int hash = InitialFNV;
+			for(int i = 0; i < s.length(); i++)
+			{
+				hash = hash ^ (s[i]); /* xor the low 8 bits */
+				hash = (hash * FNVMultiple)%100000000; /* multiply by the magic number */
+			}
+			return hash;
+		}
 	};
 }
 #endif
