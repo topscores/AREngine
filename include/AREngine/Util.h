@@ -12,7 +12,6 @@
 #include "arengine/Logger.h"
 
 #include <time.h>
-#include <direct.h>
 #include <sys/stat.h>
 #include <stdarg.h>
 
@@ -28,6 +27,7 @@ using namespace std;
 #endif
 
 #ifdef __APPLE__
+#include <dirent.h>
 #include <CoreFoundation/CFBundle.h>
 #endif
 
@@ -237,11 +237,11 @@ namespace arengine
 		// Check for program integrity
 		static bool isValidImage()
 		{
-			int imageHash;
+			unsigned int imageHash;
 			FILE *imgid = fopen("imgid", "r");
 			if (imgid)
 			{
-				fscanf(imgid, "%d", &imageHash);
+				fscanf(imgid, "%u", &imageHash);
 				return imageHash == getImageHash();
 			}
 			else
@@ -250,23 +250,28 @@ namespace arengine
 			}
 		}
 
-		static int getImageHash(string appPath = "")
+		static unsigned int getImageHash(string appPath = "")
 		{
-			int confHash = getConfHash(appPath + "mastercv.conf");
-			int modelHash = getFolderHash(appPath + "models");
-			int hudHash = getFolderHash(appPath + "huds");
-			int uiHash = getFolderHash(appPath + "ui");
-			int soundHash = getFolderHash(appPath + "sounds");
+			unsigned int confHash = getConfHash(appPath + "mastercv.conf");
+			unsigned int modelHash = getFolderHash(appPath + "models");
+			unsigned int hudHash = getFolderHash(appPath + "huds");
+			unsigned int uiHash = getFolderHash(appPath + "ui");
+			unsigned int soundHash = getFolderHash(appPath + "sounds");
+			//printf("confHash = %u\n", confHash);
+			//printf("modelHash = %u\n", modelHash);
+			//printf("hudHash = %u\n", hudHash);
+			//printf("uiHash = %u\n", uiHash);
+			//printf("soundHash = %u\n", soundHash);
 			return confHash + modelHash + hudHash + uiHash + soundHash;
 		}
 
 	private:
-		static int getFolderHash(string folder)
+		static unsigned int getFolderHash(string folder)
 		{
 #ifdef WIN32
 			bool working = true;
 			wstring buffer;
-			int folderHash = 0;
+			unsigned int folderHash = 0u;
 
 			WIN32_FIND_DATA file;
 			string searchLocation;
@@ -284,11 +289,16 @@ namespace arengine
 					if(file.cFileName != buffer)
 					{
 						buffer = file.cFileName;
-						string absPath;
-						absPath.append(folder);
-						absPath.append("\\");
-						absPath.append(narrow(file.cFileName));
-						folderHash += getFileHash(absPath);
+						if ((file.cFileName != wstring(L"."))
+							&&(file.cFileName != wstring(L"..")))
+						{
+							string absPath;
+							absPath.append(folder);
+							absPath.append("\\");
+							absPath.append(narrow(file.cFileName));
+							folderHash += getFileHash(absPath);
+							//printf("folder \"%s\" hash = %u\n", absPath.c_str(), getFileHash(absPath));
+						}
 					}
 					else
 					{
@@ -298,19 +308,47 @@ namespace arengine
 
 				}
 			}
+			else {
+				//Util::log(__FUNCTION__, 2, "Folder \"%s\" does not exist", folder.c_str());
+			}
+
 			return folderHash;
 #endif
 
+#ifdef __APPLE__
+			unsigned int folderHash = 0u;
+			DIR *dp;
+			struct dirent *dirp;
+			if((dp  = opendir(folder.c_str())) == NULL) {
+				//Util::log(__FUNCTION__, 2, "Folder \"%s\" does not exist", folder.c_str());
+				return folderHash;
+			}
+
+			while ((dirp = readdir(dp)) != NULL) {
+				if (strcmp(dirp->d_name, ".") != 0 
+					&& strcmp(dirp->d_name, "..") != 0)
+				{
+					string absPath;
+					absPath.append(folder);
+					absPath.append("/");
+					absPath.append(dirp->d_name);
+					folderHash += getFileHash(absPath);
+					//printf("folder \"%s\" hash = %u\n", absPath.c_str(), getFileHash(absPath));
+				}
+			}
+			closedir(dp);
+			return folderHash;
+#endif
 		}
 
-		static int getFileHash(string file)
+		static unsigned int getFileHash(string file)
 		{
 			struct stat filestatus;
 			stat(file.c_str(), &filestatus);
 			return filestatus.st_size % 100000000;
 		}
 
-		static int getConfHash(string file)
+		static unsigned int getConfHash(string file)
 		{
 			FILE *conf = fopen(file.c_str(), "r");
 			string s("");
@@ -327,15 +365,15 @@ namespace arengine
 			return hashFunc(s);
 		}
 
-		static int hashFunc(const string &s)
+		static unsigned int hashFunc(const string &s)
 		{
-			int InitialFNV = 2166136261;
-			int FNVMultiple = 16777619;
-			int hash = InitialFNV;
+			unsigned int InitialFNV = 2166136261u;
+			unsigned int FNVMultiple = 16777619u;
+			unsigned int hash = InitialFNV;
 			for(int i = 0; i < s.length(); i++)
 			{
 				hash = hash ^ (s[i]); /* xor the low 8 bits */
-				hash = (hash * FNVMultiple)%100000000; /* multiply by the magic number */
+				hash = hash * FNVMultiple; /* multiply by the magic number */
 			}
 			return hash;
 		}
