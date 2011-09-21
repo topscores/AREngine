@@ -59,6 +59,7 @@ Logger::log(string logMsg, int logLevel)
 	else if (logLevel <= m_logLevel)
 	{
 		fprintf(m_log, "%s", logMsg.c_str());
+		fflush(m_log);
 	}
 }
 
