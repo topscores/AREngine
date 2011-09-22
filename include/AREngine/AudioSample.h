@@ -24,6 +24,7 @@ namespace arengine
 		Sample(string soundName)
 		{
 			m_soundName = soundName;
+			m_state = E_STOP;
 		}
 
 		virtual void play(bool loop) = 0;
@@ -32,10 +33,11 @@ namespace arengine
 		virtual void resume() = 0;
 		virtual void pause() = 0;
 
-		virtual ESampleState getState(){return E_STOP;}
+		virtual ESampleState getState(){return m_state;}
 
 	protected:
 		string	m_soundName;
+		ESampleState m_state;
 	};
 
 	class ARENGINE_EXPORT WavSample : public Sample
@@ -51,7 +53,7 @@ namespace arengine
 		virtual void resume();
 		virtual void pause();
 
-		virtual ESampleState getState();
+		// virtual ESampleState getState();
 
 	protected:
 		Mix_Chunk *m_chunk;

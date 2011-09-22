@@ -2,8 +2,9 @@
 #define __UTIL_H__
 
 #ifdef WIN32
-#include <Windows.h>
+#include <windows.h>
 #include <stdio.h>
+#include <time.h>
 #endif
 
 #include "arengine/Export"
@@ -11,7 +12,7 @@
 #include "arengine/Singleton.h"
 #include "arengine/Logger.h"
 
-#include <time.h>
+
 #include <sys/stat.h>
 #include <stdarg.h>
 
@@ -28,6 +29,7 @@ using namespace std;
 
 #ifdef __APPLE__
 #include <dirent.h>
+#include <sys/time.h>
 #include <CoreFoundation/CFBundle.h>
 #endif
 
@@ -170,13 +172,15 @@ namespace arengine
 
 		static int getElapseTimeInMilliSec()
 		{
+#ifdef WIN32
 			return (int) clock();
-		}
-
-
-		static int getCurrentTime()
-		{
-			return (int) time(NULL);
+#elif __APPLE__
+			struct timeval t_now;
+			gettimeofday(&t_now, NULL);
+			
+			int now = (int)((t_now.tv_sec * 1000) + (t_now.tv_usec / 1000));
+			return now;
+#endif
 		}
 
 
