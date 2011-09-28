@@ -22,7 +22,11 @@
 using namespace std;
 
 #ifdef WIN32
+#if _MSC_VER < 1400
+#define SSCANF sscanf
+#else
 #define SSCANF sscanf_s
+#endif
 #else    
 #define SSCANF sscanf
 #endif
