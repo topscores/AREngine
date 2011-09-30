@@ -1,6 +1,8 @@
 #ifndef __OSGART_FRAME_H__
 #define __OSGART_FRAME_H__
 
+#include "wx/wx.h"
+
 #include "arenginewx/Export"
 #include "arenginewx/OSGCanvas.h"
 
@@ -23,6 +25,7 @@ namespace arenginewx
 		void setViewer(osgViewer::Viewer *viewer);
 		osgViewer::Viewer* getViewer();
 
+	private:
 		void OnIdle(wxIdleEvent& event);
 
 	private:

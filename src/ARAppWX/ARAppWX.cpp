@@ -1,5 +1,6 @@
 #include "wx/wx.h"
 #include "arenginewx/OSGFrame.h"
+#include "arenginewx/CameraCtrlFrame.h"
 
 #include "arengine/AREngine.h"
 #include "arengine/Util.h"
@@ -36,8 +37,11 @@ public:
 bool ARAppWX::OnInit()
 {
 	// Create the main frame window
-	OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
+	//OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
+	//	wxDefaultPosition, wxSize(800, 600));
+	OSGFrame *frame = new CameraCtrlFrame(NULL, wxT("wxWidgets OSG Sample"),
 		wxDefaultPosition, wxSize(800, 600));
+
 
 	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.png"));
 	splash->show();

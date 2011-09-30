@@ -2,9 +2,9 @@
 #define __UTIL_H__
 
 #ifdef WIN32
-#include <windows.h>
-#include <stdio.h>
-#include <time.h>
+#	include <windows.h>
+#	include <stdio.h>
+#	include <time.h>
 #endif
 
 #include "arengine/Export"
@@ -22,19 +22,19 @@
 using namespace std;
 
 #ifdef WIN32
-#if _MSC_VER < 1400
-#define SSCANF sscanf
-#else
-#define SSCANF sscanf_s
-#endif
+#	if _MSC_VER < 1400
+#		define SSCANF sscanf
+#	else
+#		define SSCANF sscanf_s
+#	endif
 #else    
-#define SSCANF sscanf
+#	define SSCANF sscanf
 #endif
 
 #ifdef __APPLE__
-#include <dirent.h>
-#include <sys/time.h>
-#include <CoreFoundation/CFBundle.h>
+#	include <dirent.h>
+#	include <sys/time.h>
+#	include <CoreFoundation/CFBundle.h>
 #endif
 
 #define boolToString(b) (b)?"true":"false"
