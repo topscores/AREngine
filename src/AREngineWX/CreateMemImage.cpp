@@ -1,9 +1,13 @@
 #include "arenginewx/CreateMemImage.h"
 #include "arengine/Util.h"
+
+#include <sstream>
 #include <osgDB/WriteFile>
 
+using namespace std;
 using namespace osg;
 using namespace arenginewx;
+
 
 CreateMemImage::CreateMemImage(wxWindow *win, ProcessCaptureImageCallback *callback,
 							   int width, int height)

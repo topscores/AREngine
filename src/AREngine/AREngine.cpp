@@ -4,6 +4,7 @@
 #include "arengine/ObjPool.h"
 #include "arengine/Action.h"
 #include "arengine/SceneObj.h"
+#include "arengine/Util.h"
 
 using namespace arengine;
 
@@ -62,5 +63,9 @@ AREngine::release()
 	
 	SceneObjPool *sceneObjPool = Singleton<SceneObjPool>::getInstance();
 	sceneObjPool->release();
+
+#ifdef WIN32
+	Util::releaseDeviceList();
+#endif
 
 }

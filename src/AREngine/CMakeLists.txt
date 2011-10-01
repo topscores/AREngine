@@ -26,6 +26,11 @@ set_target_properties(${lib_name}
 			DEFINE_SYMBOL ARENGINE_LIBRARY
 )
 
+if (WIN32)
+	set (PLATFORM_DEPENDENT_LIBRARY
+		strmiids.lib)
+endif (WIN32)
+
 # link external libs
 target_link_libraries(${lib_name} 
 	${OPENTHREADS_LIBRARY}
@@ -34,6 +39,7 @@ target_link_libraries(${lib_name}
 	${OSGART_LIBRARY}
 	${SDL_LIBRARY}
 	${SDLMIXER_LIBRARY}
+	${PLATFORM_DEPENDENT_LIBRARY}
 )
 
 install(FILES ${lib_hdrs} 
