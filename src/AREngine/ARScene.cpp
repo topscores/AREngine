@@ -16,8 +16,9 @@
 
 using namespace arengine;
 
-
 ARScene::ARScene()
+:m_tracker(NULL)
+,m_video(NULL)
 {
 	m_rootNode = new ARRoot();
 }
@@ -36,7 +37,7 @@ ARScene::init()
 	soundMgr->initAudio();
 
 	// Create global components that will be used for all scenes
-	initVideo();
+	m_video = initVideo();
 
 	ref_ptr<osg::Node> videoBackground = createVideoBackground();
 	m_tracker = createTracker();
@@ -75,6 +76,8 @@ ARScene::getTracker()
 void
 ARScene::release()
 {
+	m_video->stop();
+
 	// Init sound system
 	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
 	soundMgr->closeAudio();
@@ -88,8 +91,73 @@ ARScene::release()
 
 
 void
+ARScene::setVideoConfig(ref_ptr<osgART::Video> video, bool showDialog)
+{
+	if (video.valid())
+	{
+		Config *config = Singleton<Config>::getInstance();
+		
+		// Flip or not flip images from video before using it
+		osgART::VideoConfiguration *videoConfig = video.get()->getVideoConfiguration();
+
+#ifdef _WIN32
+		if (!config->flipEnable())
+		{
+			if (!showDialog)
+			{
+				videoConfig->deviceconfig = "Data\\WDM_camera_normal.xml";
+			}
+			else
+			{
+				videoConfig->deviceconfig = "Data\\WDM_camera_normal_dialog.xml";
+			}
+		}
+		else
+		{
+			if (!showDialog)
+			{
+				videoConfig->deviceconfig = "Data\\WDM_camera_mirror.xml";
+			}
+			else
+			{
+				videoConfig->deviceconfig = "Data\\WDM_camera_mirror_dialog.xml";
+			}
+		}
+#endif
+
+#ifdef __APPLE__
+		if (!config->flipEnable())
+		{
+			if (!showDialog)
+			{
+				videoConfig->deviceconfig = "-nodialog";
+			}
+			else
+			{
+				videoConfig->deviceconfig = "";
+			}
+		}
+		else
+		{
+			if (!showDialog)
+			{
+				videoConfig->deviceconfig = "-nodialog -fliph";
+			}
+			else
+			{
+				videoConfig->deviceconfig = "-fliph";
+			}
+		}
+#endif
+	}
+
+}
+
+
+ref_ptr<osgART::Video>
 ARScene::initVideo()
 {
+	ref_ptr<osgART::Video> video;
 	// Check wheter to use web camera or video file as a video source
 	Config *config = Singleton<Config>::getInstance();
 	if (config->getAVIFileName().empty())
@@ -97,38 +165,16 @@ ARScene::initVideo()
 		int video_id = osgART::PluginManager::instance()->load("osgart_video_artoolkit2");
 		
 		// Load video plugin
-		m_video = dynamic_cast<osgART::Video *>(osgART::PluginManager::instance()->get(video_id));
-		if (!m_video.valid())
+		video = dynamic_cast<osgART::Video *>(osgART::PluginManager::instance()->get(video_id));
+		if (!video.valid())
 		{
 			Util::log("ARScene::CreateBackgroundVideo : Could not initialize video", 1);
 		}
 
-
-		// Flip or not flip images from video before using it
-		osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();
-
-#ifdef WIN32
-		if (!config->flipEnable())
-		{
-			videoConfig->deviceconfig = "Data\\WDM_camera_normal.xml";
-		}
-		else
-		{
-			videoConfig->deviceconfig = "Data\\WDM_camera_mirror.xml";
-		}
-#endif
-		
-#ifdef __APPLE__
-		if (!config->flipEnable())
-		{
-			videoConfig->deviceconfig = "-nodialog";
-		}
-		else
-		{
-			videoConfig->deviceconfig = "-nodialog -fliph";
-		}
-#endif
-		
+		// Don't show dialog
+		setVideoConfig(video, false);
+		video->open();
+		return video;
 	}
 	else
 	{
@@ -144,13 +190,13 @@ ARScene::createVideoBackground()
 	// check if loading the plugin was successful
 	if (!m_video.valid()) 
 	{
-		initVideo();
+		m_video = initVideo();
 	}
 
 	// Open the video. This will not yet start the video stream but will
 	// get information about the format of the video which is essential
 	// for the connected tracker
-	m_video->open();
+	//m_video->open();
 
 	ref_ptr<osgART::VideoLayer> videoLayer = new osgART::VideoLayer();
 	videoLayer->setSize(*m_video.get());
@@ -179,7 +225,7 @@ ARScene::createTracker()
 {
 	if (!m_video.valid())
 	{
-		initVideo();
+		m_video = initVideo();
 	}
 
 	int tracker_id	=	osgART::PluginManager::instance()->load("osgart_tracker_artoolkit2");
@@ -233,3 +279,82 @@ ARScene::createTracker()
 
 	return tracker;
 }
+
+
+#ifdef _WIN32
+
+void 
+ARScene::changeCaptureDevice(IBaseFilter *pSrcFilter)
+{
+	if (pSrcFilter)
+	{
+		m_video->close();
+		m_video->open(pSrcFilter);
+		if (m_video.valid())
+		{
+			ref_ptr<osg::Node> videoBackground = createVideoBackground();
+			if (m_tracker.valid())
+			{
+				m_rootNode->setVideoBackground(videoBackground);
+				m_tracker->setImage(m_video.get());
+				m_rootNode->initCameraMatrix(m_tracker);
+				m_rootNode->setActiveScene(m_rootNode->getActiveSceneIdx());
+				m_video->start();
+			}
+			else
+			{
+				Util::log(__FUNCTION__, 2, "Invalid tracker");
+			}
+		}
+		else
+		{
+			Util::log(__FUNCTION__, 2, "Cannot create new capture device");
+		}
+
+	}
+}
+
+
+void 
+ARScene::showPinProperties()
+{
+	IBaseFilter *srcFilter = m_video->getSrcFilter();
+	m_video->close();
+
+	setVideoConfig(m_video, true);
+	m_video->open(srcFilter);
+	setVideoConfig(m_video, false);
+
+	if (m_video.valid())
+	{
+		ref_ptr<osg::Node> videoBackground = createVideoBackground();
+		if (m_tracker.valid())
+		{
+			m_rootNode->setVideoBackground(videoBackground);
+			m_tracker->setImage(m_video.get());
+			m_rootNode->initCameraMatrix(m_tracker);
+			m_rootNode->setActiveScene(m_rootNode->getActiveSceneIdx());
+			m_video->start();
+		}
+		else
+		{
+			Util::log(__FUNCTION__, 2, "Invalid tracker");
+		}
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 2, "Cannot create new capture device");
+	}
+}
+
+
+void 
+ARScene::showFilterProperties()
+{
+	if (m_video.valid())
+	{
+		m_video->showFilterProperties();
+	}
+}
+
+#endif

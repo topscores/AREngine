@@ -10,6 +10,9 @@
 #include <osgART/Tracker>
 #include <osgART/Video>
 
+#ifdef _WIN32
+#	include <dshow.h>
+#endif
 using namespace osg;
 
 namespace arengine
@@ -31,6 +34,12 @@ namespace arengine
 		
 		// Important to call before the end of main
 		void release();
+
+#ifdef _WIN32
+		void changeCaptureDevice(IBaseFilter *pSrcFilter);
+		void showPinProperties();
+		void showFilterProperties();
+#endif
 	
 	private:
 		ARScene();
@@ -38,7 +47,9 @@ namespace arengine
 		ARScene& operator=(const ARScene&);
 
 	private:
-		void initVideo();
+		void setVideoConfig(ref_ptr<osgART::Video> video, bool showDialog);
+
+		ref_ptr<osgART::Video> initVideo();
 		ref_ptr<osg::Node> createVideoBackground();
 
 		ref_ptr<osgART::Tracker> createTracker();

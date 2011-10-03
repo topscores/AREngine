@@ -21,7 +21,7 @@
 #ifdef WIN32
 typedef struct  tagDEVINFO{
 							string friendlyName;
-							IMoniker *moniker;
+							IBaseFilter *pSrcFilter;
 							}	DEVINFO;
 #endif
 
