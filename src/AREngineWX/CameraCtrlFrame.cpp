@@ -76,7 +76,7 @@ CameraCtrlFrame::OnShowPin(wxCommandEvent &event)
 	ARScene *arscene = AREngine::getARScene();
 	if (arscene)
 	{
-		arscene->showPinProperties();
+		arscene->showPinProperties((HWND)this->GetHandle());
 	}
 }
 
@@ -87,7 +87,7 @@ CameraCtrlFrame::OnShowFilter(wxCommandEvent &event)
 	ARScene *arscene = AREngine::getARScene();
 	if (arscene)
 	{
-		arscene->showFilterProperties();
+		arscene->showFilterProperties((HWND)this->GetHandle());
 	}
 }
 

@@ -11,6 +11,7 @@
 #include <osgART/Video>
 
 #ifdef _WIN32
+#	include <windows.h>
 #	include <dshow.h>
 #endif
 using namespace osg;
@@ -37,8 +38,8 @@ namespace arengine
 
 #ifdef _WIN32
 		void changeCaptureDevice(IBaseFilter *pSrcFilter);
-		void showPinProperties();
-		void showFilterProperties();
+		void showPinProperties(HWND hWnd);
+		void showFilterProperties(HWND hWnd);
 #endif
 	
 	private:

@@ -120,7 +120,7 @@ void
 OSGCanvas::OnMouseEnter(wxMouseEvent &event)
 {
 	// Set focus to ourselves, so keyboard events get directed to us
-	SetFocus();
+	//SetFocus();
 }
 
 

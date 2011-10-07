@@ -32,7 +32,7 @@ ARScene::~ARScene()
 void
 ARScene::init()
 {
-	// Init sound system
+	//// Init sound system
 	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
 	soundMgr->initAudio();
 
@@ -288,7 +288,7 @@ ARScene::changeCaptureDevice(IBaseFilter *pSrcFilter)
 {
 	if (pSrcFilter)
 	{
-		m_video->close();
+		m_video->close(false);
 		m_video->open(pSrcFilter);
 		if (m_video.valid())
 		{
@@ -316,10 +316,10 @@ ARScene::changeCaptureDevice(IBaseFilter *pSrcFilter)
 
 
 void 
-ARScene::showPinProperties()
+ARScene::showPinProperties(HWND hWnd)
 {
 	IBaseFilter *srcFilter = m_video->getSrcFilter();
-	m_video->close();
+	m_video->close(false);
 
 	setVideoConfig(m_video, true);
 	m_video->open(srcFilter);
@@ -349,11 +349,11 @@ ARScene::showPinProperties()
 
 
 void 
-ARScene::showFilterProperties()
+ARScene::showFilterProperties(HWND hWnd)
 {
 	if (m_video.valid())
 	{
-		m_video->showFilterProperties();
+		m_video->showFilterProperties(hWnd);
 	}
 }
 
