@@ -7,6 +7,7 @@
 #ifdef WIN32
 #	include <windows.h>
 #	include <dshow.h>
+#	include <atlbase.h>
 #	include <vector>
 #endif
 
@@ -21,7 +22,7 @@
 #ifdef WIN32
 typedef struct  tagDEVINFO{
 							string friendlyName;
-							IBaseFilter *pSrcFilter;
+							CComPtr<IBaseFilter> pSrcFilter;
 							}	DEVINFO;
 #endif
 

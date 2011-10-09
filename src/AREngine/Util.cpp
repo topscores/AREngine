@@ -480,7 +480,7 @@ Util::releaseDeviceList()
 	int n = devls.size();
 	for (int i = 0;i < n;i++)
 	{
-		devls[i].pSrcFilter->Release();
+		devls[i].pSrcFilter.Release();
 	}
 }
 

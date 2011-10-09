@@ -14,6 +14,10 @@
 #include <osgART/VideoLayer>
 #include <osgART/MarkerCallback>
 
+#ifdef _WIN32
+#	include <atlbase.h>
+#endif
+
 using namespace arengine;
 
 ARScene::ARScene()
@@ -318,7 +322,7 @@ ARScene::changeCaptureDevice(IBaseFilter *pSrcFilter)
 void 
 ARScene::showPinProperties(HWND hWnd)
 {
-	IBaseFilter *srcFilter = m_video->getSrcFilter();
+	CComPtr<IBaseFilter> srcFilter = m_video->getSrcFilter();
 	m_video->close(false);
 
 	setVideoConfig(m_video, true);
