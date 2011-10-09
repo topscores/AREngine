@@ -8,6 +8,10 @@
 #include "arengine/ARScene.h"
 #include "arengine/KeyboardHandler.h"
 
+#ifdef _WIN32
+#	include <dshow.h>
+#endif
+
 namespace arengine
 {
 	
@@ -18,7 +22,7 @@ namespace arengine
 						 string logFileName, 
 						 int logLevel,
 						 string configFileName);
-		
+
 		static Logger* getLogger();
 		static Config* getConfig();
 		static ARScene* getARScene();

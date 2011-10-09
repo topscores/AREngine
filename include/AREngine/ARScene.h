@@ -10,7 +10,10 @@
 #include <osgART/Tracker>
 #include <osgART/Video>
 
-using namespace osg;
+#ifdef _WIN32
+#	include <windows.h>
+#	include <dshow.h>
+#endif
 
 namespace arengine
 {
@@ -26,11 +29,21 @@ namespace arengine
 
 		void start();
 
-		ref_ptr<osg::Node> getSceneData();
-		ref_ptr<osgART::Tracker> getTracker();
+		osg::ref_ptr<osg::Node> getSceneData();
+		osg::ref_ptr<osgART::Tracker> getTracker();
 		
 		// Important to call before the end of main
 		void release();
+
+#ifdef WIN32
+		void changeCaptureDevice(IBaseFilter *pSrcFilter);
+		void showPinProperties(HWND hWnd);
+		void showFilterProperties(HWND hWnd);
+#endif
+		
+#ifdef __APPLE__
+		void showDeviceConfig();
+#endif
 	
 	private:
 		ARScene();
@@ -38,16 +51,18 @@ namespace arengine
 		ARScene& operator=(const ARScene&);
 
 	private:
-		void initVideo();
-		ref_ptr<osg::Node> createVideoBackground();
+		void setVideoConfig(ref_ptr<osgART::Video> video, bool showDialog);
 
-		ref_ptr<osgART::Tracker> createTracker();
+		osg::ref_ptr<osgART::Video> initVideo();
+		osg::ref_ptr<osg::Node> createVideoBackground();
+
+		osg::ref_ptr<osgART::Tracker> createTracker();
 
 	public:
 		int m_activeScene;
-		ref_ptr<ARRoot>				m_rootNode;
-		ref_ptr<osgART::Tracker>	m_tracker;
-		ref_ptr<osgART::Video>		m_video;
+		osg::ref_ptr<ARRoot>			m_rootNode;
+		osg::ref_ptr<osgART::Tracker>	m_tracker;
+		osg::ref_ptr<osgART::Video>		m_video;
 	};
 
 }

@@ -46,46 +46,46 @@ install_arengine(AREngineWX)
 #
 # Optional SDK packaging (default is on)
 #
-option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
-if(ARENGINE_BUILD_SDK)		
-	if(WIN32)		
-		# wxWidgets
-		install(
-			DIRECTORY ${wxWidgets_INCLUDE_DIRS}
-			DESTINATION "."
-		)
-
-		install(
-			DIRECTORY ${wxWidgets_LIB_DIR}/${wxWidgets_CONFIGURATION}
-			DESTINATION "lib"
-		)
-
-		file(GLOB wxlibs
-			${wxWidgets_LIB_DIR}/*.lib
-		)
-		install(
-			FILES ${wxlibs}
-			DESTINATION "lib"
-		)
-
-		file(GLOB wxdlls
-			${wxWidgets_LIB_DIR}/*.dll
-		)
-		install(
-			FILES ${wxdlls}
-			DESTINATION "lib"
-		)
-		install(
-			FILES ${wxdlls}
-			DESTINATION "bin"
-		)
-	else(WIN32)
-		if (APPLE)
-			FIND_PATH(wxWidgets_ROOT_DIR include/wx/wx.h)
-			install(
-				DIRECTORY ${wxWidgets_ROOT_DIR}/
-				DESTINATION "."
-			)
-		endif (APPLE)
-	endif(WIN32)
-endif(ARENGINE_BUILD_SDK)
+#option(ARENGINE_BUILD_SDK "Build as an SDK which will copy all necessary files into the AREngine folder" ON)
+#if(ARENGINE_BUILD_SDK)		
+#	if(WIN32)		
+#		# wxWidgets
+#		install(
+#			DIRECTORY ${wxWidgets_INCLUDE_DIRS}
+#			DESTINATION "."
+#		)
+#
+#		install(
+#			DIRECTORY ${wxWidgets_LIB_DIR}/${wxWidgets_CONFIGURATION}
+#			DESTINATION "lib"
+#		)
+#
+#		file(GLOB wxlibs
+#			${wxWidgets_LIB_DIR}/*.lib
+#		)
+#		install(
+#			FILES ${wxlibs}
+#			DESTINATION "lib"
+#		)
+#
+#		file(GLOB wxdlls
+#			${wxWidgets_LIB_DIR}/*.dll
+#		)
+#		install(
+#			FILES ${wxdlls}
+#			DESTINATION "lib"
+#		)
+#		install(
+#			FILES ${wxdlls}
+#			DESTINATION "bin"
+#		)
+#	else(WIN32)
+#		if (APPLE)
+#			FIND_PATH(wxWidgets_ROOT_DIR include/wx/wx.h)
+#			install(
+#				DIRECTORY ${wxWidgets_ROOT_DIR}/
+#				DESTINATION "."
+#			)
+#		endif (APPLE)
+#	endif(WIN32)
+#endif(ARENGINE_BUILD_SDK)

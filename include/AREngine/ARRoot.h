@@ -39,12 +39,13 @@ namespace arengine
 		void	setActiveScene(string name);
 		void	setVideoBackground(osg::Node *background);
 
-
+		int		getActiveSceneIdx();
 	private:
 		ref_ptr<Scene>	getActiveScene();
 
 	public:
 		ref_ptr<osg::Camera>		m_cam;
+		ref_ptr<osg::Node>			m_vdoBackground;
 		vector< ref_ptr<Scene> >	m_scene;
 		int							m_activeSceneIdx;
 	};

@@ -43,7 +43,9 @@ namespace arengine
 }
 
 
-using namespace arengine;
+namespace arengine
+{
+
 template <class T>
 ObjPool<T>::ObjPool()
 {
@@ -129,6 +131,8 @@ ObjPool<T>::getByName(string name)
 		}
 	}
 	return NULL;
+}
+
 }
 
 #endif __OBJ_POOL_H__

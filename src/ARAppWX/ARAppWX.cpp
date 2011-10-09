@@ -1,5 +1,6 @@
 #include "wx/wx.h"
 #include "arenginewx/OSGFrame.h"
+#include "arenginewx/CameraCtrlFrame.h"
 
 #include "arengine/AREngine.h"
 #include "arengine/Util.h"
@@ -36,8 +37,11 @@ public:
 bool ARAppWX::OnInit()
 {
 	// Create the main frame window
-	OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
+	//OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
+	//	wxDefaultPosition, wxSize(800, 600));
+	OSGFrame *frame = new CameraCtrlFrame(NULL, wxT("wxWidgets OSG Sample"),
 		wxDefaultPosition, wxSize(800, 600));
+
 
 	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.png"));
 	splash->show();
@@ -49,7 +53,7 @@ bool ARAppWX::OnInit()
 	
 	osgViewer::Viewer *viewer = frame->getViewer();
 
-	//osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("cow.osg");
+	//osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("Models\\cow.osg");
 	//if (!loadedModel)
 	//{
 	//    std::cout << argv[0] <<": No data loaded." << std::endl;
@@ -58,22 +62,22 @@ bool ARAppWX::OnInit()
 	//viewer->setSceneData(loadedModel.get());
 
 	//SceneObjPool *pool = Singleton<SceneObjPool>::getInstance();
-	//ref_ptr<SceneObj> obj = pool->getSceneObj("orbit").get();
+	//ref_ptr<SceneObj> obj = pool->getByName("cow");
 	//viewer->setSceneData(obj);
 
 	// load the scene.
 	ref_ptr<ARScene> arscene = AREngine::getARScene();
 	viewer->setSceneData(arscene->getSceneData().get());
-	if (config->viewStat())
-	{
-		viewer->addEventHandler(new osgViewer::StatsHandler());
-	}
+	//if (config->viewStat())
+	//{
+	//	viewer->addEventHandler(new osgViewer::StatsHandler());
+	//}
 
 	arscene->start();
 
 	splash->close();
 	
-	viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+	//viewer->setCameraManipulator(new osgGA::TrackballManipulator);
 	frame->Show(true);
 	
 

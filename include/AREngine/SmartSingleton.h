@@ -4,8 +4,6 @@
 #include "arengine/Export"
 
 #include <osg/Node>
-using namespace osg;
-
 
 #include "arengine/KeyboardHandler.h"
 #include "arengine/ARScene.h"
@@ -18,7 +16,7 @@ namespace arengine
 	class SmartSingleton
 	{
 	private:
-		static ref_ptr<T> sm_ptr;
+		static osg::ref_ptr<T> sm_ptr;
 		SmartSingleton();
 		SmartSingleton(const SmartSingleton&);
 		SmartSingleton& operator=(const SmartSingleton&);
@@ -35,7 +33,7 @@ namespace arengine
 	};
 	
 	template<class T>
-	ref_ptr<T> SmartSingleton<T>::sm_ptr;
+	osg::ref_ptr<T> SmartSingleton<T>::sm_ptr;
 
 }
 
