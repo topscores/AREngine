@@ -37,7 +37,9 @@
 using namespace std;
 using namespace arengine;
 
-vector<DEVINFO> Util::devls;
+#ifdef WIN32
+	vector<DEVINFO> Util::devls;
+#endif
 
 
 int 

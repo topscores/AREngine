@@ -19,16 +19,23 @@ namespace arenginewx
 			const wxSize& size, long style = wxDEFAULT_FRAME_STYLE);
 		~CameraCtrlFrame();
 
-#ifdef _WIN32
+#ifdef WIN32
 		void OnSwitchDevices(wxCommandEvent& event);
 		void OnShowPin(wxCommandEvent& event);
 		void OnShowFilter(wxCommandEvent& event);
+#endif
+		
+#ifdef __APPLE__
+		void OnDeviceConfig(wxCommandEvent& event);
 #endif
 
 	private:
 		wxMenuBar *m_menubar;
 		int m_devcount;
+
+#ifdef WIN32		
 		vector<DEVINFO> m_devls;
+#endif
 	};
 }
 

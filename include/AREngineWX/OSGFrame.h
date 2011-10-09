@@ -6,12 +6,9 @@
 #include "arenginewx/Export"
 #include "arenginewx/OSGCanvas.h"
 
-#include <osg/Node>
 #include <osgViewer/Viewer>
 
 #include <string>
-
-using namespace osg;
 
 namespace arenginewx
 {
@@ -30,7 +27,7 @@ namespace arenginewx
 
 	private:
 		OSGCanvas *_canvas;
-		ref_ptr<osgViewer::Viewer> _viewer;
+		osg::ref_ptr<osgViewer::Viewer> _viewer;
 
 		DECLARE_EVENT_TABLE()
 	};

@@ -285,7 +285,7 @@ ARScene::createTracker()
 }
 
 
-#ifdef _WIN32
+#ifdef WIN32
 
 void 
 ARScene::changeCaptureDevice(IBaseFilter *pSrcFilter)
@@ -358,6 +358,40 @@ ARScene::showFilterProperties(HWND hWnd)
 	if (m_video.valid())
 	{
 		m_video->showFilterProperties(hWnd);
+	}
+}
+
+#endif
+
+#ifdef __APPLE__
+
+void
+ARScene::showDeviceConfig()
+{
+	m_video->close(false);
+	setVideoConfig(m_video, true);
+	m_video->open();
+	setVideoConfig(m_video, false);
+	
+	if (m_video.valid())
+	{
+		ref_ptr<osg::Node> videoBackground = createVideoBackground();
+		if (m_tracker.valid())
+		{
+			m_rootNode->setVideoBackground(videoBackground);
+			m_tracker->setImage(m_video.get());
+			m_rootNode->initCameraMatrix(m_tracker);
+			m_rootNode->setActiveScene(m_rootNode->getActiveSceneIdx());
+			m_video->start();
+		}
+		else
+		{
+			Util::log(__FUNCTION__, 2, "Invalid tracker");
+		}
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 2, "Cannot create new capture device");
 	}
 }
 
