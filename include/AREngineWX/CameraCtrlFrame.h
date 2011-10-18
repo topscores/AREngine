@@ -19,6 +19,10 @@ namespace arenginewx
 			const wxSize& size, long style = wxDEFAULT_FRAME_STYLE);
 		~CameraCtrlFrame();
 
+		void OnContextMenu(wxContextMenuEvent& event);
+		void OnToggleFullScreen(wxCommandEvent& event);
+		void OnExit(wxCommandEvent& event);
+
 #ifdef WIN32
 		void OnSwitchDevices(wxCommandEvent& event);
 		void OnShowPin(wxCommandEvent& event);
@@ -29,13 +33,22 @@ namespace arenginewx
 		void OnDeviceConfig(wxCommandEvent& event);
 #endif
 
+#ifdef WIN32
+	private:
+		wxMenu *createDevMenu();
+		wxMenu *createOptionMenu();
+#endif
+
 	private:
 		wxMenuBar *m_menubar;
+		wxMenu m_contextMenu;
 		int m_devcount;
 
 #ifdef WIN32		
 		vector<DEVINFO> m_devls;
 #endif
+
+		DECLARE_EVENT_TABLE();
 	};
 }
 
