@@ -39,6 +39,7 @@ namespace arenginewx
 		wxMenu *createOptionMenu();
 #endif
 
+		
 	private:
 		wxMenuBar *m_menubar;
 		wxMenu m_contextMenu;

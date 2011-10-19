@@ -28,6 +28,13 @@ END_EVENT_TABLE ()
 
 #ifdef __APPLE__
 #	define wxID_DEVCONF 100
+
+BEGIN_EVENT_TABLE (CameraCtrlFrame, OSGFrame)
+	EVT_MENU(wxID_DEVCONF, CameraCtrlFrame::OnDeviceConfig)
+	EVT_MENU(wxID_TOGGLEFULLSCREEN, CameraCtrlFrame::OnToggleFullScreen)
+	EVT_MENU(wxID_EXIT, CameraCtrlFrame::OnExit)
+	EVT_CONTEXT_MENU(CameraCtrlFrame::OnContextMenu)
+END_EVENT_TABLE ()
 #endif
 
 
@@ -38,19 +45,17 @@ CameraCtrlFrame::CameraCtrlFrame(wxFrame *frame, const wxString& title, const wx
 	m_menubar = new wxMenuBar();
 	SetMenuBar(m_menubar);
 
+
+#ifdef WIN32
+	// Create menubar
 	wxMenu *learngearMenu  = new wxMenu();
 	learngearMenu->Append(wxID_TOGGLEFULLSCREEN, wxT("Fullscreen"));
 	learngearMenu->AppendSeparator();
 	learngearMenu->Append(wxID_EXIT, wxT("Exit"));
+	
 	m_menubar->Append(learngearMenu, wxT("Learngear"));
-
-
-#ifdef WIN32
-	// Create menubar
 	m_menubar->Append(createDevMenu(), wxT("Devices"));
 	m_menubar->Append(createOptionMenu(), wxT("Options"));
-
-	SetMenuBar(m_menubar);
 
 	// Create Context Menu
 	m_contextMenu.AppendSubMenu(createDevMenu(), wxT("Devices"));
@@ -61,13 +66,17 @@ CameraCtrlFrame::CameraCtrlFrame(wxFrame *frame, const wxString& title, const wx
 #endif
 	
 #ifdef __APPLE__
-	wxMenu *devmenu = new wxMenu();
-	devmenu->Append(wxID_DEVCONF, wxT("Configure"));
-	m_menubar->Append(devmenu, wxT("Devices"));
+	// Create menubar
+	wxMenu *learngearMenu  = new wxMenu();
+	learngearMenu->Append(wxID_DEVCONF, wxT("Config Capture Device"));
+	learngearMenu->Append(wxID_TOGGLEFULLSCREEN, wxT("Fullscreen"));
 	
-	Connect(wxID_DEVCONF, 
-			wxEVT_COMMAND_MENU_SELECTED,
-			wxCommandEventHandler(CameraCtrlFrame::OnDeviceConfig));
+	m_menubar->Append(learngearMenu, wxT("Learngear"));
+
+
+	// Create Context Menu
+	m_contextMenu.Append(wxID_DEVCONF, wxT("Config Capture Device"));
+	m_contextMenu.Append(wxID_TOGGLEFULLSCREEN, wxT("Toggle FullScreen"));
 #endif
 }
 
@@ -174,5 +183,6 @@ CameraCtrlFrame::OnDeviceConfig(wxCommandEvent &event)
 		arscene->showDeviceConfig();
 	}
 }
+
 
 #endif
