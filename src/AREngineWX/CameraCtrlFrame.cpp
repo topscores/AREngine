@@ -118,7 +118,7 @@ CameraCtrlFrame::OnSwitchDevices(wxCommandEvent &event)
 	ARScene *arscene = AREngine::getARScene();
 	if (arscene)
 	{
-		arscene->changeCaptureDevice(m_devls[devid - wxID_DEVFIRST].pSrcFilter);
+		arscene->changeCaptureDevice(devid - wxID_DEVFIRST);
 	}
 }
 
@@ -149,7 +149,7 @@ CameraCtrlFrame::OnShowFilter(wxCommandEvent &event)
 wxMenu*
 CameraCtrlFrame::createDevMenu()
 {
-	m_devls = Util::getDeviceList(CLSID_VideoInputDeviceCategory);
+	m_devls = Util::getDeviceList();
 	wxMenu *menu = new wxMenu();
 	for (int i = 0;i < m_devls.size();i++)
 	{

@@ -1,14 +1,14 @@
 #ifdef WIN32
-	#include <Shlobj.h>
-	#include <arengine/Util.h>	
+#	include <arengine/Util.h>	
+#	include <Shlobj.h>
 #endif
 
 #ifdef __APPLE__
-	#include <CoreServices/CoreServices.h>
-	#include <CoreFoundation/CoreFoundation.h>
-	#include <unistd.h>
-	#include <dlfcn.h>
-	#include "arengine/Arengine.h"
+#	include <CoreServices/CoreServices.h>
+#	include <CoreFoundation/CoreFoundation.h>
+#	include <unistd.h>
+#	include <dlfcn.h>
+#	include "arengine/Arengine.h"
 #endif
 
 #include "arengine/Logger.h"
@@ -95,17 +95,8 @@ string
 Logger::getLogDir(string appName)
 {
 #ifdef WIN32
-	HRESULT res;
-	wchar_t appDataDir[MAX_PATH], moduleFileName[MAX_PATH];
-	
-	res = SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, appDataDir);
-	if (res == E_FAIL) 
-	{
-		return "";
-	}
-
 	wstring logDir;
-	logDir.append(appDataDir);
+	logDir.append(Util::widen(Util::getLocalAppDir()));
 	logDir.append(L"\\Larngear\\");
 	logDir.append(Util::widen(appName));
 	logDir.append(L"\\");

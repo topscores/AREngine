@@ -11,6 +11,7 @@
 
 #ifdef WIN32
 #	include <windows.h>
+#	include <Shlobj.h>
 #	include <dshow.h>
 #	include <stdio.h>
 #	include <time.h>
@@ -438,6 +439,7 @@ Util::getDeviceInformation(IEnumMoniker *pEnum, vector<DEVINFO> &devls)
 		VariantInit(&var);
 
 		// Get description or friendly name.
+		string friendlyName;
 		hr = pPropBag->Read(L"Description", &var, 0);
 		if (FAILED(hr))
 		{
@@ -445,14 +447,23 @@ Util::getDeviceInformation(IEnumMoniker *pEnum, vector<DEVINFO> &devls)
 		}
 		if (SUCCEEDED(hr))
 		{
-			//printf("%S\n", var.bstrVal);
+			friendlyName = narrow((LPCTSTR)var.bstrVal);
 			VariantClear(&var); 
 		}
 
-		hr = pPropBag->Write(L"FriendlyName", &var);
+		WCHAR *szBuf;
+		char displayName[200];
+		pMoniker->GetDisplayName(NULL, NULL, &szBuf);
+		if (szBuf)
+		{
+			USES_CONVERSION;
+			strncpy(displayName, W2A(szBuf), NUMELMS(displayName));
+			CoTaskMemFree(szBuf);
+		}
 
 		DEVINFO devinfo;
-		devinfo.friendlyName	=	narrow((LPCTSTR)var.bstrVal);
+		devinfo.friendlyName	=	friendlyName;
+		devinfo.displayName		=	string(displayName);
 		pMoniker->BindToObject(0,0,IID_IBaseFilter, (void**)&(devinfo.pSrcFilter));
 
 		devls.push_back(devinfo);
@@ -462,8 +473,19 @@ Util::getDeviceInformation(IEnumMoniker *pEnum, vector<DEVINFO> &devls)
 }
 
 
+int
+Util::getDeviceCount()
+{
+	if (devls.empty())
+	{
+		getDeviceList();
+	}
+	return devls.size();
+}
+
+
 vector<DEVINFO> 
-Util::getDeviceList(REFGUID category)
+Util::getDeviceList()
 {
 	if (devls.empty())
 	{
@@ -486,6 +508,23 @@ Util::releaseDeviceList()
 	}
 }
 
+
+string
+Util::getLocalAppDir()
+{
+	HRESULT res;
+	wchar_t appDataDir[MAX_PATH], moduleFileName[MAX_PATH];
+
+	res = SHGetFolderPath(NULL, CSIDL_LOCAL_APPDATA, NULL, SHGFP_TYPE_CURRENT, appDataDir);
+	if (res == E_FAIL) 
+	{
+		return "";
+	}
+
+	wstring localAppDir;
+	localAppDir.append(appDataDir);
+	return Util::narrow(localAppDir);
+}
 
 #endif
 // END (WINDOWS)

@@ -22,6 +22,7 @@
 #ifdef WIN32
 typedef struct  tagDEVINFO{
 							string friendlyName;
+							string displayName;
 							CComPtr<IBaseFilter> pSrcFilter;
 							}	DEVINFO;
 #endif
@@ -65,8 +66,11 @@ namespace arengine
 		static wstring widen( const string& str );
 		static string narrow( const wstring& str );
 
-		static vector<DEVINFO> getDeviceList(REFGUID category);
+		static int getDeviceCount();
+		static vector<DEVINFO> getDeviceList();
 		static void releaseDeviceList();
+
+		static string getLocalAppDir();
 	
 	private:
 		static HRESULT enumerateDevices(REFGUID category, IEnumMoniker **ppEnum);

@@ -15,7 +15,14 @@
 #include <osgART/MarkerCallback>
 
 #ifdef _WIN32
+#	include <windows.h>
 #	include <atlbase.h>
+#	include <atlconv.h>
+#	include <objbase.h>
+
+#	define INI_FILENAME "\\Larngear\\arengine.ini"
+#	define INI_APPNAME "ARENGINE"
+#	define INI_CAPDEVKEY "CAPDEV"
 #endif
 
 using namespace arengine;
@@ -80,6 +87,12 @@ ARScene::getTracker()
 void
 ARScene::release()
 {
+	string inifile;
+	inifile = Util::getLocalAppDir();
+	inifile.append(INI_FILENAME);
+	WritePrivateProfileStringA(INI_APPNAME, INI_CAPDEVKEY, m_capdev.c_str(), inifile.c_str());
+	DWORD error = GetLastError();
+	Util::log(__FUNCTION__, 2, "error code = %d, inifile = %s", error, INI_FILENAME);
 	m_video->stop();
 
 	// Init sound system
@@ -177,7 +190,80 @@ ARScene::initVideo()
 
 		// Don't show dialog
 		setVideoConfig(video, false);
+
+#ifdef WIN32
+		vector<DEVINFO> devls = Util::getDeviceList();
+		if (devls.size() < 1)
+		{
+			MessageBox(NULL, TEXT("Fatal Error"), TEXT("Capture Device not found, program will now exit"), MB_OK);
+			Util::log(__FUNCTION__, "Capture device not found", 1);
+		}
+
+		string inifile;
+		inifile = Util::getLocalAppDir();
+		inifile.append(INI_FILENAME);
+
+		char capdev[200];
+		GetPrivateProfileStringA(INI_APPNAME, INI_CAPDEVKEY, "", capdev, 200, inifile.c_str());
+
+		// Capture device name has not yet been set before
+		// Choose the first one in list
+		if (strcmp(capdev, "") == 0)
+		{
+			m_capdev = devls[0].displayName;
+			Util::log(__FUNCTION__, 3, "No capture device from previous session, choose the first available one(%s)", m_capdev.c_str());
+			video->open(devls[0].pSrcFilter);
+		}
+		else
+		{
+			bool found = false;
+            int n = devls.size();
+			
+			for (int i = 0;i < n;i++)
+			{
+				if (capdev == devls[i].displayName)
+				{
+					found = true;
+					m_capdev = devls[i].displayName;
+					Util::log(__FUNCTION__, 3, "Capture Device = %s", m_capdev.c_str());
+					video->open(devls[i].pSrcFilter);
+				}
+			}
+
+			if (!found)
+			{
+				m_capdev = devls[0].displayName;
+				Util::log(__FUNCTION__, 3, "Previous capture device not found, choose the first available one(%s)", m_capdev.c_str());
+				video->open(devls[0].pSrcFilter);
+			}
+
+			//CComPtr<IBindCtx> lpBC=NULL;
+			//CComPtr<IMoniker> pmVideo=NULL;
+
+			//HRESULT hr = CreateBindCtx(0, &lpBC);
+			//if (SUCCEEDED(hr))
+			//{
+			//	DWORD dwEaten;
+			//	USES_CONVERSION;
+			//	hr = MkParseDisplayName(lpBC, A2COLE(capdev), &dwEaten, &pmVideo);
+			//}
+
+			//if (pmVideo)
+			//{
+			//	CComPtr<IBaseFilter> pSrcFilter;
+			//	pmVideo->BindToObject(0,0,IID_IBaseFilter, (void**)&pSrcFilter);
+			//	video->open(pSrcFilter);
+			//}
+			//else
+			//{
+			//	video->open();
+			//}
+		}
+#endif
+
+#ifdef __APPLE__
 		video->open();
+#endif
 		return video;
 	}
 	else
@@ -288,14 +374,17 @@ ARScene::createTracker()
 #ifdef WIN32
 
 void 
-ARScene::changeCaptureDevice(IBaseFilter *pSrcFilter)
+ARScene::changeCaptureDevice(int i)
 {
-	if (pSrcFilter)
+	vector<DEVINFO> devls = Util::getDeviceList();
+	int n = devls.size();
+	if (i >= 0 && i < n)
 	{
 		m_video->close(false);
-		m_video->open(pSrcFilter);
+		m_video->open(devls[i].pSrcFilter);
 		if (m_video.valid())
 		{
+			m_capdev = devls[i].displayName;
 			ref_ptr<osg::Node> videoBackground = createVideoBackground();
 			if (m_tracker.valid())
 			{

@@ -36,7 +36,7 @@ namespace arengine
 		void release();
 
 #ifdef WIN32
-		void changeCaptureDevice(IBaseFilter *pSrcFilter);
+		void changeCaptureDevice(int i);
 		void showPinProperties(HWND hWnd);
 		void showFilterProperties(HWND hWnd);
 #endif
@@ -58,11 +58,16 @@ namespace arengine
 
 		osg::ref_ptr<osgART::Tracker> createTracker();
 
-	public:
+	private:
 		int m_activeScene;
 		osg::ref_ptr<ARRoot>			m_rootNode;
 		osg::ref_ptr<osgART::Tracker>	m_tracker;
 		osg::ref_ptr<osgART::Video>		m_video;
+
+#ifdef WIN32
+		string m_capdev;
+#endif
+
 	};
 
 }
