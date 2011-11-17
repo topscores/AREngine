@@ -5,6 +5,7 @@
 #include "arengine/Marker.h"
 #include "arengine/ObjPool.h"
 #include "arengine/SDLSoundManager.h"
+#include "arengine/CaptureDeviceManager.h"
 
 #include <osgDB/Readfile>
 
@@ -19,10 +20,6 @@
 #	include <atlbase.h>
 #	include <atlconv.h>
 #	include <objbase.h>
-
-#	define INI_FILENAME "\\Larngear\\arengine.ini"
-#	define INI_APPNAME "ARENGINE"
-#	define INI_CAPDEVKEY "CAPDEV"
 #endif
 
 using namespace arengine;
@@ -87,12 +84,8 @@ ARScene::getTracker()
 void
 ARScene::release()
 {
-	string inifile;
-	inifile = Util::getLocalAppDir();
-	inifile.append(INI_FILENAME);
-	WritePrivateProfileStringA(INI_APPNAME, INI_CAPDEVKEY, m_capdev.c_str(), inifile.c_str());
-	DWORD error = GetLastError();
-	Util::log(__FUNCTION__, 2, "error code = %d, inifile = %s", error, INI_FILENAME);
+	ref_ptr<osg::Image> frame = m_video.get();
+	CaptureDeviceManager::saveCapDevInfo(m_capdev, frame->s(), frame->t());
 	m_video->stop();
 
 	// Init sound system
@@ -108,7 +101,10 @@ ARScene::release()
 
 
 void
-ARScene::setVideoConfig(ref_ptr<osgART::Video> video, bool showDialog)
+ARScene::setVideoConfig(ref_ptr<osgART::Video> video, 
+						bool showDialog,
+						int frame_width,
+						int frame_height)
 {
 	if (video.valid())
 	{
@@ -117,57 +113,13 @@ ARScene::setVideoConfig(ref_ptr<osgART::Video> video, bool showDialog)
 		// Flip or not flip images from video before using it
 		osgART::VideoConfiguration *videoConfig = video.get()->getVideoConfiguration();
 
-#ifdef _WIN32
-		if (!config->flipEnable())
-		{
-			if (!showDialog)
-			{
-				videoConfig->deviceconfig = "Data\\WDM_camera_normal.xml";
-			}
-			else
-			{
-				videoConfig->deviceconfig = "Data\\WDM_camera_normal_dialog.xml";
-			}
-		}
-		else
-		{
-			if (!showDialog)
-			{
-				videoConfig->deviceconfig = "Data\\WDM_camera_mirror.xml";
-			}
-			else
-			{
-				videoConfig->deviceconfig = "Data\\WDM_camera_mirror_dialog.xml";
-			}
-		}
-#endif
+		string conf = CaptureDeviceManager::createConfigString(showDialog,
+												config->flipEnable(),
+												frame_width,
+												frame_height);
 
-#ifdef __APPLE__
-		if (!config->flipEnable())
-		{
-			if (!showDialog)
-			{
-				videoConfig->deviceconfig = "-nodialog";
-			}
-			else
-			{
-				videoConfig->deviceconfig = "";
-			}
-		}
-		else
-		{
-			if (!showDialog)
-			{
-				videoConfig->deviceconfig = "-nodialog -fliph";
-			}
-			else
-			{
-				videoConfig->deviceconfig = "-fliph";
-			}
-		}
-#endif
+		videoConfig->deviceconfig = conf.c_str();
 	}
-
 }
 
 
@@ -188,76 +140,40 @@ ARScene::initVideo()
 			Util::log("ARScene::CreateBackgroundVideo : Could not initialize video", 1);
 		}
 
-		// Don't show dialog
-		setVideoConfig(video, false);
-
 #ifdef WIN32
-		vector<DEVINFO> devls = Util::getDeviceList();
-		if (devls.size() < 1)
+		if (CaptureDeviceManager::getDeviceCount() < 1)
 		{
 			MessageBox(NULL, TEXT("Fatal Error"), TEXT("Capture Device not found, program will now exit"), MB_OK);
 			Util::log(__FUNCTION__, "Capture device not found", 1);
 		}
 
-		string inifile;
-		inifile = Util::getLocalAppDir();
-		inifile.append(INI_FILENAME);
-
-		char capdev[200];
-		GetPrivateProfileStringA(INI_APPNAME, INI_CAPDEVKEY, "", capdev, 200, inifile.c_str());
-
 		// Capture device name has not yet been set before
 		// Choose the first one in list
-		if (strcmp(capdev, "") == 0)
+		int frame_width, frame_height;
+		CaptureDeviceManager::loadCapDevInfo(m_capdev, frame_width, frame_height);
+		if (m_capdev == "")
 		{
-			m_capdev = devls[0].displayName;
 			Util::log(__FUNCTION__, 3, "No capture device from previous session, choose the first available one(%s)", m_capdev.c_str());
-			video->open(devls[0].pSrcFilter);
+			m_capdev = CaptureDeviceManager::getDisplayName(0);
+			setVideoConfig(video, false, 640, 480);
+			video->open(CaptureDeviceManager::getAsSourceFilter(0));
 		}
 		else
 		{
-			bool found = false;
-            int n = devls.size();
-			
-			for (int i = 0;i < n;i++)
+			CComPtr<IBaseFilter> pSrcFilter = CaptureDeviceManager::getAsSourceFilter(m_capdev);
+			if (pSrcFilter)
 			{
-				if (capdev == devls[i].displayName)
-				{
-					found = true;
-					m_capdev = devls[i].displayName;
-					Util::log(__FUNCTION__, 3, "Capture Device = %s", m_capdev.c_str());
-					video->open(devls[i].pSrcFilter);
-				}
+				Util::log(__FUNCTION__, 3, "Capture Device = %s", m_capdev.c_str());
+				setVideoConfig(video, false, frame_width, frame_height);
+				video->open(pSrcFilter);
 			}
-
-			if (!found)
+			else
 			{
-				m_capdev = devls[0].displayName;
 				Util::log(__FUNCTION__, 3, "Previous capture device not found, choose the first available one(%s)", m_capdev.c_str());
-				video->open(devls[0].pSrcFilter);
+				m_capdev = CaptureDeviceManager::getDisplayName(0);
+				setVideoConfig(video, false, 640, 480);
+				video->open(CaptureDeviceManager::getAsSourceFilter(0));
 			}
-
-			//CComPtr<IBindCtx> lpBC=NULL;
-			//CComPtr<IMoniker> pmVideo=NULL;
-
-			//HRESULT hr = CreateBindCtx(0, &lpBC);
-			//if (SUCCEEDED(hr))
-			//{
-			//	DWORD dwEaten;
-			//	USES_CONVERSION;
-			//	hr = MkParseDisplayName(lpBC, A2COLE(capdev), &dwEaten, &pmVideo);
-			//}
-
-			//if (pmVideo)
-			//{
-			//	CComPtr<IBaseFilter> pSrcFilter;
-			//	pmVideo->BindToObject(0,0,IID_IBaseFilter, (void**)&pSrcFilter);
-			//	video->open(pSrcFilter);
-			//}
-			//else
-			//{
-			//	video->open();
-			//}
 		}
 #endif
 
@@ -376,15 +292,13 @@ ARScene::createTracker()
 void 
 ARScene::changeCaptureDevice(int i)
 {
-	vector<DEVINFO> devls = Util::getDeviceList();
-	int n = devls.size();
-	if (i >= 0 && i < n)
+	if (i >= 0 && i < CaptureDeviceManager::getDeviceCount())
 	{
 		m_video->close(false);
-		m_video->open(devls[i].pSrcFilter);
+		m_video->open(CaptureDeviceManager::getAsSourceFilter(i));
 		if (m_video.valid())
 		{
-			m_capdev = devls[i].displayName;
+			m_capdev = CaptureDeviceManager::getDisplayName(i);
 			ref_ptr<osg::Node> videoBackground = createVideoBackground();
 			if (m_tracker.valid())
 			{
@@ -411,11 +325,10 @@ ARScene::changeCaptureDevice(int i)
 void 
 ARScene::showPinProperties(HWND hWnd)
 {
-	CComPtr<IBaseFilter> srcFilter = m_video->getSrcFilter();
 	m_video->close(false);
 
 	setVideoConfig(m_video, true);
-	m_video->open(srcFilter);
+	m_video->open(CaptureDeviceManager::getAsSourceFilter(m_capdev));
 	setVideoConfig(m_video, false);
 
 	if (m_video.valid())

@@ -51,7 +51,10 @@ namespace arengine
 		ARScene& operator=(const ARScene&);
 
 	private:
-		void setVideoConfig(ref_ptr<osgART::Video> video, bool showDialog);
+		void setVideoConfig(ref_ptr<osgART::Video> video, 
+							bool showDialog,
+							int frame_width=0,
+							int frame_height=0);
 
 		osg::ref_ptr<osgART::Video> initVideo();
 		osg::ref_ptr<osg::Node> createVideoBackground();
