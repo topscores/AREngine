@@ -84,8 +84,10 @@ ARScene::getTracker()
 void
 ARScene::release()
 {
+#ifdef WIN32
 	ref_ptr<osg::Image> frame = m_video.get();
 	CaptureDeviceManager::saveCapDevInfo(m_capdev, frame->s(), frame->t());
+#endif
 	m_video->stop();
 
 	// Init sound system
@@ -178,6 +180,7 @@ ARScene::initVideo()
 #endif
 
 #ifdef __APPLE__
+		setVideoConfig(video, false);
 		video->open();
 #endif
 		return video;
@@ -186,6 +189,7 @@ ARScene::initVideo()
 	{
 		// Code to load video from file go here
 		Util::log("Using VDO as a background texture is currently unsupported", 1);
+		return NULL;
 	}
 }
 

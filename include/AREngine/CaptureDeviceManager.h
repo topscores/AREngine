@@ -6,12 +6,12 @@
 #	include <vector>
 #	include <dshow.h>
 #	include <atlbase.h>
-#	include <string>
 #endif
 
 #include "arengine/Export"
 #include "arengine/Singleton.h"
 
+#include <string>
 using namespace std;
 
 #ifdef WIN32
