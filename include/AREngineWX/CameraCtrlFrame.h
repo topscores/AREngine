@@ -45,10 +45,6 @@ namespace arenginewx
 		wxMenu m_contextMenu;
 		int m_devcount;
 
-#ifdef WIN32		
-		vector<DEVINFO> m_devls;
-#endif
-
 		DECLARE_EVENT_TABLE();
 	};
 }

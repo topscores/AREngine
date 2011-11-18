@@ -12,7 +12,6 @@
 
 #include <sstream>
 #include <map>
-using namespace std;
 
 namespace arengine
 {
@@ -33,7 +32,7 @@ namespace arengine
 		KeyboardHandler& operator=(const KeyboardHandler&);
 
 	private:
-		map<int, bool> m_keypress;
+		std::map<int, bool> m_keypress;
 
 	};
 

@@ -2,11 +2,11 @@
 #define __SDL_SOUND_MANAGER_H__
 
 #include "arengine/Export"
+#include "arengine/Singleton.h"
 #include "arengine/AudioSample.h"
 
 #include <string>
 #include <map>
-using namespace std;
 
 // Audio CD sample rate so most likely all hardware will support
 #define SAMPLE_RATE 44100
@@ -17,8 +17,9 @@ using namespace std;
 namespace arengine
 {
 
-	class ARENGINE_EXPORT SDLSoundManager
+	class ARENGINE_EXPORT SDLSoundManager 
 	{
+	template<class SDLSoundManager> friend class Singleton;
 	public:
 		void initAudio();
 		void closeAudio();
@@ -28,10 +29,14 @@ namespace arengine
 		void pause(string soundName="");
 
 	private:
+		SDLSoundManager(){}
+		SDLSoundManager(const SDLSoundManager&){}
+		SDLSoundManager& operator=(const SDLSoundManager&){return *this;}
+
 		Sample *getSample(string soundName);
 
 	private:
-		map<string, Sample*> m_samples;
+		std::map<string, Sample*> m_samples;
 	};
 
 }

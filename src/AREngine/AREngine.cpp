@@ -63,9 +63,4 @@ AREngine::release()
 	
 	SceneObjPool *sceneObjPool = Singleton<SceneObjPool>::getInstance();
 	sceneObjPool->release();
-
-#ifdef WIN32
-	Util::releaseDeviceList();
-#endif
-
 }

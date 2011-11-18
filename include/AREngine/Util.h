@@ -4,28 +4,11 @@
 #include "arengine/Export"
 #include "arengine/Exception.h"
 
-#ifdef WIN32
-#	include <windows.h>
-#	include <dshow.h>
-#	include <atlbase.h>
-#	include <vector>
-#endif
-
 #ifdef __APPLE__
 #	include <CoreFoundation/CFBundle.h>
 #endif
 
-
 #define boolToString(b) (b)?"true":"false"
-
-
-#ifdef WIN32
-typedef struct  tagDEVINFO{
-							string friendlyName;
-							string displayName;
-							CComPtr<IBaseFilter> pSrcFilter;
-							}	DEVINFO;
-#endif
 
 namespace arengine
 {
@@ -66,18 +49,7 @@ namespace arengine
 		static wstring widen( const string& str );
 		static string narrow( const wstring& str );
 
-		static int getDeviceCount();
-		static vector<DEVINFO> getDeviceList();
-		static void releaseDeviceList();
-
 		static string getLocalAppDir();
-	
-	private:
-		static HRESULT enumerateDevices(REFGUID category, IEnumMoniker **ppEnum);
-		static void getDeviceInformation(IEnumMoniker *pEnum, vector<DEVINFO> &devls);
-
-	private:
-		static std::vector<DEVINFO> devls;
 
 #endif
 

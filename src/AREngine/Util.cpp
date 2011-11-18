@@ -38,10 +38,6 @@
 using namespace std;
 using namespace arengine;
 
-#ifdef WIN32
-	vector<DEVINFO> Util::devls;
-#endif
-
 
 int 
 Util::makeInt(string s)
@@ -169,6 +165,9 @@ Util::log(string logMsg, int logLevel)
 	logger->log(sstr.str(), logLevel);
 	if (logLevel == 1)
 	{
+#ifdef WIN32
+		MessageBoxA(NULL, "Fatal Error", sstr.str().c_str(), MB_OK);
+#endif
 		logger->releaseLog();
 		exit(1);
 	}
@@ -374,7 +373,6 @@ Util::hashFunc(const string &s)
 // WINDOWS
 #ifdef WIN32
 
-
 wstring 
 Util::widen( const string& str )
 {
@@ -396,116 +394,6 @@ Util::narrow( const wstring& str )
 	for( size_t i=0 ; i<str.size() ; ++i ) 
 		stm << ctfacet.narrow( str[i], 0 ) ;
 	return stm.str() ;
-}
-
-
-HRESULT 
-Util::enumerateDevices(REFGUID category, IEnumMoniker **ppEnum)
-{
-	// Create the System Device Enumerator.
-	ICreateDevEnum *pDevEnum;
-	HRESULT hr = CoCreateInstance(CLSID_SystemDeviceEnum, NULL,  
-		CLSCTX_INPROC_SERVER, IID_ICreateDevEnum, (void ** ) &pDevEnum);
-
-	if (SUCCEEDED(hr))
-	{
-		// Create an enumerator for the category.
-		hr = pDevEnum->CreateClassEnumerator(category, ppEnum, 0);
-		if (hr == S_FALSE)
-		{
-			hr = VFW_E_NOT_FOUND;  // The category is empty. Treat as an error.
-		}
-		pDevEnum->Release();
-	}
-	return hr;
-}
-
-void 
-Util::getDeviceInformation(IEnumMoniker *pEnum, vector<DEVINFO> &devls)
-{
-	IMoniker *pMoniker = NULL;
-
-	while (pEnum->Next(1, &pMoniker, NULL) == S_OK)
-	{
-		IPropertyBag *pPropBag;
-		HRESULT hr = pMoniker->BindToStorage(0, 0, IID_IPropertyBag, (void ** ) &pPropBag);
-		if (FAILED(hr))
-		{
-			pMoniker->Release();
-			continue;  
-		} 
-
-		VARIANT var;
-		VariantInit(&var);
-
-		// Get description or friendly name.
-		string friendlyName;
-		hr = pPropBag->Read(L"Description", &var, 0);
-		if (FAILED(hr))
-		{
-			hr = pPropBag->Read(L"FriendlyName", &var, 0);
-		}
-		if (SUCCEEDED(hr))
-		{
-			friendlyName = narrow((LPCTSTR)var.bstrVal);
-			VariantClear(&var); 
-		}
-
-		WCHAR *szBuf;
-		char displayName[200];
-		pMoniker->GetDisplayName(NULL, NULL, &szBuf);
-		if (szBuf)
-		{
-			USES_CONVERSION;
-			strncpy(displayName, W2A(szBuf), NUMELMS(displayName));
-			CoTaskMemFree(szBuf);
-		}
-
-		DEVINFO devinfo;
-		devinfo.friendlyName	=	friendlyName;
-		devinfo.displayName		=	string(displayName);
-		pMoniker->BindToObject(0,0,IID_IBaseFilter, (void**)&(devinfo.pSrcFilter));
-
-		devls.push_back(devinfo);
-		pPropBag->Release();
-		pMoniker->Release();
-	}
-}
-
-
-int
-Util::getDeviceCount()
-{
-	if (devls.empty())
-	{
-		getDeviceList();
-	}
-	return devls.size();
-}
-
-
-vector<DEVINFO> 
-Util::getDeviceList()
-{
-	if (devls.empty())
-	{
-		IEnumMoniker *pEnum;
-		HRESULT hr = enumerateDevices(CLSID_VideoInputDeviceCategory, &pEnum);
-		getDeviceInformation(pEnum, devls);
-		pEnum->Release();
-	}
-	return devls;
-}
-
-
-void 
-Util::releaseDeviceList()
-{
-	int n = devls.size();
-	for (int i = 0;i < n;i++)
-	{
-		devls[i].pSrcFilter.Release();
-	}
 }
 
 

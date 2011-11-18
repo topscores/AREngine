@@ -2,6 +2,7 @@
 #include "arengine/AREngine.h"
 #include "arengine/ARScene.h"
 #include "arengine/Util.h"
+#include "arengine/CaptureDeviceManager.h"
 
 using namespace arengine;
 using namespace arenginewx;
@@ -149,11 +150,18 @@ CameraCtrlFrame::OnShowFilter(wxCommandEvent &event)
 wxMenu*
 CameraCtrlFrame::createDevMenu()
 {
-	m_devls = Util::getDeviceList();
+	int n = CaptureDeviceManager::getDeviceCount();
 	wxMenu *menu = new wxMenu();
-	for (int i = 0;i < m_devls.size();i++)
+	string displayName;
+	int frame_width, frame_height;
+	CaptureDeviceManager::loadCapDevInfo(displayName, frame_width, frame_height);
+	for (int i = 0;i < n;i++)
 	{
-		menu->AppendRadioItem(wxID_DEVFIRST + i, wxString(Util::widen(m_devls[i].friendlyName.c_str())));
+        menu->AppendRadioItem(wxID_DEVFIRST + i, wxString(Util::widen(CaptureDeviceManager::getFriendlyName(i))));
+		if (displayName == CaptureDeviceManager::getDisplayName(i))
+		{
+			menu->Check(wxID_DEVFIRST + i, true);
+		}
 	}
 
 	return menu;
