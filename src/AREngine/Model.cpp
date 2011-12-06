@@ -47,10 +47,9 @@ Model::Model(DataNode *modelNode)
 					sstr << "Model::Model() : Model file not found for " << m_fileName;
 					throw Exception(sstr.str().c_str(), 2);
 				}
-				//if (modelNode->getAttributeAsBool("preCompile"))
-				//{
-				//	compileDisplayList();
-				//}
+				SetSyncModeVisitor nv(true);
+				m_orgNode->accept(nv);
+
 				m_id		= Util::getUniqueId();
 
 				m_orgTranslation[0] = modelNode->getAttributeAsDouble("transX");

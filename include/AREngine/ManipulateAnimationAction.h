@@ -39,12 +39,15 @@ namespace arengine
 		virtual void doAction(osg::Node *node);
 
 	private:
-		void manipulateAnim(SceneObj *obj);
+		void manipulateAnim(Node *node, SceneObj *obj);
 
 	private:
 		string m_manipulateType;
 		string m_markerName;
 		string m_objName;
+
+		// false if there is no need to change sequence node sync mode (use in pause/resume), true
+		bool m_changeSyncMode;
 
 		ref_ptr<Marker> m_marker;
 	};

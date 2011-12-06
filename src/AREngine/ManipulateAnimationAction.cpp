@@ -4,6 +4,7 @@
 #include "arengine/Scene.h"
 #include "arengine/ObjPool.h"
 #include "arengine/Singleton.h"
+#include "arengine/Model.h"
 
 #include <osg/NodeCallback>
 #include <osg/AnimationPath>
@@ -44,6 +45,7 @@ ManipulateSequenceVisitor::apply(osg::Sequence &seq)
 	{
 		seq.setMode(osg::Sequence::RESUME);
 	}
+	traverse(seq);
 }
 
 
@@ -93,13 +95,13 @@ ManipulateAnimationPathVisitor::apply(osg::Node &node)
 		cb = cb->getNestedCallback();
 		acb = dynamic_cast<osg::AnimationPathCallback*>(cb);
 	}
-
 	traverse(node);
 }
 
 
 ManipulateAnimationAction::ManipulateAnimationAction(arengine::DataNode *datNode)
 :Action(datNode)
+,m_changeSyncMode(false)
 {
 	if (datNode->getNodeName() == "ManipulateAnimation")
 	{
@@ -140,7 +142,7 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 			ref_ptr<SceneObj> obj = m_marker->getAssociatedObj(m_objName);
 			if (obj.valid())
 			{
-				manipulateAnim(obj.get());
+				manipulateAnim(node, obj.get());
 				Util::log(__FUNCTION__, 3, "Manipulate animation on %s with command \"%s\"", m_objName.c_str(), m_manipulateType.c_str());
 			}
 		}
@@ -150,7 +152,7 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 			int n = m_marker->countAssociatedObj();
 			for (int i = 0;i < n;i++)
 			{
-				manipulateAnim((m_marker->getAssociatedObj(i)).get());
+				manipulateAnim(node, (m_marker->getAssociatedObj(i)).get());
 			}
 			Util::log(__FUNCTION__, 3, "Manipulate animation on marker %s with command \"%s\"", m_markerName.c_str(), m_manipulateType.c_str());
 		}
@@ -162,7 +164,7 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 		ref_ptr<SceneObj> obj = pool->getByName(m_objName);
 		if (obj.valid())
 		{
-			manipulateAnim(obj.get());
+			manipulateAnim(node, obj.get());
 			Util::log(__FUNCTION__, 3, "Manipulate animation on %s with command \"%s\"", m_objName.c_str(), m_manipulateType.c_str());
 		}
 	}
@@ -170,24 +172,61 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 
 
 void
-ManipulateAnimationAction::manipulateAnim(SceneObj *obj)
+ManipulateAnimationAction::manipulateAnim(Node *node, SceneObj *obj)
 {
 	if (obj)
 	{
-		/*if (m_manipulateType == "stop")
+		if (m_manipulateType == "start" || m_manipulateType == "stop")
 		{
-			obj->accept(ManipulateSequenceVisitor("start"));
-			obj->accept(ManipulateAnimationPathVisitor("start"));
-
-			obj->accept(ManipulateSequenceVisitor("stop"));
-			obj->accept(ManipulateAnimationPathVisitor("stop"));
-		}
-		else
-		{*/
-        ManipulateSequenceVisitor msv(m_manipulateType);
-        ManipulateAnimationPathVisitor mapv(m_manipulateType);
+			ManipulateSequenceVisitor msv(m_manipulateType);
+			ManipulateAnimationPathVisitor mapv(m_manipulateType);
 			obj->accept(msv);
 			obj->accept(mapv);
-		//}
+		}
+		else if (m_manipulateType == "pause")
+		{
+			if (!m_changeSyncMode)
+			{
+				ManipulateSequenceVisitor msv(m_manipulateType);
+				ManipulateAnimationPathVisitor mapv(m_manipulateType);
+				obj->accept(msv);
+				obj->accept(mapv);
+
+				// After pausing need to change sync mode to false to avoid frame skip after resuming
+				m_changeSyncMode = true;
+				addToPendingQueue(node, this);
+			}
+			// Change sync mode
+			else
+			{
+				// After pausing need to change sync mode to false to avoid frame skip after resuming
+				SetSyncModeVisitor ssmv(false);
+				obj->accept(ssmv);
+				m_changeSyncMode = false;
+			}
+		}
+		else if (m_manipulateType == "resume")
+		{
+			if (!m_changeSyncMode)
+			{
+				ManipulateSequenceVisitor msv(m_manipulateType);
+				ManipulateAnimationPathVisitor mapv(m_manipulateType);
+				obj->accept(msv);
+				obj->accept(mapv);
+
+				// After resuming need to change sync mode to true to sync with timeline
+				m_changeSyncMode = true;
+				addToPendingQueue(node, this);
+			}
+			// Change sync mode
+			else
+			{
+				// After resuming need to change sync mode to true to sync with timeline
+				SetSyncModeVisitor ssmv(true);
+				obj->accept(ssmv);
+				m_changeSyncMode = false;
+			}
+		}
+
 	}
 }
