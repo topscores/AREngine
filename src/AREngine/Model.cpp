@@ -47,8 +47,8 @@ Model::Model(DataNode *modelNode)
 					sstr << "Model::Model() : Model file not found for " << m_fileName;
 					throw Exception(sstr.str().c_str(), 2);
 				}
-				SetSyncModeVisitor nv(true);
-				m_orgNode->accept(nv);
+				SetSyncModeVisitor ssmv(true);
+				m_orgNode->accept(ssmv);
 
 				m_id		= Util::getUniqueId();
 

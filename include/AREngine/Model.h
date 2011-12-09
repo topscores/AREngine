@@ -4,6 +4,7 @@
 #include "arengine/Export"
 #include "arengine/DataNode.h"
 #include "arengine/SceneObj.h"
+#include "AREngine/Util.h"
 
 #include <osg/Vec3d>
 #include <osg/MatrixTransform>
@@ -28,9 +29,11 @@ namespace arengine
 			setTraversalMode(TRAVERSE_ALL_CHILDREN);
 		}
 
-		virtual void apply(osg::Sequence &node)
+		virtual void apply(osg::Sequence &seq)
 		{
-			node.setSync(m_sync);
+			seq.setSync(m_sync);
+			traverse(seq);
+			Util::log(__FUNCTION__, 3, "sync mode = %s", boolToString(m_sync));
 		}
 
 	private:
