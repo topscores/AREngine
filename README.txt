@@ -24,8 +24,8 @@ Required Packages.
 -- OSG 2.8.5
 -- OSGART 2.0.1 (Larngear Branch)
 -- WXWIDGET 2.8.12
--- SDL-1.2.14
--- SDL_mixer-1.2.11
+-- SDL-1.2.15
+-- SDL_mixer-1.2.12
 
 Config file format.
 -------------------
