@@ -33,9 +33,15 @@ Config file format.
 Changes log.
 ------------------------
 version 1.0
+- Support vdo action
+- Check avaiability of catpure device before starting program
 - Sync Animation
 - Support Multiple Camera
 - Support Sound
+
+version 0.811
+- Support AppConf tag (Application specific configurations)
+- Move osgdb_osgAudio to same location as other plugins
 
 version 0.81
 - Add support for Sound Action
