@@ -80,6 +80,22 @@ Marker::Marker(DataNode *markerNode)
 				throw Exception("Marker::Marker() : Cannot associate model which does not have a name", 2);
 			}
 		}
+
+		int countAssociatedMovie = markerNode->countChild("Movie");
+		for (int i = 0;i < countAssociatedMovie;i++)
+		{
+			DataNode *movieNode = markerNode->getChild("Movie", i);
+			string movieName = movieNode->getAttributeAsString("name");
+			if (!movieName.empty())
+			{
+				addAssociatedObj(movieName);
+			}
+			else
+			{
+				throw Exception("Marker::Marker() : Cannot associate movie which does not have a name", 2);
+			}
+		}
+
 		getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
 	}
 	catch (Exception err)

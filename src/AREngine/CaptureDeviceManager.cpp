@@ -267,6 +267,7 @@ CaptureDeviceManager::getDeviceInformation(IEnumMoniker *pEnum)
 		devinfo.friendlyName	=	friendlyName;
 		devinfo.displayName		=	string(displayName);
 		pMoniker->BindToObject(0,0,IID_IBaseFilter, (void**)&(devinfo.pSrcFilter));
+		pMoniker = NULL;
 
 		m_devls.push_back(devinfo);
 	}

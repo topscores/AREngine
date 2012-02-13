@@ -44,6 +44,7 @@ ARScene::init()
 	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
 	soundMgr->initAudio();
 
+	CoInitialize(NULL);
 	// Create global components that will be used for all scenes
 	m_video = initVideo();
 
@@ -89,6 +90,7 @@ ARScene::release()
 	CaptureDeviceManager::saveCapDevInfo(m_capdev, frame->s(), frame->t());
 #endif
 	m_video->stop();
+	CoUninitialize();
 
 	// Init sound system
 	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();

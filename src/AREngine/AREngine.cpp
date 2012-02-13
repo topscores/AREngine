@@ -5,8 +5,26 @@
 #include "arengine/Action.h"
 #include "arengine/SceneObj.h"
 #include "arengine/Util.h"
+#include "arengine/CaptureDeviceManager.h"
 
 using namespace arengine;
+
+bool
+AREngine::isCaptureDeviceReady()
+{
+#ifdef WIN32
+	if (CaptureDeviceManager::getDeviceCount() < 1)
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+#else
+	return true;
+#endif
+}
 
 void
 AREngine::init(string appName, 

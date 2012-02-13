@@ -13,40 +13,35 @@ Know issues in this release.
 
 About this archive.
 --------------------
-AREngine is a library xxx.
+AREngine is a library 1.0.
 
 Build AREngine.
 ---------------
 
 Required Packages.
--- Visual Studio 9.0
--- ARTOOLKIT 2.72
--- OSG 2.8.4
--- OSGART 2.0RC3
+-- Visual Studio .NET 2003
+-- ARTOOLKIT 2.72.1 (Larngear Branch)
+-- OSG 2.8.5
+-- OSGART 2.0.1 (Larngear Branch)
 -- WXWIDGET 2.8.12
--- osgAudio 2.0.0
--- openal 1.1
--- freealut-1.1.0
--- libogg-1.2.2
--- libvorbis-1.3.2
-
-Currently solution file is provided for VS9.0SP1. 
-In order to build AREngine you need to set following environment variable properly
--- OSG_ROOT : Root directory of OpenSceneGraph (normally /Program File/OpenSceneGraph)
--- OSGART_ROOT : Root directory of osgART (normally /Program File/osgART)
--- WxWIDGET_ROOT : Root directory of wxWidget (normally /Program File/wxWidget)
--- AL_ROOT : Root directory of OpenAL
--- ALUT_ROOT : Root directory of AL Utility toolkit
--- OSGAUDIO_ROOT : Root directory of osgAudio
--- LIBOGG_ROOT : Root directory of libogg
--- LIBVORBIS_ROOT : Root directory of libvorbis
-
+-- SDL-1.2.15
+-- SDL_mixer-1.2.12
 
 Config file format.
 -------------------
 
 Changes log.
 ------------------------
+version 1.0
+- Support vdo action
+- Check avaiability of catpure device before starting program
+- Sync Animation
+- Support Multiple Camera
+- Support Sound
+
+version 0.811
+- Support AppConf tag (Application specific configurations)
+- Move osgdb_osgAudio to same location as other plugins
 
 version 0.81
 - Add support for Sound Action

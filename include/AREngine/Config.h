@@ -48,6 +48,7 @@ namespace arengine
 		void processModelData(DataNode *modelNode);
 		void processImageData(DataNode *imageNode);
 		void processSceneData(DataNode *pMarkerNode);
+		void processMovieData(DataNode *movieNode);
 
 	private:
 		ConfigReader *m_reader;

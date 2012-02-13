@@ -6,6 +6,7 @@
 #include <osgDB/ReadFile>
 #include <osg/Texture2D>
 #include <osg/TextureRectangle>
+#include <osg/ImageStream>
 
 #include <sstream>
 
@@ -44,10 +45,7 @@ m_tex(NULL)
 			m_image = osgDB::readImageFile(m_imageFileName);
 			if (!m_image.valid())
 			{
-				stringstream sstr;
-				sstr << "Image::Image() : Cannot load " << m_imageFileName;
-				Util::log(sstr.str().c_str(), 2);
-
+				Util::log(__FUNCTION__, 2, "Cannot load %s", m_imageFileName);
 			}
 			else
 			{
@@ -57,6 +55,24 @@ m_tex(NULL)
 
 				m_size[0] = imageNode->getAttributeAsInt("width");
 				m_size[1] = imageNode->getAttributeAsInt("height");
+
+				// Find file extension
+				size_t dotPos = m_imageFileName.find_last_of(".");
+				string extension = m_imageFileName.substr(dotPos+1);
+				if (extension == "gif")
+				{
+					ImageStream *imgStream = dynamic_cast<ImageStream*>(m_image.get());
+					if (imgStream)
+					{
+						imgStream->play();
+					}
+					else
+					{
+						Util::log(__FUNCTION__, 3, 
+							"Fail to convert %s to ImageStream, all animation will not work"
+							, m_imageFileName.c_str());
+					}
+				}
 
 				m_orgNode = createGeodeForImage(m_image, m_position[0], m_position[1], m_size[0], m_size[1]);
 

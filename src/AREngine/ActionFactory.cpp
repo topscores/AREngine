@@ -4,6 +4,7 @@
 #include "arengine/AddRemoveAction.h"
 #include "arengine/SoundAction.h"
 #include "arengine/ManipulateAnimationAction.h"
+#include "arengine/ManipulateMovieAction.h"
 #include "arengine/ActionSet.h"
 #include "arengine/CircularActionSet.h"
 #include "arengine/TimerActionSet.h"
@@ -43,6 +44,10 @@ ActionFactory::newAction(DataNode *action)
 	else if (actionType == "ManipulateAnimation")
 	{
 		return new ManipulateAnimationAction(action);
+	}
+	else if (actionType == "ManipulateMovie")
+	{
+		return new ManipulateMovieAction(action);
 	}
 	else if (actionType == "ActionSet")
 	{

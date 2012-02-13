@@ -18,6 +18,9 @@ namespace arenginewx
 		CameraCtrlFrame(wxFrame *frame, const wxString& title, const wxPoint& pos,
 			const wxSize& size, long style = wxDEFAULT_FRAME_STYLE);
 		~CameraCtrlFrame();
+		
+		// Return false if no capture devices were found
+		bool WaitForCaptureDevice();
 
 		void OnContextMenu(wxContextMenuEvent& event);
 		void OnToggleFullScreen(wxCommandEvent& event);
