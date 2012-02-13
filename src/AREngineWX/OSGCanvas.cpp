@@ -120,7 +120,7 @@ void
 OSGCanvas::OnMouseEnter(wxMouseEvent &event)
 {
 	// Set focus to ourselves, so keyboard events get directed to us
-	SetFocus();
+	//SetFocus();
 }
 
 
@@ -132,6 +132,7 @@ OSGCanvas::OnMouseDown(wxMouseEvent &event)
 		_graphics_window->getEventQueue()->mouseButtonPress(event.GetX(), event.GetY(),
 			event.GetButton());
 	}
+	event.Skip();
 }
 
 
@@ -143,6 +144,7 @@ OSGCanvas::OnMouseUp(wxMouseEvent &event)
 		_graphics_window->getEventQueue()->mouseButtonRelease(event.GetX(), event.GetY(),
 			event.GetButton());
 	}
+	event.Skip();
 }
 
 

@@ -38,7 +38,7 @@ namespace arengine
 		void processImageData(DataNode *node);
 
 	private:
-		vector<ref_ptr<SceneObj>>	m_hudList;
+		vector< ref_ptr<SceneObj> >	m_hudList;
 		ref_ptr<osg::Camera>		m_hudCamera;
 	};
 

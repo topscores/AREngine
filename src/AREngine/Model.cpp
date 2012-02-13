@@ -39,7 +39,7 @@ Model::Model(DataNode *modelNode)
 
 			if (!modelNode->getAttributeAsString("fileName").empty())
 			{
-				m_fileName	= modelNode->getAttributeAsString("fileName");
+				m_fileName	= modelNode->getAttributeAsPath("fileName");
 				m_orgNode   = osgDB::readNodeFile(m_fileName);
 				if (!m_orgNode)
 				{
@@ -47,10 +47,9 @@ Model::Model(DataNode *modelNode)
 					sstr << "Model::Model() : Model file not found for " << m_fileName;
 					throw Exception(sstr.str().c_str(), 2);
 				}
-				//if (modelNode->getAttributeAsBool("preCompile"))
-				//{
-				//	compileDisplayList();
-				//}
+				SetSyncModeVisitor ssmv(true);
+				m_orgNode->accept(ssmv);
+
 				m_id		= Util::getUniqueId();
 
 				m_orgTranslation[0] = modelNode->getAttributeAsDouble("transX");

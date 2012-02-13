@@ -9,8 +9,6 @@
 
 #include <osgViewer/Viewer>
 
-using namespace osg;
-
 namespace arenginewx
 {
 
@@ -48,7 +46,7 @@ namespace arenginewx
 		DECLARE_EVENT_TABLE()
 
 		bool _process_kd_evt;
-		ref_ptr<osgViewer::GraphicsWindow> _graphics_window;
+		osg::ref_ptr<osgViewer::GraphicsWindow> _graphics_window;
 
 		wxCursor _oldCursor;
 	};

@@ -2,37 +2,19 @@
 #include "arengine/Util.h"
 
 #include <osgUtil/Optimizer>
-#include <osgAudio/SoundManager.h>
-#include <osg/DeleteHandler>
-
-#include <sstream>
 
 using namespace arengine;
-using namespace std;
-
 
 ARRoot::ARRoot()
+:m_activeSceneIdx(0)
+,m_cam(NULL)
+,m_vdoBackground(NULL)
 {
-	m_activeSceneIdx = 0;
-
-	osgAudio::SoundManager::instance()->init( 16, true );
-	osgAudio::SoundManager::instance()->getEnvironment()->setDistanceModel(osgAudio::InverseDistance);
-	osgAudio::SoundManager::instance()->getEnvironment()->setDopplerFactor(1);
-
-	m_sound_root = new osgAudio::SoundRoot();
-	this->addChild(m_sound_root);
-
 }
 
 
 ARRoot::~ARRoot()
 {
-	// Very important to call before end of main!
-	if (osg::Referenced::getDeleteHandler()) {
-		osg::Referenced::getDeleteHandler()->setNumFramesToRetainObjects(0);
-		osg::Referenced::getDeleteHandler()->flushAll();
-	}
-	osgAudio::SoundManager::instance()->shutdown();
 }
 
 
@@ -67,9 +49,7 @@ ARRoot::getScene(string name)
 	int idx = getIdxForSceneName(name);
 	if (idx == -1)
 	{
-		stringstream sstr;
-		sstr << "ARRoot::getScene() : Cannot find idx for " << name;
-		Util::log(sstr.str().c_str(), 2);
+		Util::log(__FUNCTION__, 2, "ARRoot::getScene() : Cannot find idx for %s", name.c_str());
 		return NULL;
 	}
 	else
@@ -98,9 +78,7 @@ ARRoot::getIdxForSceneName(string name)
 				return i;
 			}
 		}
-		stringstream sstr;
-		sstr << "ARRoot::getIdxForSceneName() : Cannot find idx for " << name;
-		Util::log(sstr.str().c_str(), 2);
+		Util::log(__FUNCTION__, 2, "ARRoot::getIdxForSceneName() : Cannot find idx for ", name.c_str());
 		return 0;
 	}
 }
@@ -158,9 +136,7 @@ ARRoot::setActiveScene(string name)
 	if (idx == -1)
 	{
 		setActiveScene(0);
-		stringstream sstr;
-		sstr << "Cannot find idx for " << name << "use idx = 0 instead";
-		Util::log(sstr.str().c_str(), 2);
+		Util::log(__FUNCTION__, 2, "Cannot find idx for %s use idx = 0 instead", name.c_str());
 	}
 	else
 	{
@@ -196,12 +172,27 @@ ARRoot::setVideoBackground(osg::Node *background)
 	if (background != NULL)
 	{
 		background->getOrCreateStateSet()->setRenderBinDetails(0, "RenderBin");
-		addChild(background);
+		if (m_vdoBackground)
+		{
+			replaceChild(m_vdoBackground, background);
+			m_vdoBackground = background;
+		}
+		else
+		{
+			addChild(background);
+		}
 	}
 	else
 	{
 		Util::log("ARRoot::setVideoBackground : NULL background", 3);
 	}
+}
+
+
+int
+ARRoot::getActiveSceneIdx()
+{
+	return m_activeSceneIdx;
 }
 
 

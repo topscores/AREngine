@@ -77,7 +77,7 @@ HUDRoot::addHUD(string name)
 	if (!name.empty())
 	{
 		// Check whether the object is already in list or not
-		vector<ref_ptr<SceneObj>>::iterator itr;
+		vector< ref_ptr<SceneObj> >::iterator itr;
 		for (itr = m_hudList.begin();itr != m_hudList.end();itr++)
 		{
 			SceneObj *obj = *itr;
@@ -124,7 +124,7 @@ HUDRoot::removeHUD(string name)
 
 	// Find removeIndex
 	int i = 0;
-	vector<ref_ptr<SceneObj>>::iterator itr;
+	vector< ref_ptr<SceneObj> >::iterator itr;
 	for (itr = m_hudList.begin();itr != m_hudList.end();itr++, i++)
 	{
 		string objName = (*itr)->getObjName();

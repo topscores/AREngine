@@ -9,6 +9,7 @@
 #include "arengine/ARScene.h"
 #include "arengine/ARRoot.h"
 #include "arengine/Image.h"
+#include "arengine/Movie.h"
 
 #include "arengine/MasterCVReader.h"
 #include "arengine/DebugCodec.h"
@@ -16,7 +17,6 @@
 
 using namespace arengine;
 
-Singleton<Config>::InstPtr Singleton<Config>::sm_ptr;
 
 Config::Config():
 m_reader(NULL)
@@ -34,6 +34,9 @@ Config::readConfig(string fileName)
 {
 	initReader();
 	try {
+#ifdef __APPLE__
+		fileName = Util::getNativePath(fileName);
+#endif
 		DataNode *rootNode = m_reader->readConfigFile(fileName);
 		if (rootNode == NULL)
 		{
@@ -113,6 +116,10 @@ Config::readConfig(string fileName)
 				else if (objName.compare("Image") == 0)
 				{
 					processImageData(objNode);
+				}
+				else if (objName.compare("Movie") == 0)
+				{
+					processMovieData(objNode);
 				}
 			}
 		}
@@ -269,5 +276,17 @@ Config::processSceneData(DataNode *sceneNode)
 		ref_ptr<Scene> scene = new Scene(sceneNode);
 		ARRoot *root = dynamic_cast<ARRoot*>(SmartSingleton<ARScene>::getInstance()->getSceneData().get());
 		root->addScene(scene);
+	}
+}
+
+
+void
+Config::processMovieData(DataNode *movieNode)
+{
+	if (movieNode->getNodeName().compare("Movie") == 0)
+	{
+		ref_ptr<SceneObj> movie = new Movie(movieNode);
+		SceneObjPool *pool = Singleton<SceneObjPool>::getInstance();
+		pool->addObj(movie.get());
 	}
 }

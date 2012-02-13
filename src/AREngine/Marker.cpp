@@ -30,6 +30,33 @@ Marker::Marker(DataNode *markerNode)
 		m_markerName = markerNode->getAttributeAsString("name");
 
 		m_initString = markerNode->getAttributeAsString("initString");
+#ifdef __APPLE__
+		// Init string syntax eg. initString=single;data\logo_gear.patt;80;0;0
+		// We need to extract the second part and convert to native path
+		int i = 0;
+		char *pch;
+		char *initStringPart[5];
+		char str[100];
+		sprintf(str, "%s", m_initString.c_str());
+		pch = strtok(str, ";");
+		while (pch != NULL)
+		{
+			initStringPart[i] = pch;
+			pch = strtok(NULL, ";");
+			i++;
+		}
+		string nativePath = Util::getNativePath(string(initStringPart[1]));
+		m_initString="";
+		m_initString.append(initStringPart[0]);
+		m_initString.append(";");
+		m_initString.append(nativePath);
+		m_initString.append(";");
+		m_initString.append(initStringPart[2]);
+		m_initString.append(";");
+		m_initString.append(initStringPart[3]);
+		m_initString.append(";");
+		m_initString.append(initStringPart[4]);
+#endif
 		if (m_initString.empty())
 		{
 			throw Exception("Marker::Marker() : InitString is empty", 2);
@@ -53,6 +80,22 @@ Marker::Marker(DataNode *markerNode)
 				throw Exception("Marker::Marker() : Cannot associate model which does not have a name", 2);
 			}
 		}
+
+		int countAssociatedMovie = markerNode->countChild("Movie");
+		for (int i = 0;i < countAssociatedMovie;i++)
+		{
+			DataNode *movieNode = markerNode->getChild("Movie", i);
+			string movieName = movieNode->getAttributeAsString("name");
+			if (!movieName.empty())
+			{
+				addAssociatedObj(movieName);
+			}
+			else
+			{
+				throw Exception("Marker::Marker() : Cannot associate movie which does not have a name", 2);
+			}
+		}
+
 		getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
 	}
 	catch (Exception err)
@@ -124,7 +167,7 @@ Marker::setActive(bool active)
 void
 Marker::initMarkerMatrixCallback()
 {
-	osgART::Tracker *tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
+	ref_ptr<osgART::Tracker> tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
 	m_osgMarker = tracker->addMarker(m_initString);
 
 	if (m_osgMarker.valid())

@@ -4,6 +4,8 @@
 #include "arengine/PendingActionCallback.h"
 #include "arengine/Scene.h"
 
+#include <sstream>
+
 #define DEFAULT_SLEEP_TIME 1000
 #define DEFAULT_SLEEP_COUNT 5
 

@@ -1,8 +1,19 @@
-#include "arengine/Singleton.h"
+#ifdef WIN32
+#	include <arengine/Util.h>	
+#	include <Shlobj.h>
+#endif
+
+#ifdef __APPLE__
+#	include <CoreServices/CoreServices.h>
+#	include <CoreFoundation/CoreFoundation.h>
+#	include <unistd.h>
+#	include <dlfcn.h>
+#	include "arengine/Arengine.h"
+#endif
+
 #include "arengine/Logger.h"
 using namespace arengine;
 
-Singleton<Logger>::InstPtr Singleton<Logger>::sm_ptr;
 
 Logger::Logger():
 m_log(NULL),	// Not yet initialized
@@ -18,7 +29,7 @@ Logger::~Logger()
 
 
 void
-Logger::init(string fileName, int logLevel)
+Logger::init(string fileName, int logLevel, string appName)
 {
 	if (logLevel >= 1 && logLevel <= 5)
 	{
@@ -29,20 +40,26 @@ Logger::init(string fileName, int logLevel)
 		// Default log level = 3
 		m_logLevel = 3;
 	}
-	m_log		= fopen(fileName.c_str(), "w");
+
+	string logPath;
+	logPath.append(getLogDir(appName));
+	logPath.append(fileName);
+
+	m_log = fopen(logPath.c_str(), "w");
 }
 
 
 void
 Logger::log(string logMsg, int logLevel)
 {
-	if (m_log == NULL && m_logLevel == -1) // Have not initialized yet, log to console
+	if (m_log == NULL) // Have not initialized yet, log to console
 	{
 		printf(logMsg.c_str());
 	}
 	else if (logLevel <= m_logLevel)
 	{
-		fprintf(m_log, logMsg.c_str());
+		fprintf(m_log, "%s", logMsg.c_str());
+		fflush(m_log);
 	}
 }
 
@@ -67,11 +84,56 @@ Logger::getLogLevel()
 void
 Logger::releaseLog()
 {
-	if (m_log)
-	{
-		fclose(m_log);
+	fclose(m_log);
 
-		m_log		= NULL;
-		m_logLevel	= -1;
+	m_log		= NULL;
+	m_logLevel	= -1;
+}
+
+
+string
+Logger::getLogDir(string appName)
+{
+#ifdef WIN32
+	wstring logDir;
+	logDir.append(Util::widen(Util::getLocalAppDir()));
+	logDir.append(L"\\Larngear\\");
+	logDir.append(Util::widen(appName));
+	logDir.append(L"\\");
+	SHCreateDirectory(NULL, logDir.c_str());
+	return Util::narrow(logDir);
+#endif
+	
+#ifdef __APPLE__
+	char homePath[1024];
+	FSRef homeRef;
+	FSFindFolder(kOnAppropriateDisk, kCurrentUserFolderType, kCreateFolder, &homeRef);
+	FSRefMakePath(&homeRef,(UInt8*) &homePath ,sizeof(homePath) );
+	
+	string logDir;
+	logDir.append(homePath);
+	if (!logDir.empty())
+	{
+		logDir.append("/");
+		logDir.append("Library/Logs/Larngear");
+		logDir.append("/");
 	}
+	else 
+	{
+		return "";
+	}
+	
+	logDir.append(appName);
+	logDir.append("/");
+	
+	string cmd;
+	cmd.append("mkdir -p ");
+	cmd.append(logDir);
+	system(cmd.c_str());
+	
+	return logDir;
+
+#endif
+	
+	return "";
 }

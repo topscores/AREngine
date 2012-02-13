@@ -1,7 +1,6 @@
 #include "wx/wx.h"
 
-#include "arengine/KeyboardHandler.h"
-#include "arengine/SmartSingleton.h"
+#include "arengine/AREngine.h"
 
 #include "arenginewx/OSGFrame.h"
 #include "arenginewx/OSGCanvas.h"
@@ -42,7 +41,7 @@ OSGFrame::OSGFrame(wxFrame *frame, const wxString& title, const wxPoint& pos,
     attributes[6] = 0;
 
     _canvas = new OSGCanvas(this, wxID_ANY, wxDefaultPosition,
-		wxSize(width, height), wxNO_BORDER, wxT("osgviewerWX"), attributes);
+		wxSize(width, height), wxNO_BORDER, title, attributes);
 	_canvas->enableProcessKeyDownEvent(true);
 
     GraphicsWindowWX* gw = new GraphicsWindowWX(_canvas);
@@ -52,10 +51,15 @@ OSGFrame::OSGFrame(wxFrame *frame, const wxString& title, const wxPoint& pos,
 	_viewer = new osgViewer::Viewer;
     _viewer->getCamera()->setGraphicsContext(gw);
 	_viewer->getCamera()->setViewport(0, 0, width, height);
-    _viewer->addEventHandler(new osgViewer::StatsHandler);
-	_viewer->addEventHandler(SmartSingleton<KeyboardHandler>::getInstance());
+	
+	Config *config = AREngine::getConfig();
+	if (config->viewStat())
+	{
+		_viewer->addEventHandler(new osgViewer::StatsHandler);
+	}
+	_viewer->addEventHandler(AREngine::getKeyboardHandler());
 	_viewer->addEventHandler(new osgViewer::WindowSizeHandler);
-    //_viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
+    _viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 }
 
 

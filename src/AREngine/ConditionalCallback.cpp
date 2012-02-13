@@ -80,7 +80,7 @@ ConditionalCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 		m_lastCheckTime = curTime;
 		if (valid(node))
 		{
-			vector<ref_ptr<Action>>::iterator actionItr;
+			vector< ref_ptr<Action> >::iterator actionItr;
 			for (actionItr = m_actions.begin();actionItr != m_actions.end();actionItr++)
 			{
 				ref_ptr<Action> action = *actionItr;
@@ -217,7 +217,7 @@ ConditionalCallback::allConditionValid(osg::Node *node)
 		return true;
 	}
 
-	vector<ref_ptr<ConditionChecker>>::iterator checkerItr;
+	vector< ref_ptr<ConditionChecker> >::iterator checkerItr;
 	for (checkerItr = m_checkers.begin();checkerItr != m_checkers.end();checkerItr++)
 	{
 		// Exit if one of the conditions is not satisfied

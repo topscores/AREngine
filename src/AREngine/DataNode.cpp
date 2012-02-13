@@ -188,6 +188,13 @@ DataNode::getAttributeAsString(string name)
 }
 
 
+string
+DataNode::getAttributeAsPath(string name)
+{
+	string s = getAttributeAsString(name);
+	return Util::getNativePath(s);
+}
+
 int
 DataNode::getAttributeAsInt(string name)
 {

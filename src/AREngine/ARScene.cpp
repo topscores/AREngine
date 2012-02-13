@@ -4,19 +4,29 @@
 #include "arengine/SmartSingleton.h"
 #include "arengine/Marker.h"
 #include "arengine/ObjPool.h"
+#include "arengine/SDLSoundManager.h"
+#include "arengine/CaptureDeviceManager.h"
 
 #include <osgDB/Readfile>
+
 #include <osgART/GeometryUtils>
 #include <osgART/PluginManager>
 #include <osgART/VideoGeode>
 #include <osgART/VideoLayer>
 #include <osgART/MarkerCallback>
 
+#ifdef _WIN32
+#	include <windows.h>
+#	include <atlbase.h>
+#	include <atlconv.h>
+#	include <objbase.h>
+#endif
+
 using namespace arengine;
 
-SmartSingleton<ARScene>::InstPtr SmartSingleton<ARScene>::sm_ptr;
-
 ARScene::ARScene()
+:m_tracker(NULL)
+,m_video(NULL)
 {
 	m_rootNode = new ARRoot();
 }
@@ -30,8 +40,13 @@ ARScene::~ARScene()
 void
 ARScene::init()
 {
+	//// Init sound system
+	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
+	soundMgr->initAudio();
+
+	CoInitialize(NULL);
 	// Create global components that will be used for all scenes
-	initVideo();
+	m_video = initVideo();
 
 	ref_ptr<osg::Node> videoBackground = createVideoBackground();
 	m_tracker = createTracker();
@@ -56,7 +71,6 @@ ARScene::start()
 ref_ptr<osg::Node>
 ARScene::getSceneData()
 {
-	//return m_root.get();
 	return m_rootNode.get();
 }
 
@@ -69,8 +83,54 @@ ARScene::getTracker()
 
 
 void
+ARScene::release()
+{
+#ifdef WIN32
+	ref_ptr<osg::Image> frame = m_video.get();
+	CaptureDeviceManager::saveCapDevInfo(m_capdev, frame->s(), frame->t());
+#endif
+	m_video->stop();
+	CoUninitialize();
+
+	// Init sound system
+	SDLSoundManager *soundMgr = Singleton<SDLSoundManager>::getInstance();
+	soundMgr->closeAudio();
+	
+	// Need to do this to force ref_ptr to unref, otherwise will cause core dump on osx
+	// This might have something to do with static variable memory releasing in osx
+	m_rootNode = NULL;
+	m_video = NULL;
+	m_tracker = NULL;
+}
+
+
+void
+ARScene::setVideoConfig(ref_ptr<osgART::Video> video, 
+						bool showDialog,
+						int frame_width,
+						int frame_height)
+{
+	if (video.valid())
+	{
+		Config *config = Singleton<Config>::getInstance();
+		
+		// Flip or not flip images from video before using it
+		osgART::VideoConfiguration *videoConfig = video.get()->getVideoConfiguration();
+
+		string conf = CaptureDeviceManager::createConfigString(showDialog,
+												config->flipEnable(),
+												frame_width,
+												frame_height);
+
+		videoConfig->deviceconfig = conf.c_str();
+	}
+}
+
+
+ref_ptr<osgART::Video>
 ARScene::initVideo()
 {
+	ref_ptr<osgART::Video> video;
 	// Check wheter to use web camera or video file as a video source
 	Config *config = Singleton<Config>::getInstance();
 	if (config->getAVIFileName().empty())
@@ -78,27 +138,60 @@ ARScene::initVideo()
 		int video_id = osgART::PluginManager::instance()->load("osgart_video_artoolkit2");
 		
 		// Load video plugin
-		m_video = dynamic_cast<osgART::Video *>(osgART::PluginManager::instance()->get(video_id));
-		if (!m_video.valid())
+		video = dynamic_cast<osgART::Video *>(osgART::PluginManager::instance()->get(video_id));
+		if (!video.valid())
 		{
 			Util::log("ARScene::CreateBackgroundVideo : Could not initialize video", 1);
 		}
 
-		// Flip or not flip images from video before using it
-		osgART::VideoConfiguration *videoConfig = m_video.get()->getVideoConfiguration();
-		if (!config->flipEnable())
+#ifdef WIN32
+		if (CaptureDeviceManager::getDeviceCount() < 1)
 		{
-			videoConfig->deviceconfig = "Data\\WDM_camera_normal.xml";
+			MessageBox(NULL, TEXT("Fatal Error"), TEXT("Capture Device not found, program will now exit"), MB_OK);
+			Util::log(__FUNCTION__, "Capture device not found", 1);
+		}
+
+		// Capture device name has not yet been set before
+		// Choose the first one in list
+		int frame_width, frame_height;
+		CaptureDeviceManager::loadCapDevInfo(m_capdev, frame_width, frame_height);
+		if (m_capdev == "")
+		{
+			Util::log(__FUNCTION__, 3, "No capture device from previous session, choose the first available one(%s)", m_capdev.c_str());
+			m_capdev = CaptureDeviceManager::getDisplayName(0);
+			setVideoConfig(video, false, 640, 480);
+			video->open(CaptureDeviceManager::getAsSourceFilter(0));
 		}
 		else
 		{
-			videoConfig->deviceconfig = "Data\\WDM_camera_mirror.xml";
+			CComPtr<IBaseFilter> pSrcFilter = CaptureDeviceManager::getAsSourceFilter(m_capdev);
+			if (pSrcFilter)
+			{
+				Util::log(__FUNCTION__, 3, "Capture Device = %s", m_capdev.c_str());
+				setVideoConfig(video, false, frame_width, frame_height);
+				video->open(pSrcFilter);
+			}
+			else
+			{
+				Util::log(__FUNCTION__, 3, "Previous capture device not found, choose the first available one(%s)", m_capdev.c_str());
+				m_capdev = CaptureDeviceManager::getDisplayName(0);
+				setVideoConfig(video, false, 640, 480);
+				video->open(CaptureDeviceManager::getAsSourceFilter(0));
+			}
 		}
+#endif
+
+#ifdef __APPLE__
+		setVideoConfig(video, false);
+		video->open();
+#endif
+		return video;
 	}
 	else
 	{
 		// Code to load video from file go here
 		Util::log("Using VDO as a background texture is currently unsupported", 1);
+		return NULL;
 	}
 }
 
@@ -109,13 +202,13 @@ ARScene::createVideoBackground()
 	// check if loading the plugin was successful
 	if (!m_video.valid()) 
 	{
-		initVideo();
+		m_video = initVideo();
 	}
 
 	// Open the video. This will not yet start the video stream but will
 	// get information about the format of the video which is essential
 	// for the connected tracker
-	m_video->open();
+	//m_video->open();
 
 	ref_ptr<osgART::VideoLayer> videoLayer = new osgART::VideoLayer();
 	videoLayer->setSize(*m_video.get());
@@ -144,7 +237,7 @@ ARScene::createTracker()
 {
 	if (!m_video.valid())
 	{
-		initVideo();
+		m_video = initVideo();
 	}
 
 	int tracker_id	=	osgART::PluginManager::instance()->load("osgart_tracker_artoolkit2");
@@ -180,7 +273,7 @@ ARScene::createTracker()
 		osg::ref_ptr<osgART::Calibration> calibration = tracker->getOrCreateCalibration();
 
 		// load a calibration file
-		if (!calibration->load(std::string("data/camera_para.dat"))) 
+		if (!calibration->load(Util::getNativePath("data/camera_para.dat"))) 
 		{
 
 			// the calibration file was non-existing or couldnt be loaded
@@ -198,3 +291,116 @@ ARScene::createTracker()
 
 	return tracker;
 }
+
+
+#ifdef WIN32
+
+void 
+ARScene::changeCaptureDevice(int i)
+{
+	if (i >= 0 && i < CaptureDeviceManager::getDeviceCount())
+	{
+		m_video->close(false);
+		m_video->open(CaptureDeviceManager::getAsSourceFilter(i));
+		if (m_video.valid())
+		{
+			m_capdev = CaptureDeviceManager::getDisplayName(i);
+			ref_ptr<osg::Node> videoBackground = createVideoBackground();
+			if (m_tracker.valid())
+			{
+				m_rootNode->setVideoBackground(videoBackground);
+				m_tracker->setImage(m_video.get());
+				m_rootNode->initCameraMatrix(m_tracker);
+				m_rootNode->setActiveScene(m_rootNode->getActiveSceneIdx());
+				m_video->start();
+			}
+			else
+			{
+				Util::log(__FUNCTION__, 2, "Invalid tracker");
+			}
+		}
+		else
+		{
+			Util::log(__FUNCTION__, 2, "Cannot create new capture device");
+		}
+
+	}
+}
+
+
+void 
+ARScene::showPinProperties(HWND hWnd)
+{
+	m_video->close(false);
+
+	setVideoConfig(m_video, true);
+	m_video->open(CaptureDeviceManager::getAsSourceFilter(m_capdev));
+	setVideoConfig(m_video, false);
+
+	if (m_video.valid())
+	{
+		ref_ptr<osg::Node> videoBackground = createVideoBackground();
+		if (m_tracker.valid())
+		{
+			m_rootNode->setVideoBackground(videoBackground);
+			m_tracker->setImage(m_video.get());
+			m_rootNode->initCameraMatrix(m_tracker);
+			m_rootNode->setActiveScene(m_rootNode->getActiveSceneIdx());
+			m_video->start();
+		}
+		else
+		{
+			Util::log(__FUNCTION__, 2, "Invalid tracker");
+		}
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 2, "Cannot create new capture device");
+	}
+}
+
+
+void 
+ARScene::showFilterProperties(HWND hWnd)
+{
+	if (m_video.valid())
+	{
+		m_video->showFilterProperties(hWnd);
+	}
+}
+
+#endif
+
+#ifdef __APPLE__
+
+void
+ARScene::showDeviceConfig()
+{
+	m_video->close(false);
+	setVideoConfig(m_video, true);
+	m_video->open();
+	setVideoConfig(m_video, false);
+	
+	if (m_video.valid())
+	{
+		ref_ptr<osg::Node> videoBackground = createVideoBackground();
+		if (m_tracker.valid())
+		{
+			m_rootNode->setVideoBackground(videoBackground);
+			m_tracker->setImage(m_video.get());
+			m_rootNode->initCameraMatrix(m_tracker);
+			m_rootNode->setActiveScene(m_rootNode->getActiveSceneIdx());
+			m_video->start();
+		}
+		else
+		{
+			Util::log(__FUNCTION__, 2, "Invalid tracker");
+		}
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 2, "Cannot create new capture device");
+	}
+}
+
+#endif

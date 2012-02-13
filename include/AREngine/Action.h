@@ -40,8 +40,8 @@ namespace arengine
 
 	protected:
 		string m_name;
-		vector<ref_ptr<ActionCallback>> m_preActionCB;
-		vector<ref_ptr<ActionCallback>> m_postActionCB;
+		vector< ref_ptr<ActionCallback> > m_preActionCB;
+		vector< ref_ptr<ActionCallback> > m_postActionCB;
 		bool m_enable;
 	};
 

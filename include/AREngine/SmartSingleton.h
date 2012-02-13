@@ -4,46 +4,37 @@
 #include "arengine/Export"
 
 #include <osg/Node>
-using namespace osg;
+
+#include "arengine/KeyboardHandler.h"
+#include "arengine/ARScene.h"
+
 
 namespace arengine
 {
+
 	template<class T>
-	class ARENGINE_EXPORT SmartSingleton
+	class SmartSingleton
 	{
 	private:
-		class InstPtr
-		{
-		public:
-			InstPtr() {m_ptr = 0;}
-			~InstPtr() {}
-			ref_ptr<T> Get() { return m_ptr; }
-			void Set(T* p)
-			{
-				if(p!= 0)
-				{
-					m_ptr = p;
-				}
-			}
-		private:
-			ref_ptr<T> m_ptr;
-		};
-
-		static InstPtr sm_ptr;
+		static osg::ref_ptr<T> sm_ptr;
 		SmartSingleton();
 		SmartSingleton(const SmartSingleton&);
 		SmartSingleton& operator=(const SmartSingleton&);
 
 	public:
-		static ref_ptr<T> getInstance()
+		static T* getInstance()
 		{
-			if(!sm_ptr.Get().valid())
+			if(!sm_ptr.valid())
 			{
-				sm_ptr.Set(new T());
+				sm_ptr = new T();
 			}
-			return sm_ptr.Get();
+			return sm_ptr.get();
 		}
 	};
+	
+	template<class T>
+	osg::ref_ptr<T> SmartSingleton<T>::sm_ptr;
+
 }
 
 #endif

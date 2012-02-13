@@ -1,5 +1,10 @@
 #include "wx/wx.h"
+#include "wx/msgdlg.h"
 
+#include "arenginewx/OSGFrame.h"
+#include "arenginewx/CameraCtrlFrame.h"
+
+#include "arengine/AREngine.h"
 #include "arengine/Util.h"
 #include "arengine/Logger.h"
 #include "arengine/ARScene.h"
@@ -9,7 +14,6 @@
 #include "arengine/SceneObj.h"
 #include "arengine/Config.h"
 #include "arengine/Model.h"
-#include "arenginewx/OSGFrame.h"
 #include "arenginewx/LGSplashWx.h"
 
 #include <osgViewer/ViewerEventHandlers>
@@ -27,33 +31,37 @@ class ARAppWX : public wxApp
 {
 public:
 	bool OnInit();
+	int OnExit();
 };
 
 
 // `Main program' equivalent, creating windows and returning main app frame
 bool ARAppWX::OnInit()
 {
+
+
 	// Create the main frame window
-	OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
+	//OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
+	//	wxDefaultPosition, wxSize(800, 600));
+	CameraCtrlFrame *frame = new CameraCtrlFrame(NULL, wxT("wxWidgets OSG Sample"),
 		wxDefaultPosition, wxSize(800, 600));
 
-	LGSplashWx *splash = new LGSplashWx(wxT(".\\huds\\splash.png"));
+	if (!frame->WaitForCaptureDevice())
+	{
+		exit(0);
+	}
+
+	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.png"));
 	splash->show();
 
-	// wxString fname(argv[1]);
-	// Initialize logger
-	Logger* logger = Singleton<Logger>::getInstance();
-	logger->init("log.txt", 4);
-
-	// Read config file
-	Config *config = Singleton<Config>::getInstance();
-	config->readConfig("mastercv.conf");
-
+	AREngine::init("ARAppWX", "log.txt", 4, "mastercv.conf");
+	Config *config = AREngine::getConfig();
+	
 	splash->SetMainFrame(frame, config->fullScreen());
 	
 	osgViewer::Viewer *viewer = frame->getViewer();
 
-	//osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("cow.osg");
+	//osg::ref_ptr<osg::Node> loadedModel = osgDB::readNodeFile("Models\\cow.osg");
 	//if (!loadedModel)
 	//{
 	//    std::cout << argv[0] <<": No data loaded." << std::endl;
@@ -62,24 +70,35 @@ bool ARAppWX::OnInit()
 	//viewer->setSceneData(loadedModel.get());
 
 	//SceneObjPool *pool = Singleton<SceneObjPool>::getInstance();
-	//ref_ptr<SceneObj> obj = pool->getSceneObj("orbit").get();
+	//ref_ptr<SceneObj> obj = pool->getByName("cow");
 	//viewer->setSceneData(obj);
 
 	// load the scene.
-	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
+	ref_ptr<ARScene> arscene = AREngine::getARScene();
 	viewer->setSceneData(arscene->getSceneData().get());
-	if (config->viewStat())
-	{
-		viewer->addEventHandler(new osgViewer::StatsHandler());
-	}
+	//if (config->viewStat())
+	//{
+	//	viewer->addEventHandler(new osgViewer::StatsHandler());
+	//}
 
 	arscene->start();
 
 	splash->close();
 	
-	viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+	//viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+	frame->Show(true);
+	
 
 	return true;
 }
+
+
+int
+ARAppWX::OnExit()
+{
+	AREngine::release();
+	return 0;
+}
+
 
 IMPLEMENT_APP(ARAppWX)
