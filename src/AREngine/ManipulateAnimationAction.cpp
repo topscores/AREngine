@@ -174,7 +174,7 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 void
 ManipulateAnimationAction::manipulateAnim(Node *node, SceneObj *obj)
 {
-	if (obj)
+	if (obj && obj->getObjType() == E_MODEL)
 	{
 		if (m_manipulateType == "start" || m_manipulateType == "stop")
 		{

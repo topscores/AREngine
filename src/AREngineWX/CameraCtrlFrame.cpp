@@ -87,6 +87,24 @@ CameraCtrlFrame::~CameraCtrlFrame()
 }
 
 
+bool
+CameraCtrlFrame::WaitForCaptureDevice()
+{
+	while(!AREngine::isCaptureDeviceReady())
+	{
+		wxMessageDialog dlg(NULL, 
+			wxT("Could not find available capture device"), 
+			wxT("Fatal Error"), 
+			wxOK|wxCANCEL);
+
+		if (wxID_CANCEL == dlg.ShowModal())
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
 void
 CameraCtrlFrame::OnContextMenu(wxContextMenuEvent &event)
 {

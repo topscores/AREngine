@@ -18,6 +18,7 @@ namespace arengine
 	class ARENGINE_EXPORT AREngine
 	{
 	public:
+		static bool isCaptureDeviceReady();
 		static void init(string appName,
 						 string logFileName, 
 						 int logLevel,

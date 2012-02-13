@@ -21,7 +21,8 @@ namespace arengine
 	enum EObjType
 	{
 		E_MODEL,
-		E_IMAGE
+		E_IMAGE,
+		E_MOVIE
 	};
 
 	class ARENGINE_EXPORT SceneObj : public osg::MatrixTransform, 
