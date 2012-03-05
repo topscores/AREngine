@@ -26,6 +26,7 @@ Required Packages.
 -- WXWIDGET 2.8.12
 -- SDL-1.2.15
 -- SDL_mixer-1.2.12
+-- Boost-1.4.8
 
 Config file format.
 -------------------
