@@ -46,7 +46,6 @@ CameraCtrlFrame::CameraCtrlFrame(wxFrame *frame, const wxString& title, const wx
 	m_menubar = new wxMenuBar();
 	SetMenuBar(m_menubar);
 
-
 #ifdef WIN32
 	// Create menubar
 	wxMenu *learngearMenu  = new wxMenu();

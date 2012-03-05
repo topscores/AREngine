@@ -58,6 +58,11 @@ find_package(wxWidgets COMPONENTS
 		adv
 )
 
+set(Boost_USE_STATIC_LIBS        ON)
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+find_package( Boost 1.48 COMPONENTS thread date_time)
+
 # Add additional include directories
 include_directories(${OPENGL_INCLUDE_DIR})
 
