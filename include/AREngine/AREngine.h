@@ -30,6 +30,10 @@ namespace arengine
 		static KeyboardHandler* getKeyboardHandler();
 		
 		static void release();
+		static bool ready();
+	private:
+		static bool m_ready;
+
 	};
 	
 }

@@ -9,6 +9,8 @@
 
 using namespace arengine;
 
+bool AREngine::m_ready;
+
 bool
 AREngine::isCaptureDeviceReady()
 {
@@ -32,13 +34,16 @@ AREngine::init(string appName,
 			   int	  logLevel,
 			   string configFileName)
 {
+	m_ready = false;
 	// Initialize logger
 	Logger* logger = AREngine::getLogger();
 	logger->init(logFileName, logLevel, appName);
-	
+
 	// Read config file
 	Config *config = AREngine::getConfig();
 	config->readConfig(configFileName);
+
+	m_ready = true;
 }
 
 
@@ -75,10 +80,19 @@ AREngine::release()
 {
 	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 	arscene->release();
-	
+
 	ActionPool *actionPool = Singleton<ActionPool>::getInstance();
 	actionPool->release();
-	
+
 	SceneObjPool *sceneObjPool = Singleton<SceneObjPool>::getInstance();
 	sceneObjPool->release();
+	
+	m_ready = false;
+}
+
+
+bool
+AREngine::ready()
+{
+	return m_ready;
 }

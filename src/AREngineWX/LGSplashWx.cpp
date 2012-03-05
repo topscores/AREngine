@@ -1,70 +1,40 @@
 #include "arengine/Util.h"
 #include "arenginewx/LGSplashWx.h"
 
+#include "wx/animate.h"
+
 using namespace arengine;
 using namespace arenginewx;
 
-BEGIN_EVENT_TABLE(LGSplashWx, wxEvtHandler)
+BEGIN_EVENT_TABLE(LGSplashWx, wxFrame)
 	EVT_CLOSE(LGSplashWx::OnSplashClose)
 END_EVENT_TABLE()
 
 LGSplashWx::LGSplashWx(wxString bitmapName)
-:m_mainFrame(NULL), m_fullscreen(false)
+:wxFrame(NULL,
+		 wxID_ANY,
+		 wxT(""),
+		 wxDefaultPosition, 
+		 wxSize(605, 317),
+		 wxDEFAULT_FRAME_STYLE & ~(wxCAPTION | wxRESIZE_BORDER))
 {
-#ifdef WIN32
-	m_bitmapName = bitmapName;
-#endif 
-	
-#ifdef __APPLE__
-	string nativePath = Util::getNativePath(bitmapName.mb_str().data());
-	m_bitmapName = wxString(nativePath.c_str(), wxConvUTF8);
-#endif
+	Center();
+
+	m_mainFrame = NULL;
+
+	wxSizer *sz = new wxBoxSizer(wxVERTICAL);
+
+	wxAnimationCtrl *animation = new wxAnimationCtrl(this, wxID_ANY);
+	animation->LoadFile(bitmapName);
+	animation->Play();
+	sz->Add(animation);
+
+	SetSizer(sz);
 }
 
 
 LGSplashWx::~LGSplashWx()
 {
-	delete m_splash;
-}
-
-
-void
-LGSplashWx::show()
-{
-	wxInitAllImageHandlers();
-	m_bitmap.LoadFile(m_bitmapName, wxBITMAP_TYPE_PNG);
-
-	m_splash = new wxSplashScreen(m_bitmap,
-		wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_NO_TIMEOUT,
-		0, NULL, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-		wxSIMPLE_BORDER|wxSTAY_ON_TOP);
-	//wxWindow *win = splash->GetSplashWindow();
-
-	m_splash->SetEventHandler(this);
-
-	wxYield();
-}
-
-
-void
-LGSplashWx::show(int timeout)
-{
-	wxInitAllImageHandlers();
-	m_bitmap.LoadFile(m_bitmapName, wxBITMAP_TYPE_PNG);
-
-	m_splash = new wxSplashScreen(m_bitmap,
-		wxSPLASH_CENTRE_ON_SCREEN | wxSPLASH_TIMEOUT,
-		timeout, NULL, wxID_ANY, wxDefaultPosition, wxDefaultSize,
-		wxSIMPLE_BORDER|wxSTAY_ON_TOP);
-
-	wxYield();
-}
-
-
-void
-LGSplashWx::close()
-{
-	m_splash->Close();
 }
 
 
@@ -77,11 +47,13 @@ LGSplashWx::SetMainFrame(wxFrame *mainFrame, bool fullscreen)
 
 
 void
-LGSplashWx::OnSplashClose(wxCloseEvent &event)
+LGSplashWx::OnSplashClose(wxCloseEvent& event)
 {
-	m_splash->OnCloseWindow(event);
 	if (m_mainFrame == NULL)
+	{
+		event.Skip();
 		return;
+	}
 
 	if (m_fullscreen)
 	{

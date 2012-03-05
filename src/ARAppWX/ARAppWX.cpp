@@ -23,6 +23,8 @@
 #include <string>
 #include <iostream>
 
+#include <boost/thread.hpp>
+
 using namespace arengine;
 using namespace arenginewx;
 using namespace std;
@@ -38,11 +40,10 @@ public:
 // `Main program' equivalent, creating windows and returning main app frame
 bool ARAppWX::OnInit()
 {
-
-
 	// Create the main frame window
 	//OSGFrame *frame = new OSGFrame(NULL, wxT("wxWidgets OSG Sample"),
 	//	wxDefaultPosition, wxSize(800, 600));
+
 	CameraCtrlFrame *frame = new CameraCtrlFrame(NULL, wxT("wxWidgets OSG Sample"),
 		wxDefaultPosition, wxSize(800, 600));
 
@@ -51,10 +52,17 @@ bool ARAppWX::OnInit()
 		exit(0);
 	}
 
-	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.png"));
-	splash->show();
+	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.gif"));
+	splash->Show();
 
-	AREngine::init("ARAppWX", "log.txt", 4, "mastercv.conf");
+	boost::thread initThread(AREngine::init, "ARAppWX", "log.txt", 4, "mastercv.conf");
+	//AREngine::init("ARAppWX", "log.txt", 4, "mastercv.conf");
+	while (!AREngine::ready())
+	{
+		wxYield();
+		Sleep(100);
+	}
+	initThread.join();
 	Config *config = AREngine::getConfig();
 	
 	splash->SetMainFrame(frame, config->fullScreen());
@@ -76,16 +84,16 @@ bool ARAppWX::OnInit()
 	// load the scene.
 	ref_ptr<ARScene> arscene = AREngine::getARScene();
 	viewer->setSceneData(arscene->getSceneData().get());
-	//if (config->viewStat())
-	//{
-	//	viewer->addEventHandler(new osgViewer::StatsHandler());
-	//}
+	if (config->viewStat())
+	{
+		viewer->addEventHandler(new osgViewer::StatsHandler());
+	}
 
 	arscene->start();
 
-	splash->close();
+	splash->Close();
 	
-	//viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+	viewer->setCameraManipulator(new osgGA::TrackballManipulator);
 	frame->Show(true);
 	
 
@@ -96,7 +104,7 @@ bool ARAppWX::OnInit()
 int
 ARAppWX::OnExit()
 {
-	AREngine::release();
+	//AREngine::release();
 	return 0;
 }
 

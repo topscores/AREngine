@@ -1,5 +1,6 @@
 set(app_name "ARAppWX")
 
+include_directories(${Boost_INCLUDE_DIRS})
 include_directories(${SDL_INCLUDE_DIR})
 
 include_directories(${wxWidgets_INCLUDE_DIRS})
@@ -27,6 +28,7 @@ target_link_libraries(${app_name}
 	${OPENSCENEGRAPH_LIBRARIES}
 	${OPENGL_LIBRARIES}
 	${wxWidgets_LIBRARIES}
+	${Boost_LIBRARIES}
 	AREngine
 	AREngineWX
 )
