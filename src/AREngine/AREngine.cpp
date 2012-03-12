@@ -75,6 +75,13 @@ AREngine::getKeyboardHandler()
 }
 
 
+MouseHandler*
+AREngine::getMouseHandler()
+{
+	return SmartSingleton<MouseHandler>::getInstance();
+}
+
+
 void
 AREngine::release()
 {

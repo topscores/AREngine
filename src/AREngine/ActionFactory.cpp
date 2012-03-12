@@ -41,6 +41,10 @@ ActionFactory::newAction(DataNode *action)
 	{
 		return new StopSoundAction(action);
 	}
+	else if (actionType == "ToggleMute")
+	{
+		return new ToggleMuteAction(action);
+	}
 	else if (actionType == "ManipulateAnimation")
 	{
 		return new ManipulateAnimationAction(action);

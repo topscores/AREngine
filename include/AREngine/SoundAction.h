@@ -42,6 +42,19 @@ namespace arengine
 		bool	m_stop;
 	};
 
+	class ARENGINE_EXPORT ToggleMuteAction : public Action
+	{
+	public:
+		ToggleMuteAction(DataNode *soundNode)
+			:Action(soundNode)
+		{
+		}
+
+		~ToggleMuteAction(){}
+
+		virtual void doAction(osg::Node *node);
+	};
+
 }
 
 #endif

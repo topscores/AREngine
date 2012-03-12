@@ -1,4 +1,6 @@
 #include "arenginewx/CameraCtrlFrame.h"
+#include "arenginewx/AboutDlg.h"
+
 #include "arengine/AREngine.h"
 #include "arengine/ARScene.h"
 #include "arengine/Util.h"
@@ -15,6 +17,8 @@ using namespace arenginewx;
 #	define wxID_DEVLAST (wxID_DEVFIRST + MAX_DEV - 1)
 #	define wxID_SHOWPINPROPERTIES (wxID_DEVLAST + 1)
 #	define wxID_SHOWFILTERPROPERTIES (wxID_SHOWPINPROPERTIES + 1)
+#	define wxID_ABOUTLARNGEAR (wxID_SHOWPINPROPERTIES + 2)
+#	define wxID_FAQ (wxID_SHOWPINPROPERTIES + 3)
 
 BEGIN_EVENT_TABLE (CameraCtrlFrame, OSGFrame)
 	EVT_MENU(wxID_SHOWPINPROPERTIES, CameraCtrlFrame::OnShowPin)
@@ -22,6 +26,8 @@ BEGIN_EVENT_TABLE (CameraCtrlFrame, OSGFrame)
 	EVT_MENU_RANGE(wxID_DEVFIRST, wxID_DEVLAST, CameraCtrlFrame::OnSwitchDevices)
 	EVT_MENU(wxID_TOGGLEFULLSCREEN, CameraCtrlFrame::OnToggleFullScreen)
 	EVT_MENU(wxID_EXIT, CameraCtrlFrame::OnExit)
+	EVT_MENU(wxID_FAQ, CameraCtrlFrame::OnFaq)
+	EVT_MENU(wxID_ABOUTLARNGEAR, CameraCtrlFrame::OnAbout)
 	EVT_CONTEXT_MENU(CameraCtrlFrame::OnContextMenu)
 END_EVENT_TABLE ()
 
@@ -56,6 +62,7 @@ CameraCtrlFrame::CameraCtrlFrame(wxFrame *frame, const wxString& title, const wx
 	m_menubar->Append(learngearMenu, wxT("Learngear"));
 	m_menubar->Append(createDevMenu(), wxT("Devices"));
 	m_menubar->Append(createOptionMenu(), wxT("Options"));
+	m_menubar->Append(createAboutMenu(), wxT("Help"));
 
 	// Create Context Menu
 	m_contextMenu.AppendSubMenu(createDevMenu(), wxT("Devices"));
@@ -127,6 +134,25 @@ CameraCtrlFrame::OnExit(wxCommandEvent& event)
 }
 
 
+void
+CameraCtrlFrame::OnFaq(wxCommandEvent& event)
+{
+	Close(true);
+}
+
+
+void
+CameraCtrlFrame::OnAbout(wxCommandEvent& event)
+{
+	AboutDlg dlg = new AboutDlg(this,
+								wxID_ANY,
+								wxT("About..."),
+								wxDefaultPosition, 
+								wxSize(312, 83));
+	dlg.ShowModal();
+}
+
+
 #ifdef WIN32
 
 void
@@ -191,6 +217,17 @@ CameraCtrlFrame::createOptionMenu()
 	wxMenu *menu = new wxMenu();
 	menu->Append(wxID_SHOWPINPROPERTIES, wxT("Change Video Resolution"));
 	menu->Append(wxID_SHOWFILTERPROPERTIES, wxT("Adjust Video Properties"));
+
+	return menu;
+}
+
+
+wxMenu*
+CameraCtrlFrame::createAboutMenu()
+{
+	wxMenu *menu = new wxMenu();
+	menu->Append(wxID_ABOUTLARNGEAR, wxT("About"));
+	menu->Append(wxID_FAQ, wxT("Troubleshoot"));
 
 	return menu;
 }

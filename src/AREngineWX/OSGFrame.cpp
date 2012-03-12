@@ -58,6 +58,7 @@ OSGFrame::OSGFrame(wxFrame *frame, const wxString& title, const wxPoint& pos,
 		_viewer->addEventHandler(new osgViewer::StatsHandler);
 	}
 	_viewer->addEventHandler(AREngine::getKeyboardHandler());
+	_viewer->addEventHandler(AREngine::getMouseHandler());
 	_viewer->addEventHandler(new osgViewer::WindowSizeHandler);
     _viewer->setThreadingModel(osgViewer::Viewer::SingleThreaded);
 }

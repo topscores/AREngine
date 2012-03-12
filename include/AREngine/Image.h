@@ -24,8 +24,8 @@ namespace arengine
 		void setSize(int width, int height);
 
 		string		getImageFileName();
-		osg::Vec2d  getPosition();
-		osg::Vec2d	getSize();
+		osg::Vec2d  getPosition(){return m_position;}
+		osg::Vec2d	getSize(){return m_size;}
 
 	private:
 		// Modified version of osg::createGeodeForImage, create image of specified size and move to posx, posy

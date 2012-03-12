@@ -28,8 +28,14 @@ namespace arengine
 		void stop(string soundName="");
 		void pause(string soundName="");
 
+		void toggleMute();
+
 	private:
-		SDLSoundManager(){}
+		SDLSoundManager()
+			:m_mute(false)
+		{
+		}
+
 		SDLSoundManager(const SDLSoundManager&){}
 		SDLSoundManager& operator=(const SDLSoundManager&){return *this;}
 
@@ -37,6 +43,7 @@ namespace arengine
 
 	private:
 		std::map<string, Sample*> m_samples;
+		bool m_mute;
 	};
 
 }

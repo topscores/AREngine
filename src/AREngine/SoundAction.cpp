@@ -85,3 +85,10 @@ StopSoundAction::doAction(osg::Node *node)
 		soundMgr->pause(m_soundName);
 	}
 }
+
+//==================================
+void
+ToggleMuteAction::doAction(osg::Node *node)
+{
+	Singleton<SDLSoundManager>::getInstance()->toggleMute();
+}
