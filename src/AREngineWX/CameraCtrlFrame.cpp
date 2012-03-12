@@ -99,7 +99,7 @@ CameraCtrlFrame::WaitForCaptureDevice()
 	while(!AREngine::isCaptureDeviceReady())
 	{
 		wxMessageDialog dlg(NULL, 
-			wxT("Could not find available capture device"), 
+			wxT("Please connect camera to your PC"), 
 			wxT("Fatal Error"), 
 			wxOK|wxCANCEL);
 

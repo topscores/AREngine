@@ -165,9 +165,9 @@ Util::log(string logMsg, int logLevel)
 	logger->log(sstr.str(), logLevel);
 	if (logLevel == 1)
 	{
-#ifdef WIN32
-		MessageBoxA(NULL, "Fatal Error", sstr.str().c_str(), MB_OK);
-#endif
+//#ifdef WIN32
+//		MessageBoxA(NULL, sstr.str().c_str(), "Fatal Error", MB_OK);
+//#endif
 		logger->releaseLog();
 		exit(1);
 	}
