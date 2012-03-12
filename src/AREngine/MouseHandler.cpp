@@ -1,7 +1,9 @@
 #include "arengine/MouseHandler.h"
 #include "arengine/SmartSingleton.h"
-#include "arengine/ObjPool.h"
 #include "arengine/Image.h"
+#include "arengine/ARScene.h"
+#include "arengine/ARRoot.h"
+#include "arengine/HUDRoot.h"
 
 #include<osg/Vec2d>
 
@@ -27,7 +29,7 @@ MouseHandler::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& a
 		position co-ordinates. **/
 	case osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON: 
 		{
-			check2DIntersection(ea.getXnormalized(), ea.getYnormalized());
+			check2DIntersection(ea.getX(), ea.getY());
 			check3DIntersection(ea.getXnormalized(), ea.getYnormalized());
 			return true;
 		}
@@ -58,22 +60,42 @@ MouseHandler::isMouseDown(string objname)
 void
 MouseHandler::check2DIntersection(int mx, int my)
 {
-	SceneObjPool *pool = Singleton<SceneObjPool>::getInstance();
-	int n = pool->size();
-	for (int i = 0;i < n;i++)
-	{
-		ref_ptr<arengine::Image> img = dynamic_cast<arengine::Image*>(pool->at(i).get());
-		if (img)
-		{
-			Vec2d pos = img->getPosition();
-			Vec2d size= img->getSize();
+	vector< ref_ptr<SceneObj> > hudlist;
+	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 
-			// Intersect with img
-			if ((mx >= pos.x() && mx < pos.x() + size.x()) 
-				&& (my >= pos.y() && my <= pos.y()))
+	if (arscene.valid())
+	{
+		ARRoot* arroot = dynamic_cast<ARRoot*>(arscene->getSceneData().get());
+		if (arroot)
+		{
+			ref_ptr<Scene> activescene = arroot->getScene(arroot->getActiveSceneIdx());
+			if (activescene.valid())
 			{
-				string name = img->getName();
-				setMouseDown(name);
+				ref_ptr<HUDRoot> hudroot = activescene->getHUDRoot();
+				hudlist = hudroot->getHUDList();
+			}
+		}
+	}
+
+	if (hudlist.size() != 0)
+	{
+		int n = hudlist.size();
+		for (int i = 0;i < n;i++)
+		{
+			Image *img = dynamic_cast<Image*>(hudlist[i].get());
+
+			if (img)
+			{
+				Vec2d pos = img->getPosition();
+				Vec2d size= img->getSize();
+
+				// Intersect with img
+				if ((mx >= pos.x() && mx < pos.x() + size.x()) 
+					&& (my >= pos.y() && my <= pos.y() + size.y()))
+				{
+					string name = img->getName();
+					setMouseDown(name);
+				}
 			}
 		}
 	}

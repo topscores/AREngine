@@ -211,6 +211,13 @@ HUDRoot::getHUD(string name)
 }
 
 
+vector< ref_ptr<SceneObj> >
+HUDRoot::getHUDList()
+{
+	return m_hudList;
+}
+
+
 void
 HUDRoot::resizeHUD(int xMin, int xMax, int yMin, int yMax)
 {

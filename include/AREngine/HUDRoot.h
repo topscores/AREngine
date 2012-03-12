@@ -32,6 +32,8 @@ namespace arengine
 		ref_ptr<osg::Node> getHUD(int id);
 		ref_ptr<osg::Node> getHUD(string name);
 
+		vector< ref_ptr<SceneObj> > getHUDList();
+
 		void resizeHUD(int xMin, int xMax, int yMin, int yMax);
 
 	private:
