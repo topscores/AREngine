@@ -23,7 +23,7 @@ namespace arengine
 	public:
 
 
-		bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
+		virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
 		bool isKeyDown(int key);
 
 	private:

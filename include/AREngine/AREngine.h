@@ -7,6 +7,7 @@
 #include "arengine/Config.h"
 #include "arengine/ARScene.h"
 #include "arengine/KeyboardHandler.h"
+#include "arengine/MouseHandler.h"
 
 #ifdef _WIN32
 #	include <dshow.h>
@@ -28,6 +29,7 @@ namespace arengine
 		static Config* getConfig();
 		static ARScene* getARScene();
 		static KeyboardHandler* getKeyboardHandler();
+		static MouseHandler* getMouseHandler();
 		
 		static void release();
 		static bool ready();

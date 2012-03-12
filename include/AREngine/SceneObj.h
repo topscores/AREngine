@@ -25,7 +25,8 @@ namespace arengine
 		E_MOVIE
 	};
 
-	class ARENGINE_EXPORT SceneObj : public osg::MatrixTransform, 
+	class ARENGINE_EXPORT SceneObj : 
+		public osg::MatrixTransform, 
 		public arengine::NamedObj
 	{
 	public:

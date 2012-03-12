@@ -1,6 +1,7 @@
 #include "arengine/ConditionalCallback.h"
 #include "arengine/CollisionChecker.h"
 #include "arengine/KeyDownChecker.h"
+#include "arengine/MouseDownChecker.h"
 #include "arengine/AppearChecker.h"
 #include "arengine/Util.h"
 #include "arengine/ActionFactory.h"
@@ -254,6 +255,10 @@ ConditionalCallback::processConditionData(DataNode *conditionNode)
 				else if (type.compare("Appear") == 0)
 				{
 					m_checkers.push_back(new AppearChecker(checker));
+				}
+				else if (type.compare("MouseDown") == 0)
+				{
+					m_checkers.push_back(new MouseDownChecker(checker));
 				}
 				else
 				{
