@@ -32,21 +32,25 @@ m_lastState(E_INVALID)
 
 		// When to trigger action
 		string type = callbackNode->getAttributeAsString("type");
-		if (type.compare("onValid") == 0)
+		if (type == "onValid")
 		{
 			m_triggerType = E_ON_VALID;
 		}
-		else if (type.compare("onInvalid") == 0)
+		else if (type == "onInvalid")
 		{
 			m_triggerType = E_ON_INVALID;
 		}
-		else if (type.compare("always") == 0)
+		else if (type == "always")
 		{
 			m_triggerType = E_ALWAYS;
 		}
 		// Default case
 		else
 		{
+			if ((type != ""))
+			{
+				Util::log(__FUNCTION__, 2, "Unknown condition type \'%s\'", type.c_str());
+			}
 			m_triggerType = E_ON_VALID;
 		}
 
