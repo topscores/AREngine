@@ -104,7 +104,7 @@ bool ARAppWX::OnInit()
 int
 ARAppWX::OnExit()
 {
-	//AREngine::release();
+	AREngine::release();
 	return 0;
 }
 

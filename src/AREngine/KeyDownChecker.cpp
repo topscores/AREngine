@@ -9,6 +9,7 @@ using namespace arengine;
 
 
 KeyDownChecker::KeyDownChecker(DataNode *checkerNode)
+:ConditionChecker(checkerNode)
 {
 	if (checkerNode->getNodeName().compare("KeyDown") == 0)
 	{
