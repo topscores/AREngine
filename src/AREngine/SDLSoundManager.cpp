@@ -87,6 +87,10 @@ SDLSoundManager::play(string soundName, bool loop)
 		{
 			m_samples.insert(pair<string, Sample*>(soundName, sample));
 			sample->play(loop);
+			if (m_mute)
+			{
+				sample->mute();
+			}
 		}
 	}
 }

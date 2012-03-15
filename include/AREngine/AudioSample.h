@@ -41,6 +41,8 @@ namespace arengine
 	protected:
 		string	m_soundName;
 		ESampleState m_state;
+
+		bool m_mute;
 	};
 
 	class ARENGINE_EXPORT WavSample : public Sample
