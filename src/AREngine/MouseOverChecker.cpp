@@ -1,4 +1,4 @@
-#include "arengine/MouseDownChecker.h"
+#include "arengine/MouseOverChecker.h"
 #include "arengine/SmartSingleton.h"
 #include "arengine/Util.h"
 
@@ -6,10 +6,10 @@ using namespace std;
 using namespace arengine;
 
 
-MouseDownChecker::MouseDownChecker(DataNode *checkerNode)
+MouseOverChecker::MouseOverChecker(DataNode *checkerNode)
 :ConditionChecker(checkerNode)
 {
-	if (checkerNode->getNodeName().compare("MouseDown") == 0)
+	if (checkerNode->getNodeName().compare("MouseOver") == 0)
 	{
 		if (!checkerNode->getAttributeAsString("objName").empty())
 		{
@@ -22,22 +22,22 @@ MouseDownChecker::MouseDownChecker(DataNode *checkerNode)
 	}
 	else
 	{
-		Util::log(__FUNCTION__, 2, "Not a MouseDown tag");
+		Util::log(__FUNCTION__, 2, "Not a MouseOver tag");
 	}
 }
 
 
-MouseDownChecker::~MouseDownChecker()
+MouseOverChecker::~MouseOverChecker()
 {
 }
 
 
 bool
-MouseDownChecker::conditionValid(osg::Node *node)
+MouseOverChecker::conditionValid(osg::Node *node)
 {
-	if (m_mh->isMouseDown(m_objName))
+	if (m_mh->isMouseOver(m_objName))
 	{
-		Util::log(__FUNCTION__, 4, "MouseDown detected for objName = %s", m_objName.c_str());
+		Util::log(__FUNCTION__, 4, "MouseOver detected for objName = %s", m_objName.c_str());
 		return true;
 	}
 	else

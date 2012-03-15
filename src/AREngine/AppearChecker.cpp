@@ -7,8 +7,9 @@ using namespace std;
 using namespace arengine;
 
 AppearChecker::AppearChecker(DataNode *checkerNode)
-:m_marker(NULL),
-m_scene(NULL)
+:ConditionChecker(checkerNode)
+,m_marker(NULL)
+,m_scene(NULL)
 {
 	if (checkerNode->getNodeName().compare("Appear") == 0)
 	{

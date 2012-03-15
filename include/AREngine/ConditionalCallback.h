@@ -31,7 +31,27 @@ namespace arengine
 	class ARENGINE_EXPORT ConditionChecker : public osg::Referenced
 	{
 	public:
+		ConditionChecker(DataNode *dataNode)
+		{
+			m_negate = dataNode->getAttributeAsBool("negate");
+		}
+
+		bool testCondition(osg::Node *node)
+		{
+			if (!m_negate)
+			{
+				return conditionValid(node);
+			}
+			else
+			{
+				return !conditionValid(node);
+			}
+		}
+
 		virtual bool conditionValid(osg::Node *node) = 0;
+
+	private:
+		bool m_negate;
 	};
 
 	class ARENGINE_EXPORT ConditionalCallback : public osg::NodeCallback

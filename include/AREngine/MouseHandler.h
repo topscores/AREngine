@@ -22,18 +22,23 @@ namespace arengine
 
 		virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
 		bool isMouseDown(string objname);
+		bool isMouseOver(string objname);
 
 	private:
 		MouseHandler();
 		MouseHandler(const KeyboardHandler&);
 		MouseHandler& operator=(const KeyboardHandler&);
 
-		void check2DIntersection(int mx, int my);
-		void check3DIntersection(int mx, int my);
+		string check2DIntersection(double mx, double my);
+		string check3DIntersection(double mx, double my);
+		
 		void setMouseDown(string objName);
+		void resetMouseOver();
+		void setMouseOver(string objName);
 
 	private:
 		std::map <string, bool> m_isPick;
+		std::map <string, bool> m_isOver;
 
 	};
 

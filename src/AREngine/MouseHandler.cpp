@@ -20,17 +20,44 @@ MouseHandler::MouseHandler()
 bool 
 MouseHandler::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& aa) 
 {
+	// Check for MouseOver whenever we receive mouse related event
+	resetMouseOver();
+	string objName;
+	objName = check2DIntersection(ea.getXnormalized(), ea.getYnormalized());
+	if (objName != "")
+	{
+		setMouseOver(objName);
+	}
+
+	objName = "";
+	objName = check3DIntersection(ea.getXnormalized(), ea.getYnormalized());
+	if (objName != "")
+	{
+		setMouseOver(objName);
+	}
+
 	switch (ea.getEventType()) 
 	{
-
 
 		/** HANDLE MOUSE EVENTS:
 		Mouse events have associated event names, and mouse
 		position co-ordinates. **/
+
 	case osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON: 
 		{
-			check2DIntersection(ea.getX(), ea.getY());
-			check3DIntersection(ea.getXnormalized(), ea.getYnormalized());
+			string objName;
+			objName = check2DIntersection(ea.getXnormalized(), ea.getYnormalized());
+			if (objName != "")
+			{
+				setMouseDown(objName);
+			}
+			
+			objName = "";
+			objName = check3DIntersection(ea.getXnormalized(), ea.getYnormalized());
+			if (objName != "")
+			{
+				setMouseDown(objName);
+			}
 			return true;
 		}
 
@@ -57,9 +84,19 @@ MouseHandler::isMouseDown(string objname)
 }
 
 
-void
-MouseHandler::check2DIntersection(int mx, int my)
+bool
+MouseHandler::isMouseOver(string objname)
 {
+	return m_isOver[objname];
+}
+
+
+string
+MouseHandler::check2DIntersection(double mx, double my)
+{
+	mx = ((mx - (-1)) / 2.0) * 800;
+	my = ((my - (-1)) / 2.0) * 600;
+
 	vector< ref_ptr<SceneObj> > hudlist;
 	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 
@@ -94,16 +131,19 @@ MouseHandler::check2DIntersection(int mx, int my)
 					&& (my >= pos.y() && my <= pos.y() + size.y()))
 				{
 					string name = img->getName();
-					setMouseDown(name);
+					// setMouseDown(name);
+					return name;
 				}
 			}
 		}
 	}
+
+	return "";
 }
 
 
-void
-MouseHandler::check3DIntersection(int mx, int my)
+string
+MouseHandler::check3DIntersection(double mx, double my)
 {
 
 
@@ -160,10 +200,12 @@ MouseHandler::check3DIntersection(int mx, int my)
 			if (node != NULL)
 			{
 				string name = node->getName();
-				setMouseDown(name);
+				// setMouseDown(name);
+				return name;
 			}
 		}
 	}
+	return "";
 }
 
 
@@ -180,5 +222,33 @@ MouseHandler::setMouseDown(string objName)
 	else
 	{
 		m_isPick.insert(pair<string, bool>(objName, true));
+	}
+}
+
+
+void
+MouseHandler::resetMouseOver()
+{
+	map<string, bool>::iterator itr;
+	for (itr = m_isOver.begin();itr != m_isOver.end();itr++)
+	{
+		itr->second = false;
+	}
+}
+
+
+void
+MouseHandler::setMouseOver(string objName)
+{
+	map<string, bool>::iterator itr = m_isOver.find(objName);
+
+	// m_isPick already contains an item represents object specified by name
+	if (itr != m_isOver.end())
+	{
+		itr->second = true;
+	}
+	else
+	{
+		m_isOver.insert(pair<string, bool>(objName, true));
 	}
 }
