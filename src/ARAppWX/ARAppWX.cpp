@@ -45,7 +45,7 @@ bool ARAppWX::OnInit()
 	//	wxDefaultPosition, wxSize(800, 600));
 
 	CameraCtrlFrame *frame = new CameraCtrlFrame(NULL, wxT("wxWidgets OSG Sample"),
-		wxDefaultPosition, wxSize(800, 600));
+		wxDefaultPosition, wxSize(640, 480));
 
 	if (!frame->WaitForCaptureDevice())
 	{
