@@ -57,12 +57,24 @@ bool ARAppWX::OnInit()
 
 	boost::thread initThread(AREngine::init, "ARAppWX", "log.txt", 4, "mastercv.conf");
 	//AREngine::init("ARAppWX", "log.txt", 4, "mastercv.conf");
+
 	while (!AREngine::ready())
 	{
 		wxYield();
 		Sleep(100);
 	}
 	initThread.join();
+
+	if (!AREngine::isLoggerReady())
+	{
+		if (!frame->ContinueWithoutLog())
+		{
+			splash->Close();
+			AREngine::release();
+			exit(0);
+		}
+	}
+
 	Config *config = AREngine::getConfig();
 	
 	splash->SetMainFrame(frame, config->fullScreen());
@@ -84,16 +96,16 @@ bool ARAppWX::OnInit()
 	// load the scene.
 	ref_ptr<ARScene> arscene = AREngine::getARScene();
 	viewer->setSceneData(arscene->getSceneData().get());
-	if (config->viewStat())
-	{
-		viewer->addEventHandler(new osgViewer::StatsHandler());
-	}
+	//if (config->viewStat())
+	//{
+	//	viewer->addEventHandler(new osgViewer::StatsHandler());
+	//}
 
 	arscene->start();
 
 	splash->Close();
 	
-	viewer->setCameraManipulator(new osgGA::TrackballManipulator);
+	//viewer->setCameraManipulator(new osgGA::TrackballManipulator);
 	frame->Show(true);
 	
 

@@ -21,6 +21,7 @@ namespace arenginewx
 		
 		// Return false if no capture devices were found
 		bool WaitForCaptureDevice();
+		bool ContinueWithoutLog();
 
 		void OnFaq(wxCommandEvent& event);
 		void OnAbout(wxCommandEvent& event);

@@ -46,6 +46,14 @@ Logger::init(string fileName, int logLevel, string appName)
 	logPath.append(fileName);
 
 	m_log = fopen(logPath.c_str(), "w");
+	if (m_log)
+	{
+		m_ready = true;
+	}
+	else
+	{
+		m_ready = false;
+	}
 }
 
 
@@ -92,6 +100,13 @@ Logger::releaseLog()
 		m_log		= NULL;
 		m_logLevel	= -1;
 	}
+}
+
+
+bool
+Logger::ready()
+{
+	return m_ready;
 }
 
 
