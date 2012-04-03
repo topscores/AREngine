@@ -25,6 +25,7 @@ namespace arengine
 		void setLogLevel(int logLevel);
 		int  getLogLevel();
 		void releaseLog();
+		bool ready();
 
 	private:
 		Logger();
@@ -37,6 +38,7 @@ namespace arengine
 	private:
 		FILE	*m_log;
 		int		m_logLevel;
+		bool	m_ready;
 	};
 
 }

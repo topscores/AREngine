@@ -20,6 +20,8 @@ namespace arengine
 	{
 	public:
 		static bool isCaptureDeviceReady();
+		static bool isLoggerReady();
+
 		static void init(string appName,
 						 string logFileName, 
 						 int logLevel,

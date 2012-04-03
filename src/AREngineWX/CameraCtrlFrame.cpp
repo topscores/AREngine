@@ -111,6 +111,26 @@ CameraCtrlFrame::WaitForCaptureDevice()
 	return true;
 }
 
+
+bool
+CameraCtrlFrame::ContinueWithoutLog()
+{
+	wxMessageDialog dlg(NULL, 
+		wxT("Cannot access home directory. Program can continue to run, but no log files will be generated and all camera settings will be gone after program exit. Do you want to continue?"), 
+		wxT("Warning"), 
+		wxOK|wxCANCEL);
+
+	if (wxID_CANCEL == dlg.ShowModal())
+	{
+		return false;
+	}
+	else
+	{
+		return true;
+	}
+}
+
+
 void
 CameraCtrlFrame::OnContextMenu(wxContextMenuEvent &event)
 {

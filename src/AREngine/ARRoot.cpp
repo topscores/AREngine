@@ -22,9 +22,18 @@ void
 ARRoot::initCameraMatrix(osgART::Tracker *tracker)
 {
 	osg::ref_ptr<osgART::Calibration> calibration = tracker->getOrCreateCalibration();
-	m_cam = calibration->createCamera();
-	//m_cam->addChild(getActiveScene());
-	addChild(m_cam);
+
+	if (m_cam.valid())
+	{
+		ref_ptr<osg::Camera> newcam =  calibration->createCamera();
+		replaceChild(m_cam, newcam);
+		m_cam = newcam;
+	}
+	else
+	{
+		m_cam = calibration->createCamera();
+		addChild(m_cam);
+	}
 }
 
 
@@ -175,12 +184,13 @@ ARRoot::setVideoBackground(osg::Node *background)
 		if (m_vdoBackground)
 		{
 			replaceChild(m_vdoBackground, background);
-			m_vdoBackground = background;
+			// removeChild(m_vdoBackground);
 		}
 		else
 		{
 			addChild(background);
 		}
+		m_vdoBackground = background;
 	}
 	else
 	{

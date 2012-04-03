@@ -28,6 +28,15 @@ AREngine::isCaptureDeviceReady()
 #endif
 }
 
+
+bool
+AREngine::isLoggerReady()
+{
+	Logger *logger = AREngine::getLogger();
+	return logger->ready();
+}
+
+
 void
 AREngine::init(string appName, 
 			   string logFileName,
