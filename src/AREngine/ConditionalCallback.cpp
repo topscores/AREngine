@@ -77,6 +77,22 @@ m_lastState(E_INVALID)
 
 
 void
+ConditionalCallback::reset()
+{
+	m_validCount = 0;
+	m_invalidCount = 0;
+	m_lastState = E_INVALID;
+
+	int n = m_actions.size();
+	for (int i = 0;i < n;i++)
+	{
+		Action* action = m_actions[i].get();
+		action->reset();
+	}
+}
+
+
+void
 ConditionalCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
 	int curTime = Util::getElapseTimeInMilliSec();

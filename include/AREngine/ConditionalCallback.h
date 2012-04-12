@@ -60,6 +60,8 @@ namespace arengine
 		ConditionalCallback(DataNode *callbackNode);
 		virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
+		virtual void reset();
+
 	private:
 		// True when we should raise action on node, False otherwise
 		bool valid(osg::Node *node);

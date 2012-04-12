@@ -11,6 +11,7 @@
 #include "arengine/DataNode.h"
 #include "arengine/Util.h"
 #include "arengine/TransitionAction.h"
+#include "arengine/ChangeSceneAction.h"
 
 #include <osg/Node>
 
@@ -68,6 +69,10 @@ ActionFactory::newAction(DataNode *action)
 	else if (actionType == "TwistIn")
 	{
 		return new TwistIn(action);
+	}
+	else if (actionType == "ChangeScene")
+	{
+		return new ChangeSceneAction(action);
 	}
 	else
 	{

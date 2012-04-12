@@ -5,7 +5,6 @@
 
 using namespace arengine;
 
-
 AddAction::AddAction(DataNode *addNode)
 :Action(addNode)
 {

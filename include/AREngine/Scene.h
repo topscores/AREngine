@@ -6,6 +6,7 @@
 #include "arengine/Marker.h"
 #include "arengine/HUDRoot.h"
 #include "arengine/PendingActionCallback.h"
+#include "arengine/ConditionalCallback.h"
 
 #include <osg/Group>
 #include <osgART/Tracker>
@@ -25,6 +26,8 @@ namespace arengine
 		~Scene();
 
 		int getIdxForMarkerName(string name);
+
+		void resetCallback();
 
 		// Activate or deactivate all markers in this scene
 		void setActive(bool active);
@@ -50,7 +53,9 @@ namespace arengine
 		vector< ref_ptr<Marker> > m_markers;
 		bool					m_active;
 		ref_ptr<HUDRoot>		m_hudRoot;
+
 		ref_ptr<PendingActionCallback> m_pendingActionCB;
+		vector< ref_ptr<ConditionalCallback> > m_conditionCallbackList;
 	};
 }
 

@@ -28,3 +28,10 @@ CircularActionSet::doAction(osg::Node *node)
 		m_curAction = (m_curAction + 1) % m_actionCount;
 	}
 }
+
+
+void
+CircularActionSet::reset()
+{
+	m_curAction = 0;
+}

@@ -35,6 +35,8 @@ namespace arengine
 
 		virtual void doAction(osg::Node *node) = 0;
 
+		virtual void reset();
+
 	protected:
 		virtual void addToPendingQueue(osg::Node *node, Action *action);
 

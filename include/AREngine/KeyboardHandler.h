@@ -25,6 +25,7 @@ namespace arengine
 
 		virtual bool handle(const osgGA::GUIEventAdapter& ea, osgGA::GUIActionAdapter& aa);
 		bool isKeyDown(int key);
+		void resetKeyState();
 
 	private:
 		KeyboardHandler();

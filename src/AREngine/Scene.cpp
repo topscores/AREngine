@@ -56,6 +56,7 @@ Scene::Scene(DataNode *sceneNode)
 		{
 			DataNode *callbackNode = sceneNode->getChild("ConditionalCallback", i);
 			ConditionalCallback *callback = new ConditionalCallback(callbackNode);
+			m_conditionCallbackList.push_back(callback);
 			addUpdateCallback(callback);
 
 		}
@@ -104,8 +105,21 @@ Scene::getIdxForMarkerName(string name)
 
 
 void
+Scene::resetCallback()
+{
+	int n = m_conditionCallbackList.size();
+	for (int i = 0;i < n;i++)
+	{
+		m_conditionCallbackList[i]->reset();
+	}
+}
+
+
+void
 Scene::setActive(bool active)
 {
+	resetCallback();
+
 	// Deactivate all marker
 	ref_ptr<osgART::Tracker > tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
 	if (tracker.valid())
