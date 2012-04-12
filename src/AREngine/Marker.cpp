@@ -7,6 +7,7 @@
 #include "arengine/SmartSingleton.h"
 #include "arengine/Config.h"
 #include "arengine/ARScene.h"
+#include "arengine/MarkerPool.h"
 
 #include <osgART/Marker>
 #include <osgART/MarkerCallback>
@@ -167,8 +168,9 @@ Marker::setActive(bool active)
 void
 Marker::initMarkerMatrixCallback()
 {
-	ref_ptr<osgART::Tracker> tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
-	m_osgMarker = tracker->addMarker(m_initString);
+	//ref_ptr<osgART::Tracker> tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
+	//m_osgMarker = tracker->addMarker(m_initString);
+	m_osgMarker = Singleton<MarkerPool>::getInstance()->getMarker(m_initString);
 
 	if (m_osgMarker.valid())
 	{
