@@ -44,7 +44,7 @@ MovieNode::MovieNode(string filename)
 		}
 
 		mVideoGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, mVideoTexture.get());	
-		mVideoGeode->getOrCreateStateSet()->setRenderBinDetails(150, "RenderBin");
+		//mVideoGeode->getOrCreateStateSet()->setRenderBinDetails(150, "RenderBin");
 		this->addChild(mVideoGeode.get());
 
 	} else {

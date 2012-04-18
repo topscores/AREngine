@@ -97,7 +97,7 @@ Marker::Marker(DataNode *markerNode)
 			}
 		}
 
-		getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
+		getOrCreateStateSet()->setRenderBinDetails(1, "RenderBin");
 	}
 	catch (Exception err)
 	{

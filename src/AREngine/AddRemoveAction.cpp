@@ -12,6 +12,7 @@ AddAction::AddAction(DataNode *addNode)
 	{
 		m_markerName	= addNode->getAttributeAsString("markerName");
 		m_objName		= addNode->getAttributeAsString("objName");
+		m_layerid		= addNode->getAttributeAsInt("layer");
 	}
 	else
 	{
@@ -47,7 +48,7 @@ AddAction::doAction(osg::Node *node)
 	{
 		if (scene->getHUDRoot() != NULL)
 		{
-			scene->getHUDRoot()->addHUD(m_objName);
+			scene->getHUDRoot()->addHUD(m_objName, m_layerid);
 		}
 		else
 		{
@@ -64,6 +65,7 @@ RemoveAction::RemoveAction(DataNode *removeNode)
 	{
 		m_markerName	= removeNode->getAttributeAsString("markerName");
 		m_objName		= removeNode->getAttributeAsString("objName");
+		m_layerid		= removeNode->getAttributeAsInt("layer");
 	}
 	else
 	{
@@ -112,12 +114,12 @@ RemoveAction::doAction(osg::Node *node)
 			// If objName are provided remove it
 			if (!m_objName.empty())
 			{
-				scene->getHUDRoot()->removeHUD(m_objName);
+				scene->getHUDRoot()->removeHUD(m_objName, m_layerid);
 			}
 			// otherwise remove all huds
 			else
 			{
-				scene->getHUDRoot()->removeHUD();
+				scene->getHUDRoot()->removeHUD(m_layerid);
 			}
 		}
 		else

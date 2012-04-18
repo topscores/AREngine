@@ -23,10 +23,11 @@ MouseHandler::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& a
 	// Check for MouseOver whenever we receive mouse related event
 	resetMouseOver();
 	string objName;
-	objName = check2DIntersection(ea.getXnormalized(), ea.getYnormalized());
-	if (objName != "")
+	vector<string> nameList;
+	nameList = check2DIntersection(ea.getXnormalized(), ea.getYnormalized());
+	for (int i = 0;i < nameList.size();i++)
 	{
-		setMouseOver(objName);
+		setMouseOver(nameList[i]);
 	}
 
 	objName = "";
@@ -45,13 +46,12 @@ MouseHandler::handle(const osgGA::GUIEventAdapter& ea,osgGA::GUIActionAdapter& a
 
 	case osgGA::GUIEventAdapter::LEFT_MOUSE_BUTTON: 
 		{
-			string objName;
-			objName = check2DIntersection(ea.getXnormalized(), ea.getYnormalized());
-			if (objName != "")
+			nameList = check2DIntersection(ea.getXnormalized(), ea.getYnormalized());
+			for (int i = 0;i < nameList.size();i++)
 			{
-				setMouseDown(objName);
+				setMouseDown(nameList[i]);
 			}
-			
+
 			objName = "";
 			objName = check3DIntersection(ea.getXnormalized(), ea.getYnormalized());
 			if (objName != "")
@@ -91,9 +91,11 @@ MouseHandler::isMouseOver(string objname)
 }
 
 
-string
+vector<string>
 MouseHandler::check2DIntersection(double mx, double my)
 {
+	vector<string> nameList;
+
 	mx = ((mx - (-1)) / 2.0) * 800;
 	my = ((my - (-1)) / 2.0) * 600;
 
@@ -132,13 +134,13 @@ MouseHandler::check2DIntersection(double mx, double my)
 				{
 					string name = img->getName();
 					// setMouseDown(name);
-					return name;
+					nameList.push_back(name);
 				}
 			}
 		}
 	}
 
-	return "";
+	return nameList;
 }
 
 

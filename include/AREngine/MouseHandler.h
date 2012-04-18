@@ -10,6 +10,8 @@
 #include <osgGA/GUIEventAdapter>
 #include <osgGA/GUIActionAdapter>
 
+#include <vector>
+
 namespace arengine
 {
 
@@ -29,7 +31,7 @@ namespace arengine
 		MouseHandler(const KeyboardHandler&);
 		MouseHandler& operator=(const KeyboardHandler&);
 
-		string check2DIntersection(double mx, double my);
+		std::vector<string> check2DIntersection(double mx, double my);
 		string check3DIntersection(double mx, double my);
 		
 		void setMouseDown(string objName);

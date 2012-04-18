@@ -19,6 +19,7 @@ namespace arengine
 		string m_sceneName;
 		string m_markerName;
 		string m_objName;
+		int	   m_layerid;
 		
 		ref_ptr<Marker> m_marker;
 	};
@@ -33,6 +34,7 @@ namespace arengine
 	private:
 		string m_markerName;
 		string m_objName;
+		int	   m_layerid;
 
 		ref_ptr<Marker> m_marker;
 	};

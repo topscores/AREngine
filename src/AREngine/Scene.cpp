@@ -40,15 +40,17 @@ Scene::Scene(DataNode *sceneNode)
 		}
 
 		int hudCount = sceneNode->countChild("HUD");
+		m_hudRoot = new HUDRoot();
 		if (hudCount > 0)
 		{
-			DataNode *hudNode = sceneNode->getChild("HUD", 0);
-			m_hudRoot = new HUDRoot(hudNode);
+			for (int i = 0;i < hudCount;i++)
+			{
+				DataNode *hudNode = sceneNode->getChild("HUD", i);
+				int layerid = hudNode->getAttributeAsInt("layer");
+				m_hudRoot->addLayer(hudNode, layerid);
+			}
 		}
-		else
-		{
-			m_hudRoot = new HUDRoot();
-		}
+
 		addChild(m_hudRoot);
 
 		int callbackCount = sceneNode->countChild("ConditionalCallback");
@@ -64,7 +66,7 @@ Scene::Scene(DataNode *sceneNode)
 		m_pendingActionCB = new PendingActionCallback();
 		addUpdateCallback(m_pendingActionCB);
 
-		getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
+		getOrCreateStateSet()->setRenderBinDetails(1, "RenderBin");
 	}
 	catch (Exception err)
 	{
@@ -84,7 +86,8 @@ Scene::getIdxForMarkerName(string name)
 {
 	if (name.empty())
 	{
-		Util::log("Scene::getIdxForMarkerName() : Cannot find idx for empty name", 2);
+		// Util::log("Scene::getIdxForMarkerName() : Cannot find idx for empty name", 2);
+		return -1;
 	}
 	else
 	{
