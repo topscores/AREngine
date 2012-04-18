@@ -110,8 +110,13 @@ WavSample::pause()
 void
 WavSample::mute()
 {
-	m_volume  = Mix_Volume(m_channel, -1);
-	Mix_Volume(m_channel, 0);
+	int currentVolume;
+	currentVolume = Mix_Volume(m_channel, -1);
+	if (currentVolume > 0)
+	{
+		m_volume  = currentVolume;
+		Mix_Volume(m_channel, 0);
+	}
 }
 
 
