@@ -5,6 +5,8 @@
 #include "arengine/Action.h"
 #include "arengine/DataNode.h"
 #include "arengine/Marker.h"
+#include "arengine/ARRoot.h"
+#include "arengine/Scene.h"
 
 namespace arengine
 {
@@ -14,12 +16,15 @@ namespace arengine
 	public:
 		AddAction(DataNode *addNode);
 		virtual void doAction(osg::Node *node);
+	private:
+		void doAdd(Scene *targetScene);
 
 	private:
 		string m_sceneName;
 		string m_markerName;
 		string m_objName;
 		int	   m_layerid;
+		string m_target;
 		
 		ref_ptr<Marker> m_marker;
 	};
@@ -32,9 +37,13 @@ namespace arengine
 		virtual void doAction(osg::Node *node);
 
 	private:
+		void doRemove(Scene *targetScene);
+
+	private:
 		string m_markerName;
 		string m_objName;
 		int	   m_layerid;
+		string m_target;
 
 		ref_ptr<Marker> m_marker;
 	};

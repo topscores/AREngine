@@ -1,4 +1,5 @@
 #include "arengine/AddRemoveAction.h"
+#include "arengine/ARScene.h"
 #include "arengine/Util.h"
 #include "arengine/Scene.h"
 #include "arengine/HUDRoot.h"
@@ -13,6 +14,7 @@ AddAction::AddAction(DataNode *addNode)
 		m_markerName	= addNode->getAttributeAsString("markerName");
 		m_objName		= addNode->getAttributeAsString("objName");
 		m_layerid		= addNode->getAttributeAsInt("layer");
+		m_target		= addNode->getAttributeAsString("target");
 	}
 	else
 	{
@@ -24,7 +26,27 @@ AddAction::AddAction(DataNode *addNode)
 void
 AddAction::doAction(osg::Node *node)
 {
-	ref_ptr<Scene> scene = dynamic_cast<Scene*>(node);
+	if (m_target == "allScene")
+	{
+		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
+		ref_ptr<ARRoot> arroot = dynamic_cast<ARRoot*>(arscene->getSceneData().get());
+		int n = arroot->getSceneCount();
+		for (int i = 0;i < n;i++)
+		{
+			doAdd(arroot->getScene(i));
+		}
+	}
+	else
+	{
+		doAdd(dynamic_cast<Scene*>(node));
+	}
+}
+
+
+void
+AddAction::doAdd(Scene *targetScene)
+{
+	ref_ptr<Scene> scene = targetScene;
 	if (!scene.valid())
 	{
 		Util::log(__FUNCTION__, "Invalid scene node", 2);
@@ -66,6 +88,7 @@ RemoveAction::RemoveAction(DataNode *removeNode)
 		m_markerName	= removeNode->getAttributeAsString("markerName");
 		m_objName		= removeNode->getAttributeAsString("objName");
 		m_layerid		= removeNode->getAttributeAsInt("layer");
+		m_target		= removeNode->getAttributeAsString("target");
 	}
 	else
 	{
@@ -76,7 +99,28 @@ RemoveAction::RemoveAction(DataNode *removeNode)
 void
 RemoveAction::doAction(osg::Node *node)
 {
-	ref_ptr<Scene> scene = dynamic_cast<Scene*>(node);
+	if (m_target == "allScene")
+	{
+		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
+		ref_ptr<ARRoot> arroot = dynamic_cast<ARRoot*>(arscene->getSceneData().get());
+
+		int n = arroot->getSceneCount();
+		for (int i = 0;i < n;i++)
+		{
+			doRemove(arroot->getScene(i));
+		}
+	}
+	else
+	{
+		doRemove(dynamic_cast<Scene*>(node));
+	}
+}
+
+
+void
+RemoveAction::doRemove(Scene *targetScene)
+{
+	ref_ptr<Scene> scene = targetScene;
 	if (!scene.valid())
 	{
 		Util::log(__FUNCTION__, "Invalid scene node", 2);

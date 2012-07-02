@@ -51,40 +51,6 @@ CameraCtrlFrame::CameraCtrlFrame(wxFrame *frame, const wxString& title, const wx
 {
 	m_menubar = new wxMenuBar();
 	SetMenuBar(m_menubar);
-
-#ifdef WIN32
-	// Create menubar
-	wxMenu *learngearMenu  = new wxMenu();
-	learngearMenu->Append(wxID_TOGGLEFULLSCREEN, wxT("Fullscreen"));
-	learngearMenu->AppendSeparator();
-	learngearMenu->Append(wxID_EXIT, wxT("Exit"));
-	
-	m_menubar->Append(learngearMenu, wxT("Learngear"));
-	m_menubar->Append(createDevMenu(), wxT("Devices"));
-	m_menubar->Append(createOptionMenu(), wxT("Options"));
-	m_menubar->Append(createAboutMenu(), wxT("Help"));
-
-	// Create Context Menu
-	m_contextMenu.AppendSubMenu(createDevMenu(), wxT("Devices"));
-	m_contextMenu.AppendSubMenu(createOptionMenu(), wxT("Option"));
-	m_contextMenu.Append(wxID_TOGGLEFULLSCREEN, wxT("Toggle FullScreen"));
-	m_contextMenu.AppendSeparator();
-	m_contextMenu.Append(wxID_EXIT, wxT("Exit"));
-#endif
-	
-#ifdef __APPLE__
-	// Create menubar
-	wxMenu *learngearMenu  = new wxMenu();
-	learngearMenu->Append(wxID_DEVCONF, wxT("Config Capture Device"));
-	learngearMenu->Append(wxID_TOGGLEFULLSCREEN, wxT("Fullscreen"));
-	
-	m_menubar->Append(learngearMenu, wxT("Learngear"));
-
-
-	// Create Context Menu
-	m_contextMenu.Append(wxID_DEVCONF, wxT("Config Capture Device"));
-	m_contextMenu.Append(wxID_TOGGLEFULLSCREEN, wxT("Toggle FullScreen"));
-#endif
 }
 
 
@@ -108,6 +74,41 @@ CameraCtrlFrame::WaitForCaptureDevice()
 			return false;
 		}
 	}
+
+#ifdef WIN32
+	// Create menubar
+	wxMenu *learngearMenu  = new wxMenu();
+	learngearMenu->Append(wxID_TOGGLEFULLSCREEN, wxT("Fullscreen"));
+	learngearMenu->AppendSeparator();
+	learngearMenu->Append(wxID_EXIT, wxT("Exit"));
+
+	m_menubar->Append(learngearMenu, wxT("Learngear"));
+	m_menubar->Append(createDevMenu(), wxT("Devices"));
+	m_menubar->Append(createOptionMenu(), wxT("Options"));
+	m_menubar->Append(createAboutMenu(), wxT("Help"));
+
+	// Create Context Menu
+	//m_contextMenu.AppendSubMenu(createDevMenu(), wxT("Devices"));
+	//m_contextMenu.AppendSubMenu(createOptionMenu(), wxT("Option"));
+	//m_contextMenu.Append(wxID_TOGGLEFULLSCREEN, wxT("Toggle FullScreen"));
+	//m_contextMenu.AppendSeparator();
+	//m_contextMenu.Append(wxID_EXIT, wxT("Exit"));
+#endif
+
+#ifdef __APPLE__
+	// Create menubar
+	wxMenu *learngearMenu  = new wxMenu();
+	learngearMenu->Append(wxID_DEVCONF, wxT("Config Capture Device"));
+	learngearMenu->Append(wxID_TOGGLEFULLSCREEN, wxT("Fullscreen"));
+
+	m_menubar->Append(learngearMenu, wxT("Learngear"));
+
+
+	// Create Context Menu
+	//m_contextMenu.Append(wxID_DEVCONF, wxT("Config Capture Device"));
+	//m_contextMenu.Append(wxID_TOGGLEFULLSCREEN, wxT("Toggle FullScreen"));
+#endif
+
 	return true;
 }
 
@@ -134,7 +135,7 @@ CameraCtrlFrame::ContinueWithoutLog()
 void
 CameraCtrlFrame::OnContextMenu(wxContextMenuEvent &event)
 {
-	PopupMenu(&m_contextMenu);
+	//PopupMenu(&m_contextMenu);
 }
 
 

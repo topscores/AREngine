@@ -45,7 +45,7 @@ m_tex(NULL)
 			m_image = osgDB::readImageFile(m_imageFileName);
 			if (!m_image.valid())
 			{
-				Util::log(__FUNCTION__, 2, "Cannot load %s", m_imageFileName);
+				Util::log(__FUNCTION__, 2, "Cannot load %s", m_imageFileName.c_str());
 			}
 			else
 			{

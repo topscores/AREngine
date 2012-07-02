@@ -278,7 +278,8 @@ HUDRoot::addHUD(string name, int layerid)
 	{
 		hudLayer = new HUDLayer(layerid);
 		m_layerList[layerid] = hudLayer;
-		Util::log(__FUNCTION__, "Layer %d not found, create new layer", layerid);
+		Util::log(__FUNCTION__, 3, "Layer %d not found, create new layer", layerid);
+		addChild(m_layerList[layerid]);
 		
 		hudLayer->addHUD(name);
 	}
