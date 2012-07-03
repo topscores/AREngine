@@ -32,6 +32,9 @@ namespace arengine
 		int m_sleepCount;
 		int m_curSleepCount;
 		int m_lastExec;
+		bool m_execOnce;
+		bool m_firstTime;
+		bool m_execNow;
 
 	};
 

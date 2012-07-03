@@ -15,7 +15,8 @@ using namespace std;
 TimerActionSet::TimerActionSet(DataNode *actionSetNode)
 :ActionSet(actionSetNode),
 m_curSleepCount(-1),
-m_lastExec(0)
+m_lastExec(0),
+m_firstTime(true)
 {
 	m_sleepTime = actionSetNode->getAttributeAsInt("sleepTime");
 	if (m_sleepTime == 0)
@@ -30,6 +31,9 @@ m_lastExec(0)
 		m_sleepCount = DEFAULT_SLEEP_COUNT;
 		Util::log(__FUNCTION__,"sleepCount is not specified", 2);
 	}
+
+	m_execOnce = actionSetNode->getAttributeAsBool("execOnce");
+	m_execNow  = actionSetNode->getAttributeAsBool("execNow");
 }
 
 
@@ -44,11 +48,27 @@ TimerActionSet::exec(osg::Node *node)
 {
 	if (isEnable())
 	{
-		doPreAction(node);
-		m_lastExec = Util::getElapseTimeInMilliSec();
-		m_curSleepCount = 0;
+		if (m_execOnce)
+		{
+			if (m_firstTime)
+			{
+				doPreAction(node);
+				m_lastExec = Util::getElapseTimeInMilliSec();
+				m_curSleepCount = 0;
 
-		addToPendingQueue(node, this);
+				addToPendingQueue(node, this);
+
+				m_firstTime=false;
+			}
+		}
+		else
+		{
+			doPreAction(node);
+			m_lastExec = Util::getElapseTimeInMilliSec();
+			m_curSleepCount = 0;
+
+			addToPendingQueue(node, this);
+		}
 	}
 }
 
@@ -82,8 +102,13 @@ TimerActionSet::doAction(osg::Node *node)
 {
 	// Check whether elapse time from last execute exceed sleepTime
 	int timeDiff = Util::getElapseTimeInMilliSec() - m_lastExec;
-	if (timeDiff >= m_sleepTime)
+	if (timeDiff >= m_sleepTime || m_execNow)
 	{
+		if (m_execNow)
+		{
+			m_execNow = false;
+		}
+
 		if (m_curSleepCount < m_sleepCount)
 		{
 			for (int i = 0;i < m_actionCount;i++)

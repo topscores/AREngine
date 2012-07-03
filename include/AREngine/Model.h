@@ -61,6 +61,7 @@ namespace arengine
 		string		m_objName;
 		string		m_fileName;
 		double		m_size;
+		double		m_animationMultiplier;
 
 		int			m_id;
 		vector<int> m_associatedMarkerIdList;
