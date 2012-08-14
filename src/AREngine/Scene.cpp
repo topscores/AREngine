@@ -53,6 +53,14 @@ Scene::Scene(DataNode *sceneNode)
 
 		addChild(m_hudRoot);
 
+		int shaderCount = sceneNode->countChild("Shader");
+		m_program = new osg::Program();
+		for (int i = 0;i < shaderCount;i++)
+		{
+			DataNode *shaderNode = sceneNode->getChild("Shader", i);
+			addShader(shaderNode->getAttributeAsString("shaderFile"), shaderNode->getAttributeAsString("shaderType"));
+		}
+
 		int callbackCount = sceneNode->countChild("ConditionalCallback");
 		for (int i = 0;i < callbackCount;i++)
 		{
@@ -78,6 +86,32 @@ Scene::Scene(DataNode *sceneNode)
 
 Scene::~Scene()
 {
+}
+
+
+void
+Scene::addShader(string shaderFile, string shaderType)
+{
+	osg::StateSet* state = this->getOrCreateStateSet();
+
+	osg::Shader *shader;
+	if (shaderType == "vertex")
+	{
+		shader = new osg::Shader(osg::Shader::VERTEX );
+	}
+	else if (shaderType == "fragment")
+	{
+		shader = new osg::Shader(osg::Shader::FRAGMENT );
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 2, "Unsupported shader type = %s", shaderType.c_str());
+	}
+	
+	m_program->addShader(shader);
+	Util::loadShaderSource(shader, shaderFile.c_str());
+
+	state->setAttributeAndModes(m_program, osg::StateAttribute::ON);
 }
 
 

@@ -25,7 +25,8 @@ namespace arengine
 		static void init(string appName,
 						 string logFileName, 
 						 int logLevel,
-						 string configFileName);
+						 string configFileName,
+						 bool validateImage = false);
 
 		static Logger* getLogger();
 		static Config* getConfig();

@@ -82,11 +82,12 @@ Config::readConfig(string fileName)
 
 		// How often we should check the condition
 		m_checkInterval = rootNode->getAttributeAsInt("checkInterval");
-		// Default interval = 400 millisec (25 times / sec)
+		// Default interval = 40 millisec (25 times / sec)
 		if (m_checkInterval == 0)
 		{
 			m_checkInterval = 40;
 		}
+		Util::log(__FUNCTION__, 3, "checkInterval = %d", m_checkInterval);
 
 		// Init ARScene, VideoBackground and Tracker
 		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();

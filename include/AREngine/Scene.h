@@ -25,6 +25,7 @@ namespace arengine
 		Scene(DataNode *sceneNode);
 		~Scene();
 
+		void addShader(string vertexShaderName, string fragmentShaderName);
 		int getIdxForMarkerName(string name);
 
 		void resetCallback();
@@ -53,6 +54,7 @@ namespace arengine
 		vector< ref_ptr<Marker> > m_markers;
 		bool					m_active;
 		ref_ptr<HUDRoot>		m_hudRoot;
+		ref_ptr<Program>		m_program;
 
 		ref_ptr<PendingActionCallback> m_pendingActionCB;
 		vector< ref_ptr<ConditionalCallback> > m_conditionCallbackList;

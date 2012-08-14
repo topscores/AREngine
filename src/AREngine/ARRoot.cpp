@@ -87,7 +87,7 @@ ARRoot::getIdxForSceneName(string name)
 				return i;
 			}
 		}
-		Util::log(__FUNCTION__, 2, "ARRoot::getIdxForSceneName() : Cannot find idx for ", name.c_str());
+		Util::log(__FUNCTION__, 2, "ARRoot::getIdxForSceneName() : Cannot find idx for %s", name.c_str());
 		return 0;
 	}
 }

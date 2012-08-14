@@ -41,7 +41,8 @@ void
 AREngine::init(string appName, 
 			   string logFileName,
 			   int	  logLevel,
-			   string configFileName)
+			   string configFileName,
+			   bool	  validateImage)
 {
 	m_ready = false;
 	// Initialize logger
@@ -52,6 +53,10 @@ AREngine::init(string appName,
 	Config *config = AREngine::getConfig();
 	config->readConfig(configFileName);
 
+	if (validateImage && !Util::isValidImage())
+	{
+		Util::log(__FUNCTION__, "imgid mismatch", 1);
+	}
 	m_ready = true;
 }
 

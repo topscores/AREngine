@@ -18,7 +18,7 @@ namespace arengine{
 		osg::ref_ptr<osg::Geode> mVideoGeode;
 
 	public:
-		MovieNode(string filename);
+		MovieNode(string filename, bool useGLLight);
 
 		void start();
 		void stop();
@@ -48,10 +48,12 @@ namespace arengine{
 		string	m_objName;
 		string	m_fileName;
 		double	m_size;
+		bool	m_useGLLight;
 
 		osg::Vec3d m_orgTranslation;
 		osg::Vec3d m_orgRotation;
 		double	   m_orgSize;
+		osg::Vec3d m_orgStretch;
 
 		bool m_loop;
 

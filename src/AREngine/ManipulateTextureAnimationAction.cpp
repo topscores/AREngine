@@ -65,25 +65,6 @@ ManipulateTextureAnimationVisitor::apply(osg::Geode &node)
 		}
 	}
 
-	/*// Find animated texture
-	ref_ptr<osg::StateSet> state = node.getOrCreateStateSet();
-	ref_ptr<osg::Texture2D> tex = (osg::Texture2D*) state->getTextureAttribute(0,StateAttribute::TEXTURE); 
-	if (tex.valid())
-	{
-		ref_ptr<osg::ImageStream> imageStream = dynamic_cast<osg::ImageStream *>(tex->getImage());
-		if (imageStream.valid())
-		{
-			if (m_manipulateType == "start")
-			{
-				imageStream->play();
-			}
-			else if (m_manipulateType == "stop")
-			{
-				imageStream->pause();
-			}
-		}
-	}*/
-
 	traverse(node);
 }
 
@@ -123,5 +104,7 @@ ManipulateTextureAnimationAction::doAction(osg::Node *node)
 	{
 		ManipulateTextureAnimationVisitor mtav(m_manipulateType);
 		m_obj->accept(mtav);
+
+		Util::log(__FUNCTION__, 3, "Manipulate texture animation type=%s objName=%s", m_manipulateType.c_str(), m_objName.c_str());
 	}
 }

@@ -4,6 +4,8 @@
 #include "arengine/Export"
 #include "arengine/Exception.h"
 
+#include <osg/Shader>
+
 #ifdef __APPLE__
 #	include <CoreFoundation/CFBundle.h>
 #endif
@@ -37,6 +39,8 @@ namespace arengine
 		// Check for program integrity
 		static bool isValidImage();
 		static unsigned int getImageHash(string appPath = "");
+
+		static bool loadShaderSource(osg::Shader* obj, const std::string& fileName );
 
 	private:
 		static unsigned int getFolderHash(string folder);

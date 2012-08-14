@@ -20,6 +20,8 @@
 #include <osgGA/TrackballManipulator>
 #include <osgDB/ReadFile>
 
+#include <osgFX/Cartoon>
+
 #include <string>
 #include <iostream>
 
@@ -55,7 +57,7 @@ bool ARAppWX::OnInit()
 	LGSplashWx *splash = new LGSplashWx(wxT("./huds/splash.gif"));
 	splash->Show();
 
-	boost::thread initThread(AREngine::init, "ARAppWX", "log.txt", 4, "mastercv.conf");
+	boost::thread initThread(AREngine::init, "ARAppWX", "log.txt", 4, "mastercv.conf", false);
 	//AREngine::init("ARAppWX", "log.txt", 4, "mastercv.conf");
 
 	while (!AREngine::ready())
@@ -96,6 +98,11 @@ bool ARAppWX::OnInit()
 	// load the scene.
 	ref_ptr<ARScene> arscene = AREngine::getARScene();
 	viewer->setSceneData(arscene->getSceneData().get());
+
+	//ref_ptr<osgFX::Cartoon> cartoon = new osgFX::Cartoon();
+	//cartoon->addChild(arscene->getSceneData().get());
+	//viewer->setSceneData(cartoon);
+
 	//if (config->viewStat())
 	//{
 	//	viewer->addEventHandler(new osgViewer::StatsHandler());

@@ -91,7 +91,7 @@ Model::Model(DataNode *modelNode)
 			{
 				throw Exception("Model::Model() : FileName field cannot be empty", 2);
 			}
-			//compileDisplayList();
+			compileDisplayList();
 		}
 		else
 		{
@@ -113,9 +113,13 @@ Model::~Model()
 void 
 Model::compileDisplayList()
 {
-	GLObjectsVisitor::Mode  glvMode = GLObjectsVisitor::COMPILE_DISPLAY_LISTS|
-		GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES;
-	GLObjectsVisitor gloV(glvMode);
+	//GLObjectsVisitor::Mode  glvMode = GLObjectsVisitor::COMPILE_DISPLAY_LISTS|
+	//	GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES;
+	//GLObjectsVisitor gloV(glvMode);
+	GLObjectsVisitor gloV;
+	gloV.setTraversalMode(GLObjectsVisitor::TRAVERSE_ALL_CHILDREN);
+	gloV.setMode(GLObjectsVisitor::COMPILE_DISPLAY_LISTS|
+			GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES);
 	this->accept(gloV);
 }
 
