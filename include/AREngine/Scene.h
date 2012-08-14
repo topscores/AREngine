@@ -34,6 +34,7 @@ namespace arengine
 		void setActive(bool active);
 		bool getActive();
 
+		void initMarkerMatrixFromScene(Scene *scene);
 		ref_ptr<PendingActionCallback> getPendingActionCallback();
 
 		string getName();

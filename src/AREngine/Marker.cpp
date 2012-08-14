@@ -181,10 +181,7 @@ Marker::initMarkerMatrixCallback()
 		// Reduce Jitter or not
 		if (config->smoothMotion())
 		{
-			osgART::TransformFilterCallback* tfc = new osgART::TransformFilterCallback();
-			osgART::addEventCallback(this, tfc);
-			tfc->enableTranslationalSmoothing(true);
-			tfc->enableRotationalSmoothing(true);
+			osgART::addEventCallback(this, Singleton<MarkerPool>::getInstance()->getSmoothFilterForMarker(m_initString));
 		}
 
 	}

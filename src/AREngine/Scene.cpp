@@ -193,6 +193,22 @@ Scene::getActive()
 }
 
 
+void
+Scene::initMarkerMatrixFromScene(Scene *scene)
+{
+	int n  = getMarkerCount();
+	for (int i = 0;i < n;i++)
+	{
+		Marker *dest = m_markers[i];
+		Marker *src = scene->getMarker(dest->getMarkerName());
+		if (src)
+		{
+			dest->setMatrix(src->getMatrix());
+		}
+	}
+}
+
+
 ref_ptr<PendingActionCallback>
 Scene::getPendingActionCallback()
 {

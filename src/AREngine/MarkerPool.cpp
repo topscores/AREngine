@@ -44,3 +44,25 @@ MarkerPool::getMarker(string initString)
 		return marker;
 	}
 }
+
+
+ref_ptr<osgART::TransformFilterCallback>
+MarkerPool::getSmoothFilterForMarker(std::string initString)
+{
+	map< string, ref_ptr< osgART::TransformFilterCallback > >::iterator itr;
+	itr = m_smoothFilterpool.find(initString);
+	if (itr != m_smoothFilterpool.end())
+	{
+		return  itr->second;
+	}
+	else
+	{
+		osgART::TransformFilterCallback* tfc = new osgART::TransformFilterCallback();
+		tfc->enableTranslationalSmoothing(true);
+		tfc->enableRotationalSmoothing(true);
+
+		m_smoothFilterpool[initString] = tfc;
+
+		return tfc;
+	}
+}

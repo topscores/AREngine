@@ -117,6 +117,7 @@ ARRoot::setActiveScene(int idx)
 
 				if (curActiveScene != newActiveScene)
 				{
+					newActiveScene->initMarkerMatrixFromScene(curActiveScene);
 					curActiveScene->setActive(false);
 					newActiveScene->setActive(true);
 					m_cam->replaceChild(curActiveScene, newActiveScene);
