@@ -63,7 +63,7 @@ ARRoot::getScene(string name)
 	}
 	else
 	{
-		getScene(idx);
+		return getScene(idx);
 	}
 }
 
@@ -122,6 +122,8 @@ ARRoot::setActiveScene(int idx)
 					newActiveScene->setActive(true);
 					m_cam->replaceChild(curActiveScene, newActiveScene);
 					m_activeSceneIdx = idx;
+
+					Util::log(__FUNCTION__, 3, "Change from %s to %s", curActiveScene->getName().c_str(), newActiveScene->getName().c_str());
 				}
 			}
 			osgUtil::Optimizer optimizer;

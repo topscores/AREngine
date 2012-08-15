@@ -26,14 +26,30 @@ AddAction::AddAction(DataNode *addNode)
 void
 AddAction::doAction(osg::Node *node)
 {
-	if (m_target == "allScene")
+	if (!m_target.empty())
 	{
 		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 		ref_ptr<ARRoot> arroot = dynamic_cast<ARRoot*>(arscene->getSceneData().get());
-		int n = arroot->getSceneCount();
-		for (int i = 0;i < n;i++)
+
+		if (m_target == "allScene")
 		{
-			doAdd(arroot->getScene(i));
+			int n = arroot->getSceneCount();
+			for (int i = 0;i < n;i++)
+			{
+				doAdd(arroot->getScene(i));
+			}
+		}
+		else
+		{
+			ref_ptr<Scene> target = arroot->getScene(m_target);
+			if (target.valid())
+			{
+				doAdd(target.get());
+			}
+			else
+			{
+				Util::log(__FUNCTION__, 2, "Cannot add %s to marker %s because scene with name =%s does not exist", m_objName, m_markerName, m_target);
+			}
 		}
 	}
 	else
@@ -99,15 +115,29 @@ RemoveAction::RemoveAction(DataNode *removeNode)
 void
 RemoveAction::doAction(osg::Node *node)
 {
-	if (m_target == "allScene")
+	if (!m_target.empty())
 	{
 		ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 		ref_ptr<ARRoot> arroot = dynamic_cast<ARRoot*>(arscene->getSceneData().get());
-
-		int n = arroot->getSceneCount();
-		for (int i = 0;i < n;i++)
+		if (m_target == "allScene")
 		{
-			doRemove(arroot->getScene(i));
+			int n = arroot->getSceneCount();
+			for (int i = 0;i < n;i++)
+			{
+				doRemove(arroot->getScene(i));
+			}
+		}
+		else
+		{
+			ref_ptr<Scene> target = arroot->getScene(m_target);
+			if (target.valid())
+			{
+				doRemove(target.get());
+			}
+			else
+			{
+				Util::log(__FUNCTION__, 2, "Cannot add %s to marker %s because scene with name =%s does not exist", m_objName, m_markerName, m_target);
+			}
 		}
 	}
 	else
