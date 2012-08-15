@@ -44,7 +44,7 @@ namespace arengine
 		string		getAttributeAsString(string name);
 		string		getAttributeAsPath(string name);
 		int			getAttributeAsInt(string name);
-		double		getAttributeAsDouble(string name);
+		double		getAttributeAsDouble(string name, double defaultVal=0.0);
 		bool		getAttributeAsBool(string name);
 
 	public:

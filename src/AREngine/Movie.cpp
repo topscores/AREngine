@@ -7,7 +7,7 @@
 
 using namespace arengine;
 
-MovieNode::MovieNode(string filename)
+MovieNode::MovieNode(string filename, bool useGLLight)
 {
 	osg::Image* img = osgDB::readImageFile(filename);
 	mImageStream = dynamic_cast<osg::ImageStream*>(img);
@@ -44,7 +44,16 @@ MovieNode::MovieNode(string filename)
 		}
 
 		mVideoGeode->getOrCreateStateSet()->setTextureAttributeAndModes(0, mVideoTexture.get());	
-		mVideoGeode->getOrCreateStateSet()->setRenderBinDetails(150, "RenderBin");
+		if (useGLLight)
+		{
+			mVideoGeode->getOrCreateStateSet()->setMode(GL_LIGHTING, StateAttribute::ON);
+		}
+		else
+		{
+			mVideoGeode->getOrCreateStateSet()->setMode(GL_LIGHTING, StateAttribute::OFF);
+		}
+
+		//mVideoGeode->getOrCreateStateSet()->setRenderBinDetails(150, "RenderBin");
 		this->addChild(mVideoGeode.get());
 
 	} else {
@@ -148,7 +157,8 @@ Movie::Movie(DataNode *movieNode)
 			if (!movieNode->getAttributeAsString("fileName").empty())
 			{
 				m_fileName	= movieNode->getAttributeAsPath("fileName");
-				m_orgNode   = new MovieNode(m_fileName);
+				m_useGLLight = movieNode->getAttributeAsBool("useGLLight");
+				m_orgNode   = new MovieNode(m_fileName, m_useGLLight);
 
 				m_orgTranslation[0] = movieNode->getAttributeAsDouble("transX");
 				m_orgTranslation[1] = movieNode->getAttributeAsDouble("transY");
@@ -165,6 +175,11 @@ Movie::Movie(DataNode *movieNode)
 				// Calculate bounding box and size
 				setScaleFromSize(m_orgSize);
 				scaleTo(m_scale);
+
+				m_orgStretch[0] = movieNode->getAttributeAsDouble("stretchX", 1.0);
+				m_orgStretch[1] = movieNode->getAttributeAsDouble("stretchY", 1.0);
+				m_orgStretch[2] = movieNode->getAttributeAsDouble("stretchZ", 1.0);
+				stretch(m_orgStretch);
 
 				m_unitTransform = new osg::MatrixTransform();
 				osg::Matrix modelTranslate;

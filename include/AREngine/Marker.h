@@ -14,7 +14,6 @@
 #include <osg/MatrixTransform>
 #include <osg/NodeCallback>
 
-#include <osgART/Tracker>
 #include <osgART/Marker>
 
 using namespace std;

@@ -40,22 +40,33 @@ Scene::Scene(DataNode *sceneNode)
 		}
 
 		int hudCount = sceneNode->countChild("HUD");
+		m_hudRoot = new HUDRoot();
 		if (hudCount > 0)
 		{
-			DataNode *hudNode = sceneNode->getChild("HUD", 0);
-			m_hudRoot = new HUDRoot(hudNode);
+			for (int i = 0;i < hudCount;i++)
+			{
+				DataNode *hudNode = sceneNode->getChild("HUD", i);
+				int layerid = hudNode->getAttributeAsInt("layer");
+				m_hudRoot->addLayer(hudNode, layerid);
+			}
 		}
-		else
-		{
-			m_hudRoot = new HUDRoot();
-		}
+
 		addChild(m_hudRoot);
+
+		int shaderCount = sceneNode->countChild("Shader");
+		m_program = new osg::Program();
+		for (int i = 0;i < shaderCount;i++)
+		{
+			DataNode *shaderNode = sceneNode->getChild("Shader", i);
+			addShader(shaderNode->getAttributeAsString("shaderFile"), shaderNode->getAttributeAsString("shaderType"));
+		}
 
 		int callbackCount = sceneNode->countChild("ConditionalCallback");
 		for (int i = 0;i < callbackCount;i++)
 		{
 			DataNode *callbackNode = sceneNode->getChild("ConditionalCallback", i);
 			ConditionalCallback *callback = new ConditionalCallback(callbackNode);
+			m_conditionCallbackList.push_back(callback);
 			addUpdateCallback(callback);
 
 		}
@@ -63,7 +74,7 @@ Scene::Scene(DataNode *sceneNode)
 		m_pendingActionCB = new PendingActionCallback();
 		addUpdateCallback(m_pendingActionCB);
 
-		getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
+		getOrCreateStateSet()->setRenderBinDetails(1, "RenderBin");
 	}
 	catch (Exception err)
 	{
@@ -78,12 +89,39 @@ Scene::~Scene()
 }
 
 
+void
+Scene::addShader(string shaderFile, string shaderType)
+{
+	osg::StateSet* state = this->getOrCreateStateSet();
+
+	osg::Shader *shader;
+	if (shaderType == "vertex")
+	{
+		shader = new osg::Shader(osg::Shader::VERTEX );
+	}
+	else if (shaderType == "fragment")
+	{
+		shader = new osg::Shader(osg::Shader::FRAGMENT );
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 2, "Unsupported shader type = %s", shaderType.c_str());
+	}
+	
+	m_program->addShader(shader);
+	Util::loadShaderSource(shader, shaderFile.c_str());
+
+	state->setAttributeAndModes(m_program, osg::StateAttribute::ON);
+}
+
+
 int
 Scene::getIdxForMarkerName(string name)
 {
 	if (name.empty())
 	{
-		Util::log("Scene::getIdxForMarkerName() : Cannot find idx for empty name", 2);
+		// Util::log("Scene::getIdxForMarkerName() : Cannot find idx for empty name", 2);
+		return -1;
 	}
 	else
 	{
@@ -104,8 +142,21 @@ Scene::getIdxForMarkerName(string name)
 
 
 void
+Scene::resetCallback()
+{
+	int n = m_conditionCallbackList.size();
+	for (int i = 0;i < n;i++)
+	{
+		m_conditionCallbackList[i]->reset();
+	}
+}
+
+
+void
 Scene::setActive(bool active)
 {
+	resetCallback();
+
 	// Deactivate all marker
 	ref_ptr<osgART::Tracker > tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
 	if (tracker.valid())
@@ -139,6 +190,22 @@ bool
 Scene::getActive()
 {
 	return m_active;
+}
+
+
+void
+Scene::initMarkerMatrixFromScene(Scene *scene)
+{
+	int n  = getMarkerCount();
+	for (int i = 0;i < n;i++)
+	{
+		Marker *dest = m_markers[i];
+		Marker *src = scene->getMarker(dest->getMarkerName());
+		if (src)
+		{
+			dest->setMatrix(src->getMatrix());
+		}
+	}
 }
 
 

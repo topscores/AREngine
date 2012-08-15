@@ -9,6 +9,8 @@
 #include <string>
 #include <sstream>
 
+#include <osgDB/FileUtils>
+
 #ifdef WIN32
 #	include <windows.h>
 #	include <Shlobj.h>
@@ -159,15 +161,15 @@ void
 Util::log(string logMsg, int logLevel)
 {
 	stringstream sstr;
-	sstr << logMsg << Util::newLine();
+	sstr << Util::getElapseTimeInMilliSec() << ":" << logMsg << Util::newLine();
 
 	Logger *logger = Singleton<Logger>::getInstance();
 	logger->log(sstr.str(), logLevel);
 	if (logLevel == 1)
 	{
-#ifdef WIN32
-		MessageBoxA(NULL, "Fatal Error", sstr.str().c_str(), MB_OK);
-#endif
+//#ifdef WIN32
+//		MessageBoxA(NULL, sstr.str().c_str(), "Fatal Error", MB_OK);
+//#endif
 		logger->releaseLog();
 		exit(1);
 	}
@@ -245,6 +247,28 @@ Util::getImageHash(string appPath)
 	//printf("uiHash = %u\n", uiHash);
 	//printf("soundHash = %u\n", soundHash);
 	return confHash + modelHash + hudHash + uiHash + soundHash;
+}
+
+
+bool 
+Util::loadShaderSource(osg::Shader* obj, const std::string& fileName )
+{
+	std::string fqFileName = osgDB::findDataFile(fileName);
+	if( fqFileName.length() == 0 )
+	{
+		Util::log(__FUNCTION__, 2, "File %s not found", fileName.c_str());
+		return false;
+	}
+	bool success = obj->loadShaderSourceFromFile(fqFileName.c_str());
+	if ( !success  )
+	{
+		Util::log(__FUNCTION__, 2, "Cannot load file %s", fileName.c_str());
+		return false;
+	}
+	else
+	{
+		return true;
+	}
 }
 
 

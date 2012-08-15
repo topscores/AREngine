@@ -107,23 +107,21 @@ WavSample::pause()
 }
 
 
-//ESampleState 
-//WavSample::getState()
-//{
-//	// Dummy value, represent state right after loading wav file
-//	if (m_channel == -2)
-//		return E_STOP;
-//
-//	if (Mix_Playing(m_channel))
-//	{
-//		return E_PLAYING;
-//	}
-//	else if (Mix_Paused(m_channel))
-//	{
-//		return E_PAUSE;
-//	}
-//	else 
-//	{
-//		return E_STOP;
-//	}
-//}
+void
+WavSample::mute()
+{
+	int currentVolume;
+	currentVolume = Mix_Volume(m_channel, -1);
+	if (currentVolume > 0)
+	{
+		m_volume  = currentVolume;
+		Mix_Volume(m_channel, 0);
+	}
+}
+
+
+void
+WavSample::unmute()
+{
+	Mix_Volume(m_channel, m_volume);
+}

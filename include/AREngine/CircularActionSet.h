@@ -22,6 +22,7 @@ namespace arengine
 		~CircularActionSet();
 
 		virtual void doAction(osg::Node *node);
+		virtual void reset();
 
 	protected:
 		int m_curAction;

@@ -29,6 +29,7 @@ namespace arengine
 
 		bool	smoothMotion();
 		bool	flipEnable();
+		bool	phongShaderEnable();
 		bool	useTexture2D();
 		bool	fullScreen();
 		bool	viewStat();
@@ -57,6 +58,7 @@ namespace arengine
 		string		  m_activeSceneName;
 		bool		  m_smoothMotion;
 		bool		  m_flipEnable;
+		bool		  m_phongShaderEnable;
 		bool		  m_useTexture2D;
 		bool		  m_fullScreen;
 		bool		  m_viewStat;

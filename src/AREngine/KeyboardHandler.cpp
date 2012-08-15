@@ -77,3 +77,14 @@ KeyboardHandler::isKeyDown(int key)
 {
 		return m_keypress[key];
 }
+
+
+void
+KeyboardHandler::resetKeyState()
+{
+	int n = m_keypress.size();
+	for (int i = 0;i < n;i++)
+	{
+		m_keypress[i] = false;
+	}
+}

@@ -7,6 +7,7 @@
 
 using namespace arengine;
 
+
 void
 SDLSoundManager::initAudio()
 {
@@ -19,16 +20,16 @@ SDLSoundManager::initAudio()
 		Util::log(__FUNCTION__, 3, "SDL_Audio initialized.");
 	}
 
-	 if (Mix_OpenAudio(SAMPLE_RATE, MIX_DEFAULT_FORMAT, PLAYBACK_CHANNELS, 1024) == -1)
-	 {
-		 Util::log(__FUNCTION__, 2, "Could not initialize SDL_Mixer");
-	 }
-	 else
-	 {
-		 Util::log(__FUNCTION__, 3,  "SDL_mixer initialized.");
-	 }
+	if (Mix_OpenAudio(SAMPLE_RATE, MIX_DEFAULT_FORMAT, PLAYBACK_CHANNELS, 1024) == -1)
+	{
+		Util::log(__FUNCTION__, 2, "Could not initialize SDL_Mixer");
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 3,  "SDL_mixer initialized.");
+	}
 
-	   Mix_AllocateChannels(CONCURRENT_SOUNDS);
+	Mix_AllocateChannels(CONCURRENT_SOUNDS);
 }
 
 
@@ -38,13 +39,13 @@ SDLSoundManager::closeAudio()
 	map<string, Sample*>::iterator itr;
 	for (itr = m_samples.begin();itr != m_samples.end();itr++)
 	{
-			Sample *sample = (*itr).second;
-			if (sample->getState() == E_PLAYING 
-				|| sample->getState() == E_PAUSE)
-			{
-				sample->stop();
-			}
-			delete sample;
+		Sample *sample = (*itr).second;
+		if (sample->getState() == E_PLAYING 
+			|| sample->getState() == E_PAUSE)
+		{
+			sample->stop();
+		}
+		delete sample;
 	}
 	m_samples.clear();
 
@@ -86,6 +87,10 @@ SDLSoundManager::play(string soundName, bool loop)
 		{
 			m_samples.insert(pair<string, Sample*>(soundName, sample));
 			sample->play(loop);
+			if (m_mute)
+			{
+				sample->mute();
+			}
 		}
 	}
 }
@@ -153,4 +158,24 @@ SDLSoundManager::getSample(string soundName)
 	{
 		return NULL;
 	}
+}
+
+
+void
+SDLSoundManager::toggleMute()
+{
+	map<string, Sample*>::iterator itr;
+	for (itr = m_samples.begin();itr != m_samples.end();itr++)
+	{
+		Sample *sample = itr->second;
+		if (!m_mute)
+		{
+			sample->mute();
+		}
+		else
+		{
+			sample->unmute();
+		}
+	}
+	m_mute = !m_mute;
 }

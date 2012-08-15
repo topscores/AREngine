@@ -46,6 +46,14 @@ Logger::init(string fileName, int logLevel, string appName)
 	logPath.append(fileName);
 
 	m_log = fopen(logPath.c_str(), "w");
+	if (m_log)
+	{
+		m_ready = true;
+	}
+	else
+	{
+		m_ready = false;
+	}
 }
 
 
@@ -84,10 +92,21 @@ Logger::getLogLevel()
 void
 Logger::releaseLog()
 {
-	fclose(m_log);
+	if (m_log)
+	{
 
-	m_log		= NULL;
-	m_logLevel	= -1;
+		fclose(m_log);
+
+		m_log		= NULL;
+		m_logLevel	= -1;
+	}
+}
+
+
+bool
+Logger::ready()
+{
+	return m_ready;
 }
 
 
@@ -103,13 +122,13 @@ Logger::getLogDir(string appName)
 	SHCreateDirectory(NULL, logDir.c_str());
 	return Util::narrow(logDir);
 #endif
-	
+
 #ifdef __APPLE__
 	char homePath[1024];
 	FSRef homeRef;
 	FSFindFolder(kOnAppropriateDisk, kCurrentUserFolderType, kCreateFolder, &homeRef);
 	FSRefMakePath(&homeRef,(UInt8*) &homePath ,sizeof(homePath) );
-	
+
 	string logDir;
 	logDir.append(homePath);
 	if (!logDir.empty())
@@ -122,18 +141,18 @@ Logger::getLogDir(string appName)
 	{
 		return "";
 	}
-	
+
 	logDir.append(appName);
 	logDir.append("/");
-	
+
 	string cmd;
 	cmd.append("mkdir -p ");
 	cmd.append(logDir);
 	system(cmd.c_str());
-	
+
 	return logDir;
 
 #endif
-	
+
 	return "";
 }

@@ -25,7 +25,8 @@ namespace arengine
 		E_MOVIE
 	};
 
-	class ARENGINE_EXPORT SceneObj : public osg::MatrixTransform, 
+	class ARENGINE_EXPORT SceneObj : 
+		public osg::MatrixTransform, 
 		public arengine::NamedObj
 	{
 	public:
@@ -43,6 +44,7 @@ namespace arengine
 		virtual double getScale();
 		virtual ref_ptr<osg::Node>	getOrgNode();
 
+		virtual void stretch(osg::Vec3d stretchVec);
 		virtual void scale(double scale);
 		virtual void scaleTo(double scale);
 		virtual void translate(osg::Vec3d transVec);
@@ -57,10 +59,12 @@ namespace arengine
 		osg::Vec3d	m_translation;
 		osg::Vec3d	m_rotation;
 		double		m_scale;
+		osg::Vec3d	m_stretch;
 
 		osg::Matrix m_rotMat;
 		osg::Matrix m_transMat;
 		osg::Matrix m_scaleMat;
+		osg::Matrix m_stretchMat;
 
 		osg::ref_ptr<osg::Node>	m_orgNode;
 	};

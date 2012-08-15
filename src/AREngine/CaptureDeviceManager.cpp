@@ -196,9 +196,12 @@ CaptureDeviceManager::populateDeviceList()
 		}
 		else
 		{
-			Util::log(__FUNCTION__, 1, "Error getting device information error code = %d", GetLastError());
+			Util::log(__FUNCTION__, 2, "Error getting device information error code = %d", GetLastError());
 		}
-		initialized = true;
+		if (m_devls.size() > 0)
+		{
+			initialized = true;
+		}
 	}
 }
 

@@ -22,9 +22,18 @@ void
 ARRoot::initCameraMatrix(osgART::Tracker *tracker)
 {
 	osg::ref_ptr<osgART::Calibration> calibration = tracker->getOrCreateCalibration();
-	m_cam = calibration->createCamera();
-	//m_cam->addChild(getActiveScene());
-	addChild(m_cam);
+
+	if (m_cam.valid())
+	{
+		ref_ptr<osg::Camera> newcam =  calibration->createCamera();
+		replaceChild(m_cam, newcam);
+		m_cam = newcam;
+	}
+	else
+	{
+		m_cam = calibration->createCamera();
+		addChild(m_cam);
+	}
 }
 
 
@@ -54,7 +63,7 @@ ARRoot::getScene(string name)
 	}
 	else
 	{
-		getScene(idx);
+		return getScene(idx);
 	}
 }
 
@@ -78,7 +87,7 @@ ARRoot::getIdxForSceneName(string name)
 				return i;
 			}
 		}
-		Util::log(__FUNCTION__, 2, "ARRoot::getIdxForSceneName() : Cannot find idx for ", name.c_str());
+		Util::log(__FUNCTION__, 2, "ARRoot::getIdxForSceneName() : Cannot find idx for %s", name.c_str());
 		return 0;
 	}
 }
@@ -108,10 +117,13 @@ ARRoot::setActiveScene(int idx)
 
 				if (curActiveScene != newActiveScene)
 				{
+					newActiveScene->initMarkerMatrixFromScene(curActiveScene);
 					curActiveScene->setActive(false);
 					newActiveScene->setActive(true);
 					m_cam->replaceChild(curActiveScene, newActiveScene);
 					m_activeSceneIdx = idx;
+
+					Util::log(__FUNCTION__, 3, "Change from %s to %s", curActiveScene->getName().c_str(), newActiveScene->getName().c_str());
 				}
 			}
 			osgUtil::Optimizer optimizer;
@@ -175,12 +187,13 @@ ARRoot::setVideoBackground(osg::Node *background)
 		if (m_vdoBackground)
 		{
 			replaceChild(m_vdoBackground, background);
-			m_vdoBackground = background;
+			// removeChild(m_vdoBackground);
 		}
 		else
 		{
 			addChild(background);
 		}
+		m_vdoBackground = background;
 	}
 	else
 	{

@@ -1,6 +1,7 @@
 #include "arengine/Model.h"
 #include "arengine/Util.h"
 #include "arengine/Exception.h"
+#include "arengine/SetAnimationMultiplierVisitor.h"
 
 #include <osg/Matrix>
 #include <osg/BoundingSphere>
@@ -41,14 +42,24 @@ Model::Model(DataNode *modelNode)
 			{
 				m_fileName	= modelNode->getAttributeAsPath("fileName");
 				m_orgNode   = osgDB::readNodeFile(m_fileName);
+				m_animationMultiplier = modelNode->getAttributeAsDouble("animationMultiplier");
+
 				if (!m_orgNode)
 				{
 					stringstream sstr;
 					sstr << "Model::Model() : Model file not found for " << m_fileName;
 					throw Exception(sstr.str().c_str(), 2);
 				}
+
 				SetSyncModeVisitor ssmv(true);
 				m_orgNode->accept(ssmv);
+
+				// If animation multiplier is assigned by user
+				if (m_animationMultiplier - 0.0 > 0.00000001)
+				{
+					SetAnimationMultiplierVisitor samv(m_animationMultiplier);
+					m_orgNode->accept(samv);
+				}
 
 				m_id		= Util::getUniqueId();
 
@@ -80,7 +91,7 @@ Model::Model(DataNode *modelNode)
 			{
 				throw Exception("Model::Model() : FileName field cannot be empty", 2);
 			}
-			//compileDisplayList();
+			compileDisplayList();
 		}
 		else
 		{
@@ -102,9 +113,13 @@ Model::~Model()
 void 
 Model::compileDisplayList()
 {
-	GLObjectsVisitor::Mode  glvMode = GLObjectsVisitor::COMPILE_DISPLAY_LISTS|
-		GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES;
-	GLObjectsVisitor gloV(glvMode);
+	//GLObjectsVisitor::Mode  glvMode = GLObjectsVisitor::COMPILE_DISPLAY_LISTS|
+	//	GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES;
+	//GLObjectsVisitor gloV(glvMode);
+	GLObjectsVisitor gloV;
+	gloV.setTraversalMode(GLObjectsVisitor::TRAVERSE_ALL_CHILDREN);
+	gloV.setMode(GLObjectsVisitor::COMPILE_DISPLAY_LISTS|
+			GLObjectsVisitor::COMPILE_STATE_ATTRIBUTES);
 	this->accept(gloV);
 }
 

@@ -7,6 +7,7 @@
 #include "arengine/SmartSingleton.h"
 #include "arengine/Config.h"
 #include "arengine/ARScene.h"
+#include "arengine/MarkerPool.h"
 
 #include <osgART/Marker>
 #include <osgART/MarkerCallback>
@@ -96,7 +97,7 @@ Marker::Marker(DataNode *markerNode)
 			}
 		}
 
-		getOrCreateStateSet()->setRenderBinDetails(100, "RenderBin");
+		getOrCreateStateSet()->setRenderBinDetails(1, "RenderBin");
 	}
 	catch (Exception err)
 	{
@@ -167,8 +168,9 @@ Marker::setActive(bool active)
 void
 Marker::initMarkerMatrixCallback()
 {
-	ref_ptr<osgART::Tracker> tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
-	m_osgMarker = tracker->addMarker(m_initString);
+	//ref_ptr<osgART::Tracker> tracker = SmartSingleton<ARScene>::getInstance()->getTracker();
+	//m_osgMarker = tracker->addMarker(m_initString);
+	m_osgMarker = Singleton<MarkerPool>::getInstance()->getMarker(m_initString);
 
 	if (m_osgMarker.valid())
 	{
@@ -179,10 +181,7 @@ Marker::initMarkerMatrixCallback()
 		// Reduce Jitter or not
 		if (config->smoothMotion())
 		{
-			osgART::TransformFilterCallback* tfc = new osgART::TransformFilterCallback();
-			osgART::addEventCallback(this, tfc);
-			tfc->enableTranslationalSmoothing(true);
-			tfc->enableRotationalSmoothing(true);
+			osgART::addEventCallback(this, Singleton<MarkerPool>::getInstance()->getSmoothFilterForMarker(m_initString));
 		}
 
 	}

@@ -33,11 +33,16 @@ namespace arengine
 		virtual void resume() = 0;
 		virtual void pause() = 0;
 
+		virtual void mute() = 0;
+		virtual void unmute() = 0;
+
 		virtual ESampleState getState(){return m_state;}
 
 	protected:
 		string	m_soundName;
 		ESampleState m_state;
+
+		bool m_mute;
 	};
 
 	class ARENGINE_EXPORT WavSample : public Sample
@@ -53,11 +58,15 @@ namespace arengine
 		virtual void resume();
 		virtual void pause();
 
+		virtual void mute();
+		virtual void unmute();
+
 		// virtual ESampleState getState();
 
 	protected:
 		Mix_Chunk *m_chunk;
 		int m_channel;
+		int m_volume;
 	};
 
 }

@@ -1,6 +1,8 @@
 #include "arengine/ConditionalCallback.h"
 #include "arengine/CollisionChecker.h"
 #include "arengine/KeyDownChecker.h"
+#include "arengine/MouseDownChecker.h"
+#include "arengine/MouseOverChecker.h"
 #include "arengine/AppearChecker.h"
 #include "arengine/Util.h"
 #include "arengine/ActionFactory.h"
@@ -31,21 +33,25 @@ m_lastState(E_INVALID)
 
 		// When to trigger action
 		string type = callbackNode->getAttributeAsString("type");
-		if (type.compare("onValid") == 0)
+		if (type == "onValid")
 		{
 			m_triggerType = E_ON_VALID;
 		}
-		else if (type.compare("onInvalid") == 0)
+		else if (type == "onInvalid")
 		{
 			m_triggerType = E_ON_INVALID;
 		}
-		else if (type.compare("always") == 0)
+		else if (type == "always")
 		{
 			m_triggerType = E_ALWAYS;
 		}
 		// Default case
 		else
 		{
+			if ((type != ""))
+			{
+				Util::log(__FUNCTION__, 2, "Unknown condition type \'%s\'", type.c_str());
+			}
 			m_triggerType = E_ON_VALID;
 		}
 
@@ -66,6 +72,22 @@ m_lastState(E_INVALID)
 	else
 	{
 		Util::log(__FUNCTION__, "Not a ConditionalCallback tag", 2);
+	}
+}
+
+
+void
+ConditionalCallback::reset()
+{
+	m_validCount = 0;
+	m_invalidCount = 0;
+	m_lastState = E_INVALID;
+
+	int n = m_actions.size();
+	for (int i = 0;i < n;i++)
+	{
+		Action* action = m_actions[i].get();
+		action->reset();
 	}
 }
 
@@ -101,106 +123,123 @@ ConditionalCallback::valid(osg::Node *node)
 	switch (m_triggerType)
 	{
 	case E_ON_VALID:
-		// Wait for "threshold" consecutive invalid before declaring invalid event
-		if (m_lastState == E_VALID)
 		{
-			if (!valid)
+			// Wait for "threshold" consecutive invalid before declaring invalid event
+			if (m_lastState == E_VALID)
 			{
-				if (m_invalidCount > m_invalidThresh)
+				if (!valid)
 				{
-					m_lastState = E_INVALID;
-					m_validCount = 0;
+					if (m_invalidCount == m_invalidThresh)
+					{
+						Util::log(__FUNCTION__, 5, "invalidCount = %d, invalidThresh = %d", m_invalidCount, m_invalidThresh);
+						m_lastState = E_INVALID;
+						m_validCount = 0;
+					}
+					else
+					{
+						Util::log(__FUNCTION__, 5, "invalidCount  = %d", m_invalidCount);
+						m_invalidCount++;
+					}
 				}
 				else
 				{
-					m_invalidCount++;
+					m_invalidCount = 0;
 				}
+				valid = false;
 			}
 			else
 			{
-				m_invalidCount = 0;
-			}
-			valid = false;
-		}
-		else
-		{
-			// Wait for "threshold" consecutive valid before declaring valid event
-			if (valid)
-			{
-				if (m_validCount > m_validThresh)
+				// Wait for "threshold" consecutive valid before declaring valid event
+				if (valid)
 				{
-					valid = true;
-					stringstream sstr;
-					sstr << "validCount = " << m_validCount << "," << "validThresh = " << m_validThresh;
-					Util::log(sstr.str().c_str(), 5);
-					m_lastState = E_VALID;
-					m_invalidCount = 0;
+					if (m_validCount == m_validThresh)
+					{
+						Util::log(__FUNCTION__, 5, "validCount = %d, validThresh = %d", m_validCount, m_validThresh);
+
+						valid = true;
+						//stringstream sstr;
+						//sstr << "validCount = " << m_validCount << "," << "validThresh = " << m_validThresh;
+						//Util::log(sstr.str().c_str(), 5);
+						m_lastState = E_VALID;
+						m_invalidCount = 0;
+					}
+					else
+					{
+						Util::log(__FUNCTION__, 5, "validCount = %d", m_validCount);
+
+						valid = false;
+						m_validCount++;
+						stringstream sstr;
+						//sstr << "validCount = " << m_validCount;
+						//Util::log(sstr.str().c_str(), 5);
+					}
 				}
 				else
 				{
 					valid = false;
-					m_validCount++;
-					stringstream sstr;
-					sstr << "validCount = " << m_validCount;
-					Util::log(sstr.str().c_str(), 5);
-				}
-			}
-			else
-			{
-				valid = false;
-				m_validCount = 0;
-			}
-		}
-		break;
-	case E_ON_INVALID:
-		// Wait for "threshold" consecutive valid before declaring valid event
-		if (m_lastState == E_INVALID)
-		{
-			if (valid)
-			{
-				if (m_validCount > m_validThresh)
-				{
-					m_lastState = E_VALID;
-					m_invalidCount = 0;
-				}
-				else
-				{
-					m_validCount++;
-				}
-			}
-			else
-			{
-				m_validCount = 0;
-			}
-			valid = false;
-		}
-		// Wait for "threshold" consecutive invalid before declaring invalid event
-		else
-		{
-			if (!valid)
-			{
-				if (m_invalidCount > m_invalidThresh)
-				{
-					valid = true;
-
-					m_lastState = E_INVALID;
 					m_validCount = 0;
 				}
+			}
+			break;
+		}
+	case E_ON_INVALID:
+		{
+			// Wait for "threshold" consecutive valid before declaring valid event
+			if (m_lastState == E_INVALID)
+			{
+				if (valid)
+				{
+					if (m_validCount == m_validThresh)
+					{
+						Util::log(__FUNCTION__, 5, "XXX validCount = %d, validThresh = %d", m_validCount, m_validThresh);
+						m_lastState = E_VALID;
+						m_invalidCount = 0;
+					}
+					else
+					{
+						Util::log(__FUNCTION__, 5, "XXX validCount = %d", m_validCount);
+						m_validCount++;
+					}
+				}
 				else
 				{
-					valid =false;
-					m_invalidCount++;
+					m_validCount = 0;
 				}
+				valid = false;
 			}
+			// Wait for "threshold" consecutive invalid before declaring invalid event
 			else
 			{
-				valid = false;
-				m_invalidCount = 0;
+				if (!valid)
+				{
+					if (m_invalidCount == m_invalidThresh)
+					{
+						Util::log(__FUNCTION__, 5, "YYY invalidCount = %d, invalidThresh = %d", m_invalidCount, m_invalidThresh);
+
+						valid = true;
+						m_lastState = E_INVALID;
+						m_validCount = 0;
+					}
+					else
+					{
+						Util::log(__FUNCTION__, 5, "YYY invalidCount = %d, invalidThresh = %d", m_invalidCount, m_invalidThresh);
+
+						valid =false;
+						m_invalidCount++;
+					}
+				}
+				else
+				{
+					valid = false;
+					m_invalidCount = 0;
+				}
 			}
+			break;
 		}
-		break;
 	case E_ALWAYS:
-		break;
+		{
+			break;
+		}
 	}
 
 	return valid;
@@ -222,7 +261,7 @@ ConditionalCallback::allConditionValid(osg::Node *node)
 	{
 		// Exit if one of the conditions is not satisfied
 		ref_ptr<ConditionChecker> checker = *checkerItr;
-		if (!checker->conditionValid(node))
+		if (!checker->testCondition(node))
 		{
 			return false;
 		}
@@ -254,6 +293,14 @@ ConditionalCallback::processConditionData(DataNode *conditionNode)
 				else if (type.compare("Appear") == 0)
 				{
 					m_checkers.push_back(new AppearChecker(checker));
+				}
+				else if (type.compare("MouseDown") == 0)
+				{
+					m_checkers.push_back(new MouseDownChecker(checker));
+				}
+				else if (type.compare("MouseOver") == 0)
+				{
+					m_checkers.push_back(new MouseOverChecker(checker));
 				}
 				else
 				{

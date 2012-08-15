@@ -7,6 +7,7 @@
 #include "arengine/Config.h"
 #include "arengine/ARScene.h"
 #include "arengine/KeyboardHandler.h"
+#include "arengine/MouseHandler.h"
 
 #ifdef _WIN32
 #	include <dshow.h>
@@ -19,17 +20,25 @@ namespace arengine
 	{
 	public:
 		static bool isCaptureDeviceReady();
+		static bool isLoggerReady();
+
 		static void init(string appName,
 						 string logFileName, 
 						 int logLevel,
-						 string configFileName);
+						 string configFileName,
+						 bool validateImage = false);
 
 		static Logger* getLogger();
 		static Config* getConfig();
 		static ARScene* getARScene();
 		static KeyboardHandler* getKeyboardHandler();
+		static MouseHandler* getMouseHandler();
 		
 		static void release();
+		static bool ready();
+	private:
+		static bool m_ready;
+
 	};
 	
 }

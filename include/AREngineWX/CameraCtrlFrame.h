@@ -21,7 +21,10 @@ namespace arenginewx
 		
 		// Return false if no capture devices were found
 		bool WaitForCaptureDevice();
+		bool ContinueWithoutLog();
 
+		void OnFaq(wxCommandEvent& event);
+		void OnAbout(wxCommandEvent& event);
 		void OnContextMenu(wxContextMenuEvent& event);
 		void OnToggleFullScreen(wxCommandEvent& event);
 		void OnExit(wxCommandEvent& event);
@@ -40,6 +43,7 @@ namespace arenginewx
 	private:
 		wxMenu *createDevMenu();
 		wxMenu *createOptionMenu();
+		wxMenu *createAboutMenu();
 #endif
 
 		

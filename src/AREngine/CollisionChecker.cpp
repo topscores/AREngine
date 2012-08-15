@@ -8,6 +8,7 @@ using namespace std;
 using namespace arengine;
 
 CollisionChecker::CollisionChecker(DataNode *checkerNode)
+:ConditionChecker(checkerNode)
 {
 	if (checkerNode->getNodeName().compare("Collision") == 0)
 	{

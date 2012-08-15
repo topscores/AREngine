@@ -64,6 +64,13 @@ Action::addPreActionCB(ActionCallback *callback)
 }
 
 
+void
+Action::reset()
+{
+	// Override this method in child class to reset state of action
+}
+
+
 void 
 Action::addPostActionCB(ActionCallback *callback)
 {

@@ -4,6 +4,7 @@
 #include "arengine/AddRemoveAction.h"
 #include "arengine/SoundAction.h"
 #include "arengine/ManipulateAnimationAction.h"
+#include "arengine/ManipulateTextureAnimationAction.h"
 #include "arengine/ManipulateMovieAction.h"
 #include "arengine/ActionSet.h"
 #include "arengine/CircularActionSet.h"
@@ -11,6 +12,7 @@
 #include "arengine/DataNode.h"
 #include "arengine/Util.h"
 #include "arengine/TransitionAction.h"
+#include "arengine/ChangeSceneAction.h"
 
 #include <osg/Node>
 
@@ -41,9 +43,17 @@ ActionFactory::newAction(DataNode *action)
 	{
 		return new StopSoundAction(action);
 	}
+	else if (actionType == "ToggleMute")
+	{
+		return new ToggleMuteAction(action);
+	}
 	else if (actionType == "ManipulateAnimation")
 	{
 		return new ManipulateAnimationAction(action);
+	}
+	else if (actionType == "ManipulateTextureAnimation")
+	{
+		return new ManipulateTextureAnimationAction(action);
 	}
 	else if (actionType == "ManipulateMovie")
 	{
@@ -65,8 +75,13 @@ ActionFactory::newAction(DataNode *action)
 	{
 		return new TwistIn(action);
 	}
+	else if (actionType == "ChangeScene")
+	{
+		return new ChangeSceneAction(action);
+	}
 	else
 	{
 		Util::log(__FUNCTION__, 2, "Unknown action\"%s\"", actionType.c_str());
+		return NULL;
 	}
 }

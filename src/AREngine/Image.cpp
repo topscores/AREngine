@@ -45,7 +45,7 @@ m_tex(NULL)
 			m_image = osgDB::readImageFile(m_imageFileName);
 			if (!m_image.valid())
 			{
-				Util::log(__FUNCTION__, 2, "Cannot load %s", m_imageFileName);
+				Util::log(__FUNCTION__, 2, "Cannot load %s", m_imageFileName.c_str());
 			}
 			else
 			{
@@ -78,7 +78,7 @@ m_tex(NULL)
 
 				// Set the OpenGL States of this Geometry Node
 				m_orgNode->setStateSet(m_stateSet.get());
-				m_stateSet->setRenderBinDetails(150, "RenderBin");
+				//m_stateSet->setRenderBinDetails(150, "RenderBin");
 				m_stateSet->setTextureAttributeAndModes(0, m_tex.get(), osg::StateAttribute::ON);
 				m_stateSet->setMode(GL_BLEND, osg::StateAttribute::ON);
 				m_stateSet->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );

@@ -143,7 +143,6 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 			if (obj.valid())
 			{
 				manipulateAnim(node, obj.get());
-				Util::log(__FUNCTION__, 3, "Manipulate animation on %s with command \"%s\"", m_objName.c_str(), m_manipulateType.c_str());
 			}
 		}
 		// Manipulate all active animation on marker
@@ -154,7 +153,6 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 			{
 				manipulateAnim(node, (m_marker->getAssociatedObj(i)).get());
 			}
-			Util::log(__FUNCTION__, 3, "Manipulate animation on marker %s with command \"%s\"", m_markerName.c_str(), m_manipulateType.c_str());
 		}
 	}
 	// Reset animation on specific obj
@@ -165,7 +163,6 @@ ManipulateAnimationAction::doAction(osg::Node *node)
 		if (obj.valid())
 		{
 			manipulateAnim(node, obj.get());
-			Util::log(__FUNCTION__, 3, "Manipulate animation on %s with command \"%s\"", m_objName.c_str(), m_manipulateType.c_str());
 		}
 	}
 }
@@ -227,6 +224,7 @@ ManipulateAnimationAction::manipulateAnim(Node *node, SceneObj *obj)
 				m_changeSyncMode = false;
 			}
 		}
+		Util::log(__FUNCTION__, 3, "Manipulate animation type=%s objName=%s", m_manipulateType.c_str(), m_objName.c_str());
 
 	}
 }

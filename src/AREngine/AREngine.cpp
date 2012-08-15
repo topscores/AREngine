@@ -9,6 +9,8 @@
 
 using namespace arengine;
 
+bool AREngine::m_ready;
+
 bool
 AREngine::isCaptureDeviceReady()
 {
@@ -26,19 +28,36 @@ AREngine::isCaptureDeviceReady()
 #endif
 }
 
+
+bool
+AREngine::isLoggerReady()
+{
+	Logger *logger = AREngine::getLogger();
+	return logger->ready();
+}
+
+
 void
 AREngine::init(string appName, 
 			   string logFileName,
 			   int	  logLevel,
-			   string configFileName)
+			   string configFileName,
+			   bool	  validateImage)
 {
+	m_ready = false;
 	// Initialize logger
 	Logger* logger = AREngine::getLogger();
 	logger->init(logFileName, logLevel, appName);
-	
+
 	// Read config file
 	Config *config = AREngine::getConfig();
 	config->readConfig(configFileName);
+
+	if (validateImage && !Util::isValidImage())
+	{
+		Util::log(__FUNCTION__, "imgid mismatch", 1);
+	}
+	m_ready = true;
 }
 
 
@@ -70,15 +89,31 @@ AREngine::getKeyboardHandler()
 }
 
 
+MouseHandler*
+AREngine::getMouseHandler()
+{
+	return SmartSingleton<MouseHandler>::getInstance();
+}
+
+
 void
 AREngine::release()
 {
 	ref_ptr<ARScene> arscene = SmartSingleton<ARScene>::getInstance();
 	arscene->release();
-	
+
 	ActionPool *actionPool = Singleton<ActionPool>::getInstance();
 	actionPool->release();
-	
+
 	SceneObjPool *sceneObjPool = Singleton<SceneObjPool>::getInstance();
 	sceneObjPool->release();
+	
+	m_ready = false;
+}
+
+
+bool
+AREngine::ready()
+{
+	return m_ready;
 }

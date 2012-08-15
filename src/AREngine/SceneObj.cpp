@@ -7,11 +7,13 @@ using namespace arengine;
 
 SceneObj::SceneObj()
 {
+	m_stretch.set(osg::Vec3d(1.0, 1.0, 1.0));
 	m_scale = 1.0;
 	m_rotation.set(osg::Vec3d(0.0, 0.0, 0.0));
 	m_translation.set(osg::Vec3d(0.0, 0.0, 0.0));
 	m_orgNode = NULL;
 
+	m_stretchMat.makeScale(m_stretch);
 	m_scaleMat.makeScale(m_scale, m_scale, m_scale);
 	m_rotMat.makeRotate(m_rotation[0], osg::Vec3f(1, 0, 0),
 						m_rotation[1], osg::Vec3f(0, 1, 0),
@@ -72,6 +74,15 @@ SceneObj::scaleTo(double scale)
 
 
 void
+SceneObj::stretch(osg::Vec3d stretchVec)
+{
+	m_stretch = stretchVec;
+	m_stretchMat.makeScale(m_stretch);
+	updateTransformMat();
+}
+
+
+void
 SceneObj::translate(osg::Vec3d transVec)
 {
 	translateTo(m_translation + transVec);
@@ -108,5 +119,5 @@ SceneObj::rotateTo(osg::Vec3d rotVec)
 void
 SceneObj::updateTransformMat()
 {
-	this->setMatrix(m_scaleMat*m_rotMat*m_transMat);
+	this->setMatrix(m_stretchMat*m_scaleMat*m_rotMat*m_transMat);
 }

@@ -204,10 +204,17 @@ DataNode::getAttributeAsInt(string name)
 
 
 double
-DataNode::getAttributeAsDouble(string name)
+DataNode::getAttributeAsDouble(string name, double defaultVal)
 {
 	string s = getAttributeAsString(name);
-	return Util::makeDouble(s);
+	if (!s.empty())
+	{
+		return Util::makeDouble(s);
+	}
+	else
+	{
+		return defaultVal;
+	}
 }
 
 

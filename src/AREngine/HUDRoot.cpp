@@ -6,55 +6,28 @@
 #define DEFAULT_HUD_HEIGHT 600
 using namespace arengine;
 
-HUDRoot::HUDRoot()
+//////////////////////////////////////////////////////////////////////////
+// HUDLayer
+
+HUDLayer::HUDLayer(int layerid)
 {
-	int hudHeight, hudWidth;
-	hudWidth = DEFAULT_HUD_WIDTH;
-	hudHeight = DEFAULT_HUD_HEIGHT;
-
-	m_hudCamera = new osg::Camera();
-	m_hudCamera->setViewMatrix(osg::Matrix::identity());
-	m_hudCamera->setReferenceFrame(osg::Camera::ABSOLUTE_RF);
-	m_hudCamera->setRenderOrder(osg::Camera::POST_RENDER);
-	m_hudCamera->setClearMask(GL_DEPTH_BUFFER_BIT);
-
-	osg::StateSet *state = m_hudCamera->getOrCreateStateSet();
-	state->setMode(GL_BLEND, osg::StateAttribute::ON);
-	state->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
-	//state->setMode(GL_LIGHTING, GL_FALSE);
-	state->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-
-	resizeHUD(0, hudWidth, 0, hudHeight);
-	addChild(m_hudCamera);
+	initLayer(DEFAULT_HUD_WIDTH, DEFAULT_HUD_HEIGHT, layerid);
 }
 
 
-HUDRoot::HUDRoot(DataNode *hudNode)
+HUDLayer::HUDLayer(DataNode *hudNode, int layerid)
 {
-	int hudHeight, hudWidth;
-	hudWidth = hudNode->getAttributeAsInt("width");
-	hudHeight = hudNode->getAttributeAsInt("height");
+	int width, height;
+	width = hudNode->getAttributeAsInt("width");
+	height = hudNode->getAttributeAsInt("height");
 	// Default hud resolution = 800x600
-	if (hudWidth == 0 && hudHeight == 0)
+	if (width == 0 && height == 0)
 	{
-		hudWidth = 800;
-		hudHeight = 600;
+		width = DEFAULT_HUD_WIDTH;
+		height = DEFAULT_HUD_HEIGHT;
 	}
 
-	m_hudCamera = new osg::Camera();
-	m_hudCamera->setViewMatrix(osg::Matrix::identity());
-	m_hudCamera->setReferenceFrame(osg::Camera::ABSOLUTE_RF);
-	m_hudCamera->setRenderOrder(osg::Camera::POST_RENDER);
-	m_hudCamera->setClearMask(GL_DEPTH_BUFFER_BIT);
-
-	osg::StateSet *state = m_hudCamera->getOrCreateStateSet();
-	state->setMode(GL_BLEND, osg::StateAttribute::ON);
-	state->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
-	//state->setMode(GL_LIGHTING, GL_FALSE);
-	state->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
-
-	resizeHUD(0, hudWidth, 0, hudHeight);
-	addChild(m_hudCamera);
+	initLayer(width, height, layerid);
 
 	int imageCount = hudNode->countChild("Image");
 	for (int i = 0;i < imageCount;i++)
@@ -66,13 +39,8 @@ HUDRoot::HUDRoot(DataNode *hudNode)
 }
 
 
-HUDRoot::~HUDRoot()
-{
-}
-
-
 void
-HUDRoot::addHUD(string name)
+HUDLayer::addHUD(string name)
 {
 	if (!name.empty())
 	{
@@ -83,9 +51,7 @@ HUDRoot::addHUD(string name)
 			SceneObj *obj = *itr;
 			if (obj->getObjName().compare(name) == 0)
 			{
-				stringstream sstr;
-				sstr << "Object \""<< name<<"\" is already in list";
-				Util::log(__FUNCTION__, sstr.str().c_str(), 3);
+				Util::log(__FUNCTION__, 3, "Layer %d: Object %s is already in list", m_layerid, name.c_str());
 				return;
 			}
 		}
@@ -95,11 +61,9 @@ HUDRoot::addHUD(string name)
 		if (obj != NULL)
 		{
 			m_hudList.push_back(obj);
-			m_hudCamera->addChild(obj);
+			addChild(obj);
 
-			stringstream sstr;
-			sstr << "Add Object \""<< name<<"\" to list";
-			Util::log(__FUNCTION__, sstr.str().c_str(), 3);
+			Util::log(__FUNCTION__, 3, "Layer %d: Add object %s to list", m_layerid, name.c_str());
 		}
 		else
 		{
@@ -114,7 +78,7 @@ HUDRoot::addHUD(string name)
 
 
 void
-HUDRoot::removeHUD(string name)
+HUDLayer::removeHUD(string name)
 {
 	if (name.empty())
 		return;
@@ -131,9 +95,7 @@ HUDRoot::removeHUD(string name)
 		if (name.compare(objName) == 0)
 		{
 			removeIndex = i;
-			stringstream sstr;
-			sstr << "Object found at position " << i;
-			Util::log(__FUNCTION__, sstr.str().c_str(), 3);
+			Util::log(__FUNCTION__, 3, "Layer %d: Object found at position %d", m_layerid, i);
 		}
 	}
 
@@ -141,17 +103,15 @@ HUDRoot::removeHUD(string name)
 	if (removeIndex != -1)
 	{
 		// Remove the node from hud node
-		m_hudCamera->removeChild(m_hudList.at(removeIndex));
+		removeChild(m_hudList.at(removeIndex));
 		m_hudList.erase(m_hudList.begin()+removeIndex, m_hudList.begin()+removeIndex+1);
-		stringstream sstr;
-		sstr << "Remove Object \""<< name <<"\" from list";
-		Util::log(__FUNCTION__, sstr.str().c_str(), 3);
+		Util::log(__FUNCTION__, 3, "Layer %d: Remove object %s", m_layerid, name.c_str());
 	}
 }
 
 
 void
-HUDRoot::removeHUD()
+HUDLayer::removeHUD()
 {
 	ref_ptr<SceneObj> removeObj;
 	int n = m_hudList.size();
@@ -159,18 +119,16 @@ HUDRoot::removeHUD()
 	{
 		removeObj = m_hudList[i];
 		string name = removeObj->getObjName();
-		m_hudCamera->removeChild(removeObj);
+		removeChild(removeObj);
 
-		stringstream sstr;
-		sstr << "Remove Object \""<< name <<"\" from list";
-		Util::log(__FUNCTION__, sstr.str().c_str(), 3);
+		Util::log(__FUNCTION__, 3, "Remove object %s", name.c_str());
 	}
 	m_hudList.clear();
 }
 
 
 ref_ptr<osg::Node>
-HUDRoot::getHUD(int id)
+HUDLayer::getHUD(int id)
 {
 	if (m_hudList.size() == 0)
 	{
@@ -183,13 +141,14 @@ HUDRoot::getHUD(int id)
 	}
 	else
 	{
-		Util::log(__FUNCTION__, "Invalid id", 2);
+		Util::log(__FUNCTION__, "Invalid id", 3);
+		return NULL;
 	}
 }
 
 
 ref_ptr<osg::Node>
-HUDRoot::getHUD(string name)
+HUDLayer::getHUD(string name)
 {
 	if (!name.empty())
 	{
@@ -211,20 +170,188 @@ HUDRoot::getHUD(string name)
 }
 
 
-void
-HUDRoot::resizeHUD(int xMin, int xMax, int yMin, int yMax)
+vector< ref_ptr<SceneObj> >
+HUDLayer::getHUDList()
 {
-	if (!m_hudCamera)
-	{
-		Util::log(__FUNCTION__, "m_hudCamera has not been initialized", 2);
-		return;
-	}
-
-	m_hudCamera->setProjectionMatrixAsOrtho2D(xMin, xMax, yMin, yMax);
+	return m_hudList;
 }
 
 
 void
-HUDRoot::processImageData(DataNode *node)
+HUDLayer::initLayer(int width, int height, int layerid)
 {
+	m_width = width;
+	m_height = height;
+
+	setViewMatrix(osg::Matrix::identity());
+	setReferenceFrame(osg::Camera::ABSOLUTE_RF);
+	setRenderOrder(osg::Camera::POST_RENDER);
+	setClearMask(GL_DEPTH_BUFFER_BIT);
+
+	osg::StateSet *state = getOrCreateStateSet();
+	state->setMode(GL_BLEND, osg::StateAttribute::ON);
+	state->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF);
+	state->setRenderBinDetails(2 + layerid, "RenderBin");
+	state->setRenderingHint( osg::StateSet::TRANSPARENT_BIN );
+
+	resize(0, m_width, 0, m_height);
+	m_layerid = layerid;
+}
+
+
+void
+HUDLayer::resize(int xMin, int xMax, 
+				 int yMin, int yMax)
+{
+	if (xMin < xMax && yMin < yMax)
+	{
+		setProjectionMatrixAsOrtho2D(xMin, xMax, yMin, yMax);
+	}
+	else
+	{
+		Util::log(__FUNCTION__, 2, "Cannot initialize HUD layer %d with xMin=%d,xMax=%d,yMin=%d,yMax=%d",
+			m_layerid, xMin, xMax, yMin, yMax);
+	}
+}
+
+//////////////////////////////////////////////////////////////////////////
+// HUDRoot
+
+HUDRoot::HUDRoot()
+{
+}
+
+
+HUDRoot::~HUDRoot()
+{
+}
+
+
+void
+HUDRoot::addLayer(DataNode *hudNode, int layerid)
+{
+	if (!hasLayer(layerid))
+	{
+		m_layerList[layerid] = new HUDLayer(hudNode, layerid);
+		addChild(m_layerList[layerid]);
+	}
+}
+
+
+bool
+HUDRoot::hasLayer(int layerid)
+{
+	return m_layerList.find(layerid) != m_layerList.end();
+}
+
+
+ref_ptr<HUDLayer>
+HUDRoot::getLayer(int layerid)
+{
+	if (hasLayer(layerid))
+	{
+		return m_layerList[layerid];
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+
+map<int, ref_ptr<HUDLayer> >
+HUDRoot::getLayerList()
+{
+	return m_layerList;
+}
+
+
+void	
+HUDRoot::addHUD(string name, int layerid)
+{
+	ref_ptr<HUDLayer> hudLayer = getLayer(layerid);
+	if (hudLayer.valid())
+	{
+		hudLayer->addHUD(name);
+	}
+	else
+	{
+		hudLayer = new HUDLayer(layerid);
+		m_layerList[layerid] = hudLayer;
+		Util::log(__FUNCTION__, 3, "Layer %d not found, create new layer", layerid);
+		addChild(m_layerList[layerid]);
+		
+		hudLayer->addHUD(name);
+	}
+}
+
+
+void
+HUDRoot::removeHUD(int layerid)
+{
+	ref_ptr<HUDLayer> hudLayer = getLayer(layerid);
+	if (hudLayer.valid())
+	{
+		hudLayer->removeHUD();
+	}
+}
+
+
+void
+HUDRoot::removeHUD(string name, int layerid)
+{
+	ref_ptr<HUDLayer> hudLayer = getLayer(layerid);
+	if (hudLayer.valid())
+	{
+		hudLayer->removeHUD(name);
+	}
+}
+
+
+ref_ptr<osg::Node>
+HUDRoot::getHUD(string name)
+{
+	map<int, ref_ptr<HUDLayer> >::iterator itr;
+	for (itr=m_layerList.begin();itr!=m_layerList.end();itr++)
+	{
+		ref_ptr<HUDLayer> layer = itr->second;
+		ref_ptr<osg::Node> node = layer->getHUD(name);
+		if (node.valid())
+		{
+			return node;
+		}
+	}
+	return NULL;
+}
+
+
+ref_ptr<osg::Node>
+HUDRoot::getHUD(string name, int layerid)
+{
+	if (m_layerList[layerid] != NULL)
+	{
+		return m_layerList[layerid]->getHUD(name);
+	}
+	else
+	{
+		return NULL;
+	}
+}
+
+
+vector< ref_ptr<SceneObj> >
+HUDRoot::getHUDList()
+{
+	vector< ref_ptr<SceneObj> > hudlist;
+	map<int, ref_ptr<HUDLayer> >::iterator itr;
+	
+	for (itr = m_layerList.begin(); itr != m_layerList.end();itr++)
+	{
+		ref_ptr<HUDLayer> layer = itr->second;
+		vector< ref_ptr<SceneObj> > tmpList = layer->getHUDList();
+		int n = tmpList.size();
+		hudlist.insert(hudlist.end(), tmpList.begin(), tmpList.end());
+	}
+
+	return hudlist;
 }
