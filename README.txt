@@ -13,7 +13,7 @@ Know issues in this release.
 
 About this archive.
 --------------------
-AREngine is a library 1.0.
+AREngine is a library 1.1.
 
 Build AREngine.
 ---------------
